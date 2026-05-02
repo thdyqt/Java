@@ -1,3 +1,5 @@
+package Application;
+
 import javafx.application.Application;
 
 public class Launcher {
