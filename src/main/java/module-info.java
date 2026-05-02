@@ -12,4 +12,6 @@ module com.example.javaproject_102240130_102240141 {
 
     opens com.example.javaproject_102240130_102240141 to javafx.fxml;
     exports com.example.javaproject_102240130_102240141;
+    exports;
+    opens to
 }
