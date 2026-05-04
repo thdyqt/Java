@@ -9,6 +9,7 @@ module com.example.javaproject_102240130_102240141 {
     requires org.kordamp.bootstrapfx.core;
     requires java.sql;
     requires mysql.connector.j;
+    requires java.desktop;
 
     opens Application to javafx.graphics, javafx.fxml;
     exports Application;
