@@ -1,0 +1,73 @@
+/* Nền của toàn bộ cửa sổ */
+.main-container {
+    -fx-background-color: linear-gradient(to bottom right, #0a192f, #112240); /* Gradient Xanh Navy đậm */
+}
+
+/* Khung trắng chứa form đăng nhập */
+.login-box {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-padding: 40 35 40 35;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 20, 0, 0, 10); /* Hiệu ứng đổ bóng nổi 3D */
+}
+
+/* Tên khách sạn */
+.hotel-title {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #d4af37; /* Màu Vàng Gold ánh kim */
+    -fx-font-family: "Georgia"; /* Font có chân cổ điển, sang trọng */
+}
+
+/* Dòng chữ phụ */
+.subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #666666;
+    -fx-padding: 0 0 20 0; /* Khoảng cách phía dưới */
+}
+
+/* Chữ "Tên đăng nhập", "Mật khẩu" */
+.input-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #333333;
+    -fx-font-weight: bold;
+}
+
+/* Ô nhập liệu */
+.input-field {
+    -fx-pref-height: 38px;
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-font-size: 13px;
+}
+
+/* Hiệu ứng khi bấm vào ô nhập liệu */
+.input-field:focused {
+    -fx-border-color: #d4af37; /* Viền sáng màu Gold */
+    -fx-background-color: white;
+}
+
+/* Nút Đăng Nhập */
+.login-button {
+    -fx-background-color: #d4af37; /* Nền Vàng Gold */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+    -fx-padding: 10 0 10 0;
+}
+
+/* Hiệu ứng khi rê chuột qua nút Đăng Nhập */
+.login-button:hover {
+    -fx-background-color: #bfa136;
+    -fx-effect: dropshadow(three-pass-box, rgba(212,175,55,0.4), 10, 0, 0, 3);
+}
+
+/* Dòng thông báo lỗi */
+.error-message {
+    -fx-text-fill: #d32f2f; /* Đỏ */
+    -fx-font-size: 12px;
+}

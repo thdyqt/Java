@@ -8,6 +8,7 @@ module com.example.javaproject_102240130_102240141 {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
     requires java.sql;
+    requires mysql.connector.j;
 
     opens Application to javafx.graphics, javafx.fxml;
     exports Application;
