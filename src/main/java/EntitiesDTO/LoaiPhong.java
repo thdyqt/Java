@@ -5,14 +5,14 @@ import java.math.BigDecimal;
 public class LoaiPhong {
     private int maLoaiPhong;
     private String tenLoaiPhong;
-    private BigDecimal donGia;
+    private double donGia;
     private int soNguoiToiDa;
     private String moTa;
 
     public LoaiPhong() {
     }
 
-    public LoaiPhong(int maLoaiPhong, String tenLoaiPhong, BigDecimal donGia, int soNguoiToiDa, String moTa) {
+    public LoaiPhong(int maLoaiPhong, String tenLoaiPhong, double donGia, int soNguoiToiDa, String moTa) {
         this.maLoaiPhong = maLoaiPhong;
         this.tenLoaiPhong = tenLoaiPhong;
         this.donGia = donGia;
@@ -26,8 +26,8 @@ public class LoaiPhong {
     public String getTenLoaiPhong() { return tenLoaiPhong; }
     public void setTenLoaiPhong(String tenLoaiPhong) { this.tenLoaiPhong = tenLoaiPhong; }
 
-    public BigDecimal getDonGia() { return donGia; }
-    public void setDonGia(BigDecimal donGia) { this.donGia = donGia; }
+    public double getDonGia() { return donGia; }
+    public void setDonGia(double donGia) { this.donGia = donGia; }
 
     public int getSoNguoiToiDa() { return soNguoiToiDa; }
     public void setSoNguoiToiDa(int soNguoiToiDa) { this.soNguoiToiDa = soNguoiToiDa; }

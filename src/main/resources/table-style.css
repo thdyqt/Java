@@ -1,0 +1,74 @@
+/* Tổng thể bảng */
+.table-view {
+    -fx-background-color: transparent;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 0;
+}
+
+/* Thanh tiêu đề (Header) */
+.table-view .column-header-background {
+    -fx-background-color: #112240; /* Navy đậm */
+    -fx-background-radius: 10 10 0 0;
+    -fx-padding: 0 0 5 0;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-size: 45px;
+    -fx-border-color: transparent;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #d4af37; /* Vàng Gold */
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+/* Các dòng dữ liệu (Rows) */
+.table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent #f1f5f9 transparent;
+    -fx-cell-size: 50px;
+}
+
+/* Hiệu ứng dòng kẻ xen kẽ (Zebra) */
+.table-row-cell:odd {
+    -fx-background-color: #fafbfc;
+}
+
+/* Hiệu ứng khi di chuột qua dòng */
+.table-row-cell:hover {
+    -fx-background-color: #fdfae9; /* Màu vàng nhạt rất nhẹ */
+}
+
+/* Hiệu ứng khi chọn dòng */
+.table-row-cell:selected {
+    -fx-background-color: #fff8e1;
+    -fx-background-insets: 0;
+}
+
+.table-row-cell:selected .text {
+    -fx-fill: #b48a04;
+    -fx-font-weight: bold;
+}
+
+/* Căn chỉnh chữ trong ô */
+.table-cell {
+    -fx-alignment: center-left;
+    -fx-padding: 0 15 0 15;
+    -fx-text-fill: #334155;
+    -fx-font-size: 13px;
+}
+
+/* Xóa thanh cuộn thừa và các đường kẻ dọc */
+.table-view .virtual-flow .scroll-bar:vertical,
+.table-view .virtual-flow .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+
+.table-view .placeholder .label {
+    -fx-text-fill: #94a3b8;
+    -fx-font-style: italic;
+}

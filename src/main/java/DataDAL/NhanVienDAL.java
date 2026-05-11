@@ -24,7 +24,7 @@ public class NhanVienDAL {
                             rs.getString("HoTen"),
                             rs.getString("ChucVu"),
                             rs.getString("TenDangNhap"),
-                            rs.getString("HoTen"),
+                            rs.getString("MatKhau"),
                             rs.getString("SoDienThoai")
                     );
                 }

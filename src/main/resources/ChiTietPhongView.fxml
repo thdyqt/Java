@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox fx:id="mainPane" alignment="TOP_CENTER" prefHeight="300.0" prefWidth="450.0" spacing="20.0" style="-fx-background-color: white; -fx-padding: 30;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.ChiTietPhongController">
+    <children>
+        <Label fx:id="lblSoPhong" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #112240;" text="Phòng ---" />
+
+        <VBox alignment="CENTER" spacing="10.0" style="-fx-background-color: #f4f6f9; -fx-background-radius: 10; -fx-padding: 20;">
+            <children>
+                <Label style="-fx-font-size: 16px; -fx-text-fill: #7f8c8d;" text="Khách hàng: (Đang tải...)" />
+                <Label style="-fx-font-size: 14px; -fx-text-fill: #7f8c8d;" text="Thời gian Check-in: (Đang tải...)" />
+            </children>
+        </VBox>
+
+        <HBox alignment="CENTER" spacing="15.0">
+            <children>
+                <Button mnemonicParsing="false" onAction="#handleThemDichVu" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 12 20; -fx-background-radius: 6; -fx-cursor: hand;" text="+ Thêm Dịch Vụ" />
+                <Button mnemonicParsing="false" onAction="#handleTraPhong" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 12 20; -fx-background-radius: 6; -fx-cursor: hand;" text="Thanh toán &amp; Trả phòng" />
+            </children>
+            <VBox.margin>
+                <Insets top="10.0" />
+            </VBox.margin>
+        </HBox>
+    </children>
+</VBox>

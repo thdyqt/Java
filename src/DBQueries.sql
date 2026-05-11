@@ -5,7 +5,7 @@ USE QuanLyKhachSan;
 CREATE TABLE LoaiPhong (
     MaLoaiPhong INT AUTO_INCREMENT PRIMARY KEY,
     TenLoaiPhong VARCHAR(100) NOT NULL,
-    DonGia DECIMAL(15, 2) NOT NULL,
+    DonGia DOUBLE NOT NULL,
     SoNguoiToiDa INT DEFAULT 2,
     MoTa TEXT
 );
@@ -81,8 +81,8 @@ CREATE TABLE DatPhong (
     NgayDat DATETIME DEFAULT CURRENT_TIMESTAMP,
     NgayCheckInDuKien DATETIME,
     NgayCheckOutDuKien DATETIME,
-    TienCoc DECIMAL(15, 2) DEFAULT 0,
-    TrangThai ENUM('Chờ xác nhận', 'Đã xác nhận', 'Đang ở', 'Đã trả phòng', 'Đã hủy') DEFAULT 'Chờ xác nhận',
+    TienCoc DOUBLE DEFAULT 0,
+    TrangThai ENUM('Chờ nhận phòng', 'Đang ở', 'Đã trả phòng', 'Đã hủy') DEFAULT 'Chờ nhận phòng',
     FOREIGN KEY (MaKhachHang) REFERENCES KhachHang(MaKhachHang),
     FOREIGN KEY (MaNhanVien) REFERENCES NhanVien(MaNhanVien)
 );
@@ -92,7 +92,7 @@ CREATE TABLE ChiTietDatPhong (
     MaChiTiet INT AUTO_INCREMENT PRIMARY KEY,
     MaDatPhong INT,
     MaPhong INT,
-    GiaThucTe DECIMAL(15, 2),
+    GiaThucTe DOUBLE,
     FOREIGN KEY (MaDatPhong) REFERENCES DatPhong(MaDatPhong) ON DELETE CASCADE,
     FOREIGN KEY (MaPhong) REFERENCES Phong(MaPhong)
 );
@@ -111,7 +111,7 @@ CREATE TABLE SuDungDichVu (
     MaDichVu INT,
     SoLuong INT DEFAULT 1,
     ThoiGianSuDung DATETIME DEFAULT CURRENT_TIMESTAMP,
-    ThanhTien DECIMAL(15, 2),
+    ThanhTien DOUBLE,
     FOREIGN KEY (MaDatPhong) REFERENCES DatPhong(MaDatPhong),
     FOREIGN KEY (MaDichVu) REFERENCES DichVu(MaDichVu)
 );
@@ -122,11 +122,11 @@ CREATE TABLE HoaDon (
     MaDatPhong INT UNIQUE,
     MaNhanVien INT,
     NgayThanhToan DATETIME DEFAULT CURRENT_TIMESTAMP,
-    TongTienPhong DECIMAL(15, 2),
-    TongTienDichVu DECIMAL(15, 2),
-    PhuThu DECIMAL(15, 2) DEFAULT 0,
-    GiamGia DECIMAL(15, 2) DEFAULT 0,
-    TongThanhToan DECIMAL(15, 2),
+    TongTienPhong DOUBLE,
+    TongTienDichVu DOUBLE,
+    PhuThu DOUBLE DEFAULT 0,
+    GiamGia DOUBLE DEFAULT 0,
+    TongThanhToan DOUBLE,
     PhuongThucThanhToan VARCHAR(50),
     FOREIGN KEY (MaDatPhong) REFERENCES DatPhong(MaDatPhong),
     FOREIGN KEY (MaNhanVien) REFERENCES NhanVien(MaNhanVien)

@@ -1,0 +1,43 @@
+.checkin-container {
+    -fx-background-color: white;
+    -fx-padding: 25;
+}
+
+.header-label {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #112240;
+}
+
+.room-info-box {
+    -fx-background-color: #f8f9fa;
+    -fx-padding: 15;
+    -fx-background-radius: 8;
+    -fx-border-color: #d4af37;
+    -fx-border-width: 0 0 0 5;
+}
+
+.info-title {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #34495e;
+}
+
+.info-value {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #d4af37;
+}
+
+.btn-checkin {
+    -fx-background-color: #27ae60;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+.btn-checkin:hover {
+    -fx-background-color: #219150;
+}

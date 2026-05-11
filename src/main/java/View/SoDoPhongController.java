@@ -9,9 +9,8 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
@@ -155,6 +154,18 @@ public class SoDoPhongController implements Initializable {
 
         card.getChildren().addAll(header, lblType);
 
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem itemLichSu = new MenuItem("Xem lịch đặt phòng");
+        Label iconLichSu = new Label("📅");
+        itemLichSu.setGraphic(iconLichSu);
+
+        itemLichSu.setOnAction(e -> showLichSuPopup(p.getSoPhong()));
+        contextMenu.getItems().add(itemLichSu);
+
+        card.setOnContextMenuRequested(e ->
+                contextMenu.show(card, e.getScreenX(), e.getScreenY())
+        );
+
         return card;
     }
 
@@ -162,6 +173,15 @@ public class SoDoPhongController implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Parent root = loader.load();
+
+            Object controller = loader.getController();
+            if (controller instanceof ChiTietPhongController) {
+                ((ChiTietPhongController) controller).setPhongData(selectedRoom);
+            }
+            else {
+                ((CheckInController)controller).setPhongData(selectedRoom);
+            }
+
             Stage stage = new Stage();
             stage.setTitle(title);
             stage.setScene(new Scene(root));
@@ -181,6 +201,10 @@ public class SoDoPhongController implements Initializable {
 
     @FXML
     void handleRoomClick(MouseEvent event) {
+        if (event.getButton() != MouseButton.PRIMARY) {
+            return;
+        }
+
         VBox clickedRoom = (VBox) event.getSource();
         Phong p = (Phong) clickedRoom.getUserData();
 
@@ -188,7 +212,7 @@ public class SoDoPhongController implements Initializable {
             openDialog("/CheckInView.fxml", "Check-in: Phòng " + p.getSoPhong(), p);
         }
         else if (p.getTrangThai().equals("Đang có khách")) {
-            openDialog("/CheckInView.fxml", "Check-in: Phòng " + p.getSoPhong(), p);
+            openDialog("/ChiTietPhongView.fxml", "Quản lý phòng " + p.getSoPhong(), p);
         }
         else {
             if (Others.showCustomConfirm("Xác nhận", "Phòng " + p.getSoPhong() + " đã dọn dẹp hoặc bảo trì xong?", "Có", "Không")) {
@@ -199,10 +223,28 @@ public class SoDoPhongController implements Initializable {
                     roomList = PhongBLL.getAllRooms();
                     ToggleButton currentFloor = (ToggleButton) floorGroup.getSelectedToggle();
                     getFilteredRooms(currentFloor.getText());
+                } else {
+                    Others.showAlert(mainPane, "Cập nhật trạng thái phòng " + p.getSoPhong() + " thất bại!", true);
                 }
-
-                else Others.showAlert(mainPane, "Cập nhật trạng thái phòng " + p.getSoPhong() + " thất bại!", true);
             }
+        }
+    }
+
+    private void showLichSuPopup(String soPhong) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/LichSuDatView.fxml"));
+            Parent root = loader.load();
+
+            LichSuDatController controller = loader.getController();
+            controller.loadData(soPhong);
+
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Lịch đặt phòng " + soPhong);
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
