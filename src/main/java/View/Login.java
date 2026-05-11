@@ -1,14 +1,31 @@
 package View;
 
 import BusinessBLL.NhanVienBLL;
+import Utilities.Others;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
-public class Login {
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class Login implements Initializable {
+    @FXML
+    private HBox loginBox;
+
+    @FXML
+    private StackPane mainPane;
 
     @FXML
     private TextField txtUsername;
@@ -17,31 +34,54 @@ public class Login {
     private PasswordField txtPassword;
 
     @FXML
-    private Label lblError;
-
-    @FXML
     private Button btnLogin;
 
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        Others.playButtonAnimation(btnLogin);
+        Others.playFormAnimation(loginBox);
+
+        Others.setMaxLength(txtUsername, 20);
+        Others.setMaxLength(txtPassword, 20);
+
+        txtUsername.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.contains(" ")) {
+                txtUsername.setText(newValue.replaceAll(" ", ""));
+            }
+        });
+
+        txtPassword.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.contains(" ")) {
+                txtPassword.setText(newValue.replaceAll(" ", ""));
+            }
+        });
+    }
+
     @FXML
-    void handleLogin(ActionEvent event) {
+    void handleLogin(ActionEvent event) throws IOException {
         String username = txtUsername.getText().trim();
         String password = txtPassword.getText().trim();
 
-        lblError.setText("");
-
         if (username.isEmpty() || password.isEmpty()) {
-            lblError.setText("Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu!");
+            Others.showAlert(mainPane, "Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu!", true);
             return;
         }
 
         if (NhanVienBLL.checkLogin(username, password) != null) {
-            lblError.setStyle("-fx-text-fill: #4CAF50;");
-            lblError.setText("Đăng nhập thành công! Đang chuyển trang...");
+            Others.showAlert(mainPane, "Đăng nhập thành công! Đang chuyển trang...", false);
 
-            // Viết code mở form Quản Lý (Main Form) ở đây sau
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Frame.fxml"));
+                Parent root = loader.load();
+
+                btnLogin.getScene().setRoot(root);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Others.showAlert(mainPane, "Không thể chuyển sang giao diện chính!", true);
+            }
         } else {
-            lblError.setStyle("-fx-text-fill: #d32f2f;");
-            lblError.setText("Tên đăng nhập hoặc mật khẩu không chính xác!");
+            Others.showAlert(mainPane, "Tên đăng nhập hoặc mật khẩu không chính xác!", true);
         }
     }
 }

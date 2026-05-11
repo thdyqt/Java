@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane fx:id="mainPane" prefHeight="700.0" prefWidth="1200.0" stylesheets="@frame.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.Frame">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" prefHeight="60.0" spacing="15.0" styleClass="topbar" BorderPane.alignment="CENTER">
+            <children>
+                <Button mnemonicParsing="false" onAction="#handleToggleSidebar" styleClass="toggle-button" text="☰" />
+
+                <Label styleClass="hotel-logo-text" text="DUT HOTEL" />
+
+                <HBox HBox.hgrow="ALWAYS" />
+
+                <Label fx:id="lblClock" styleClass="time-label" text="10:00 AM | 11/05/2026" />
+
+                <Label text="|" textFill="#4b5d78">
+                    <HBox.margin>
+                        <Insets left="5.0" right="5.0" />
+                    </HBox.margin>
+                </Label>
+
+                <MenuButton fx:id="menuUser" mnemonicParsing="false" styleClass="user-menu" text="Xin chào, Admin">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#handleViewProfile" text="Thông tin tài khoản" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleChangePassword" text="Đổi mật khẩu" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleLogout" styleClass="logout-item" text="Đăng xuất" />
+                    </items>
+                </MenuButton>
+            </children>
+        </HBox>
+    </top>
+
+    <left>
+        <AnchorPane fx:id="sidebar" prefWidth="250.0" styleClass="sidebar" BorderPane.alignment="CENTER">
+            <children>
+
+                <VBox AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <children>
+                        <Button fx:id="btnPhong" maxWidth="Infinity" mnemonicParsing="false" onAction="#showPhongView" styleClass="nav-button" text="Sơ Đồ Phòng" />
+                        <Button fx:id="btnDatPhong" maxWidth="Infinity" mnemonicParsing="false" onAction="#showDatPhongView" styleClass="nav-button" text="Quản Lý Đặt Phòng" />
+                        <Button fx:id="btnKhachHang" maxWidth="Infinity" mnemonicParsing="false" onAction="#showKhachHangView" styleClass="nav-button" text="Khách Hàng" />
+                        <Button fx:id="btnDichVu" maxWidth="Infinity" mnemonicParsing="false" onAction="#showDichVuView" styleClass="nav-button" text="Dịch Vụ &amp; Tiện Ích" />
+                        <Button fx:id="btnHoaDon" maxWidth="Infinity" mnemonicParsing="false" onAction="#showHoaDonView" styleClass="nav-button" text="Hóa Đơn &amp; Doanh Thu" />
+                        <Button fx:id="btnNhanVien" maxWidth="Infinity" mnemonicParsing="false" onAction="#showNhanVienView" styleClass="nav-button" text="Nhân Sự" />
+                    </children>
+                </VBox>
+
+                <Region fx:id="slideIndicator" prefHeight="50.0" prefWidth="5.0" styleClass="slide-indicator" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
+
+            </children>
+        </AnchorPane>
+    </left>
+
+    <center>
+        <StackPane fx:id="contentArea" styleClass="content-area" BorderPane.alignment="CENTER">
+            <children>
+                <Label style="-fx-font-size: 24px; -fx-text-fill: #999999;" text="Vui lòng chọn chức năng bên danh mục" />
+            </children>
+        </StackPane>
+    </center>
+</BorderPane>

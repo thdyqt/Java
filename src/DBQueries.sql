@@ -39,6 +39,12 @@ CREATE TABLE NhanVien (
     SoDienThoai VARCHAR(15)
 );
 
+USE quanlykhachsan;
+INSERT INTO NhanVien (HoTen, ChucVu, TenDangNhap, MatKhau, SoDienThoai) VALUES
+('Phan Thanh Duy', 'Admin', 'thdyqt', '123456', '0905383132'),
+('Đinh Huỳnh Nguyên Khang', 'Admin', 'dhnkhang', '123456', '1'),
+('Nguyễn Hoàng Hiếu', 'Lễ Tân', 'nhhieu', '123456', '1');
+
 -- 5. Bảng Đặt Phòng (Header)
 CREATE TABLE DatPhong (
     MaDatPhong INT AUTO_INCREMENT PRIMARY KEY,

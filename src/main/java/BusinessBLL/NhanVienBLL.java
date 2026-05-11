@@ -13,4 +13,8 @@ public class NhanVienBLL {
         }
         return null;
     }
+
+    public static void logout() {
+        UserSession.getInstance().clearSession();
+    }
 }

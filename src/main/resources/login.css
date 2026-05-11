@@ -1,73 +1,115 @@
-/* Nền của toàn bộ cửa sổ */
-.main-container {
-    -fx-background-color: linear-gradient(to bottom right, #0a192f, #112240); /* Gradient Xanh Navy đậm */
+/* Nền ngoài cùng của toàn ứng dụng */
+.main-wrapper {
+    -fx-background-color: #e9ecef;
+    -fx-padding: 50;
 }
 
-/* Khung trắng chứa form đăng nhập */
-.login-box {
+/* Khung chính chia đôi màn hình */
+.split-container {
     -fx-background-color: white;
-    -fx-background-radius: 12;
-    -fx-padding: 40 35 40 35;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 20, 0, 0, 10); /* Hiệu ứng đổ bóng nổi 3D */
+    -fx-background-radius: 15;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 30, 0, 0, 10);
 }
 
-/* Tên khách sạn */
-.hotel-title {
+/* --- NỬA TRÁI: Khu vực Thương hiệu --- */
+.left-branding {
+    -fx-background-color: linear-gradient(to bottom right, #0a192f, #112240);
+    -fx-background-radius: 15 0 0 15;
+    -fx-alignment: center;
+}
+
+.brand-text {
+    -fx-font-size: 40px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #d4af37;
+    -fx-font-family: "Georgia";
+    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.5), 5, 0, 2, 2);
+}
+
+.brand-tagline {
+    -fx-font-size: 15px;
+    -fx-text-fill: #a8b2d1;
+    -fx-font-style: italic;
+    -fx-padding: 15 0 0 0;
+}
+
+/* --- NỬA PHẢI: Khu vực Nhập liệu --- */
+.right-form {
+    -fx-background-color: white;
+    -fx-background-radius: 0 15 15 0;
+    -fx-padding: 50 60 50 60;
+    -fx-alignment: center-left;
+}
+
+.form-title {
     -fx-font-size: 26px;
     -fx-font-weight: bold;
-    -fx-text-fill: #d4af37; /* Màu Vàng Gold ánh kim */
-    -fx-font-family: "Georgia"; /* Font có chân cổ điển, sang trọng */
+    -fx-text-fill: #0a192f;
 }
 
-/* Dòng chữ phụ */
-.subtitle {
-    -fx-font-size: 13px;
-    -fx-text-fill: #666666;
-    -fx-padding: 0 0 20 0; /* Khoảng cách phía dưới */
+.form-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: #7f8c8d;
+    -fx-padding: 5 0 30 0;
 }
 
-/* Chữ "Tên đăng nhập", "Mật khẩu" */
 .input-label {
-    -fx-font-size: 12px;
-    -fx-text-fill: #333333;
-    -fx-font-weight: bold;
-}
-
-/* Ô nhập liệu */
-.input-field {
-    -fx-pref-height: 38px;
-    -fx-background-color: #f8f9fa;
-    -fx-border-color: #e0e0e0;
-    -fx-border-radius: 5;
-    -fx-background-radius: 5;
     -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #34495e;
 }
 
-/* Hiệu ứng khi bấm vào ô nhập liệu */
+.input-field {
+    -fx-pref-height: 45px;
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #ced4da;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-font-size: 14px;
+    -fx-padding: 0 15 0 15;
+}
+
 .input-field:focused {
-    -fx-border-color: #d4af37; /* Viền sáng màu Gold */
+    -fx-border-color: #d4af37;
     -fx-background-color: white;
+    -fx-border-width: 2px;
 }
 
-/* Nút Đăng Nhập */
+/* Các tùy chọn phụ */
+.options-row {
+    -fx-padding: 5 0 25 0;
+    -fx-alignment: center-left;
+}
+
+.custom-checkbox {
+    -fx-text-fill: #7f8c8d;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+}
+
+.forgot-link {
+    -fx-text-fill: #d4af37;
+    -fx-font-size: 13px;
+    -fx-underline: false;
+}
+
+.forgot-link:hover {
+    -fx-underline: true;
+}
+
+/* Nút Đăng nhập */
 .login-button {
-    -fx-background-color: #d4af37; /* Nền Vàng Gold */
+    -fx-background-color: #0a192f;
     -fx-text-fill: white;
     -fx-font-weight: bold;
-    -fx-font-size: 14px;
-    -fx-background-radius: 6;
+    -fx-font-size: 16px;
+    -fx-pref-height: 50px;
+    -fx-background-radius: 25;
     -fx-cursor: hand;
-    -fx-padding: 10 0 10 0;
+    -fx-effect: dropshadow(three-pass-box, rgba(10,25,47,0.3), 10, 0, 0, 5);
 }
 
-/* Hiệu ứng khi rê chuột qua nút Đăng Nhập */
 .login-button:hover {
-    -fx-background-color: #bfa136;
-    -fx-effect: dropshadow(three-pass-box, rgba(212,175,55,0.4), 10, 0, 0, 3);
-}
-
-/* Dòng thông báo lỗi */
-.error-message {
-    -fx-text-fill: #d32f2f; /* Đỏ */
-    -fx-font-size: 12px;
+    -fx-background-color: #112240;
+    -fx-translate-y: -2px;
 }
