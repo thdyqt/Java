@@ -348,7 +348,7 @@ public class Others {
         // Áp dụng CSS
         DialogPane dialogPane = alert.getDialogPane();
         try {
-            dialogPane.getStylesheets().add(Others.class.getResource("/GUI/style.css").toExternalForm());
+            dialogPane.getStylesheets().add(Others.class.getResource("/style.css").toExternalForm());
             dialogPane.getStyleClass().add("modern-alert");
         } catch (Exception e) {
             System.out.println("Không tìm thấy file CSS cho Alert ở đường dẫn /GUI/style.css");

@@ -1,0 +1,32 @@
+/* ======================================================= */
+/* CUSTOM HỘP THOẠI XÁC NHẬN (MODERN ALERT DIALOG)         */
+/* ======================================================= */
+
+/* Khung viền và nền của hộp thoại */
+.modern-alert {
+    -fx-background-color: white;
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
+    -fx-border-color: #E2E8F0;
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 20, 0, 0, 10);
+}
+
+/* Ẩn dải màu xám mặc định ở phần Header */
+.modern-alert .header-panel {
+    -fx-background-color: white;
+}
+
+/* Chữ Tiêu đề (Header) */
+.modern-alert .header-panel .label {
+    -fx-text-fill: #0F172A;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+/* Chữ Nội dung (Content) */
+.modern-alert .content.label {
+    -fx-text-fill: #64748B;
+    -fx-font-size: 14px;
+    -fx-padding: 10 0 10 0;
+}

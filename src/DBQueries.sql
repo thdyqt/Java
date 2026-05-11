@@ -10,6 +10,13 @@ CREATE TABLE LoaiPhong (
     MoTa TEXT
 );
 
+USE quanlykhachsan;
+INSERT INTO LoaiPhong (TenLoaiPhong, DonGia, SoNguoiToiDa, MoTa) VALUES
+('Standard', 300000, 2, 'Phòng tiêu chuẩn 1 giường đôi, không có cửa sổ'),
+('Deluxe', 500000, 2, 'Phòng cao cấp, có ban công và view thành phố'),
+('Suite', 1200000, 4, 'Phòng hạng sang diện tích lớn, có phòng khách riêng');
+
+
 -- 2. Bảng Phòng
 CREATE TABLE Phong (
     MaPhong INT AUTO_INCREMENT PRIMARY KEY,
@@ -18,6 +25,27 @@ CREATE TABLE Phong (
     TrangThai ENUM('Trống', 'Đang có khách', 'Đang dọn dẹp', 'Bảo trì') DEFAULT 'Trống',
     FOREIGN KEY (MaLoaiPhong) REFERENCES LoaiPhong(MaLoaiPhong) ON DELETE SET NULL
 );
+
+USE quanlykhachsan;
+INSERT INTO Phong (SoPhong, MaLoaiPhong, TrangThai) VALUES
+('201', 2, 'Trống'),
+('202', 2, 'Trống'),
+('203', 1, 'Trống'),
+('204', 1, 'Đang dọn dẹp'),
+('205', 1, 'Trống'),
+('301', 2, 'Trống'),
+('302', 2, 'Trống'),
+('303', 1, 'Trống'),
+('304', 1, 'Trống'),
+('305', 1, 'Trống'),
+('401', 2, 'Đang dọn dẹp'),
+('402', 2, 'Trống'),
+('403', 1, 'Trống'),
+('404', 1, 'Bảo trì'),
+('405', 1, 'Bảo trì'),
+('501', 3, 'Trống'),
+('502', 3, 'Đang dọn dẹp'),
+('503', 3, 'Bảo trì');
 
 -- 3. Bảng Khách Hàng
 CREATE TABLE KhachHang (

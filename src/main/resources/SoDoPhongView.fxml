@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -9,7 +8,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="600.0" prefWidth="900.0" styleClass="main-bg" stylesheets="@sodophong.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.SoDoPhongController">
+<BorderPane fx:id="mainPane" prefHeight="600.0" prefWidth="900.0" styleClass="main-bg" stylesheets="@sodophong.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.SoDoPhongController">
 
     <top>
         <HBox styleClass="top-bar" BorderPane.alignment="CENTER">
@@ -33,7 +32,8 @@
                     <Label text="Bảo trì" />
                 </HBox>
 
-                <Pane HBox.hgrow="ALWAYS" /> <ComboBox fx:id="cbFilterFloor" prefWidth="120.0" promptText="Tất cả các tầng" />
+                <HBox fx:id="filterBox" alignment="CENTER" styleClass="floor-filter-box">
+                </HBox>
             </children>
         </HBox>
     </top>
@@ -69,7 +69,7 @@
                             <HBox alignment="CENTER_LEFT">
                                 <Label styleClass="room-number" text="201" />
                                 <Pane HBox.hgrow="ALWAYS" />
-                                <Label styleClass="room-icon" text="🧹" />
+                                <Label styleClass="room-icon" text="💧" />
                             </HBox>
                             <Label styleClass="room-type" text="SUITE - Tầng 2" />
                         </children>
@@ -80,7 +80,7 @@
                             <HBox alignment="CENTER_LEFT">
                                 <Label styleClass="room-number" text="202" />
                                 <Pane HBox.hgrow="ALWAYS" />
-                                <Label styleClass="room-icon" text="🛠️" />
+                                <Label styleClass="room-icon" text="🛠" />
                             </HBox>
                             <Label styleClass="room-type" text="STANDARD - Rò nước" />
                         </children>

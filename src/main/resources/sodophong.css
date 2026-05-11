@@ -71,3 +71,30 @@
     -fx-font-size: 28px;
     -fx-text-fill: rgba(255, 255, 255, 0.5);
 }
+
+/* --- BỘ LỌC TẦNG DẠNG TAB --- */
+.floor-filter-box {
+    -fx-background-color: #f4f6f9;
+    -fx-background-radius: 8;
+    -fx-padding: 4;
+}
+
+.floor-tab {
+    -fx-background-color: transparent;
+    -fx-text-fill: #7f8c8d;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-padding: 8 15 8 15;
+    -fx-cursor: hand;
+    -fx-background-radius: 6;
+}
+
+.floor-tab:hover {
+    -fx-background-color: #e2e6ea;
+}
+
+.floor-tab:selected {
+    -fx-background-color: #d4af37;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(two-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);
+}

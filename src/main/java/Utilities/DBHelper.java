@@ -18,7 +18,6 @@ public class DBHelper {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
-            System.out.println("Kết nối Database thành công!");
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
             System.out.println("Kết nối Database thất bại!");
