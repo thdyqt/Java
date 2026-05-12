@@ -34,20 +34,28 @@ public class KhachHangDAL {
         return null;
     }
 
-    public static int findCustomerIdByCCCD(String cccd) {
-        String sql = "SELECT MaKhachHang FROM KhachHang WHERE CCCD_Passport = ?";
+    public static KhachHang getCustomerByCCCD(String cccd) {
+        String sql = "SELECT * FROM KhachHang WHERE CCCD_Passport = ?";
         try (Connection conn = DBHelper.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, cccd);
             ResultSet rs = stmt.executeQuery();
+
             if (rs.next()) {
-                return rs.getInt("MaKhachHang");
+                KhachHang kh = new KhachHang();
+                kh.setMaKhachHang(rs.getInt("MaKhachHang"));
+                kh.setHoTen(rs.getString("HoTen"));
+                kh.setCccdPassport(rs.getString("CCCD_Passport"));
+                kh.setSoDienThoai(rs.getString("SoDienThoai"));
+                kh.setEmail(rs.getString("Email"));
+                kh.setDiaChi(rs.getString("DiaChi"));
+                return kh;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return -1;
+        return null;
     }
 
     public static int insertCustomer(KhachHang customer) {

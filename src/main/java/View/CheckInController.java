@@ -2,6 +2,7 @@ package View;
 
 import BusinessBLL.DatPhongBLL;
 import BusinessBLL.PhongBLL;
+import EntitiesDTO.KhachHang;
 import EntitiesDTO.Phong;
 import Utilities.Others;
 import Utilities.UserSession;
@@ -42,6 +43,21 @@ public class CheckInController {
         cbHinhThuc.getItems().addAll("Theo ngày", "Qua đêm", "Theo giờ");
         cbHinhThuc.setValue("Theo ngày");
         txtSoGioThue.setDisable(true);
+
+        txtCCCD.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.length() == 9 || newValue.length() == 12) {
+                KhachHang kh = BusinessBLL.KhachHangBLL.getCustomerByCCCD(newValue);
+
+                if (kh != null) {
+                    txtHoTen.setText(kh.getHoTen());
+                    txtSDT.setText(kh.getSoDienThoai() != null ? kh.getSoDienThoai() : "");
+                    txtEmail.setText(kh.getEmail() != null ? kh.getEmail() : "");
+                    txtDiaChi.setText(kh.getDiaChi() != null ? kh.getDiaChi() : "");
+
+                    Others.showAlert(mainPane, "👋 Chào mừng khách quen quay lại: " + kh.getHoTen(), false);
+                }
+            }
+        });
 
         cbHinhThuc.valueProperty().addListener((obs, oldVal, newVal) -> {
             if ("Theo giờ".equals(newVal)) {

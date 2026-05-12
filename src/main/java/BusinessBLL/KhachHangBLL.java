@@ -8,4 +8,9 @@ public class KhachHangBLL {
         if (maKhachHang <= 0) return null;
         return KhachHangDAL.getCustomerById(maKhachHang);
     }
+
+    public static KhachHang getCustomerByCCCD(String cccd) {
+        if (cccd == null || cccd.trim().isEmpty()) return null;
+        return KhachHangDAL.getCustomerByCCCD(cccd);
+    }
 }

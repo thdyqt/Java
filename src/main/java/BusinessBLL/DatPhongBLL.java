@@ -28,16 +28,24 @@ public class DatPhongBLL {
                                          List<String> roomNumbers, int employeeId,
                                          LocalDateTime checkInDate, LocalDateTime checkOutDate, double deposit) {
 
-        int customerId = KhachHangDAL.findCustomerIdByCCCD(cccdPassport);
+        KhachHang existingCustomer = KhachHangDAL.getCustomerByCCCD(cccdPassport);
+        int customerId = -1;
 
-        if (customerId == -1) {
+        if (existingCustomer == null) {
             KhachHang newCustomer = new KhachHang(0, fullName, cccdPassport, phoneNumber, email, address);
             customerId = KhachHangDAL.insertCustomer(newCustomer);
 
-            if (customerId == -1) return false;
-
+            if (customerId == -1) {
+                return false;
+            }
         } else {
-            KhachHang existingCustomer = new KhachHang(customerId, fullName, cccdPassport, phoneNumber, email, address);
+            customerId = existingCustomer.getMaKhachHang();
+
+            existingCustomer.setHoTen(fullName);
+            existingCustomer.setSoDienThoai(phoneNumber);
+            existingCustomer.setEmail(email);
+            existingCustomer.setDiaChi(address);
+
             KhachHangDAL.updateCustomer(existingCustomer);
         }
 
