@@ -204,6 +204,7 @@ public class Frame implements Initializable {
     @FXML
     void showDatPhongView(ActionEvent event) {
         setActiveMenu(btnDatPhong);
+        switchForm("/QuanLyDatPhongView.fxml");
     }
 
     @FXML

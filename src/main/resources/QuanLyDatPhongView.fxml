@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="mainPane" prefHeight="750.0" prefWidth="1150.0" spacing="20.0" style="-fx-background-color: #f1f5f9;" stylesheets="@style.css, @table-style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.QuanLyDatPhongController">
+    <padding>
+        <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+    </padding>
+    <children>
+        <HBox alignment="CENTER_LEFT" spacing="15.0">
+            <children>
+                <VBox>
+                    <children>
+                        <Label text="QUẢN LÝ DANH SÁCH ĐẶT PHÒNG" textFill="#0f172a">
+                            <font><Font name="System Bold" size="24.0" /></font>
+                        </Label>
+                        <Label text="Theo dõi và điều phối trạng thái lưu trú của khách hàng" textFill="#64748b" />
+                    </children>
+                </VBox>
+                <Pane HBox.hgrow="ALWAYS" />
+                <Button mnemonicParsing="false" onAction="#handleNewBooking" prefHeight="45.0" style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;" text="➕ LẬP ĐƠN ĐẶT MỚI">
+                    <padding><Insets left="20.0" right="20.0" /></padding>
+                </Button>
+            </children>
+        </HBox>
+
+        <HBox spacing="15.0" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 5);">
+            <children>
+                <VBox prefWidth="250.0" spacing="5.0">
+                    <children>
+                        <Label text="Tìm kiếm khách hàng" textFill="#64748b" />
+                        <TextField fx:id="txtSearch" prefHeight="35.0" promptText="Tên, SĐT hoặc CCCD..." style="-fx-background-radius: 8;" />
+                    </children>
+                </VBox>
+
+                <VBox spacing="5.0">
+                    <children>
+                        <Label text="Từ ngày" textFill="#64748b" />
+                        <DatePicker fx:id="dpFromDate" prefHeight="35.0" prefWidth="150.0" />
+                    </children>
+                </VBox>
+                <VBox spacing="5.0">
+                    <children>
+                        <Label text="Đến ngày" textFill="#64748b" />
+                        <DatePicker fx:id="dpToDate" prefHeight="35.0" prefWidth="150.0" />
+                    </children>
+                </VBox>
+
+                <Separator orientation="VERTICAL" />
+
+                <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label text="Trạng thái đơn" textFill="#64748b" />
+                        <HBox fx:id="statusFilterBox" spacing="10.0">
+                        </HBox>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+
+        <TableView fx:id="tvDatPhong" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="colMaDat" prefWidth="70.0" text="Mã đơn" />
+                <TableColumn fx:id="colKhachHang" prefWidth="180.0" text="Khách hàng" />
+                <TableColumn fx:id="colSDT" prefWidth="110.0" text="Số điện thoại" />
+                <TableColumn fx:id="colPhong" prefWidth="130.0" text="Phòng đoàn" />
+                <TableColumn fx:id="colCheckIn" prefWidth="150.0" text="Ngày vào" />
+                <TableColumn fx:id="colCheckOut" prefWidth="150.0" text="Ngày ra" />
+                <TableColumn fx:id="colTienCoc" prefWidth="120.0" text="Tiền cọc" />
+                <TableColumn fx:id="colTrangThai" prefWidth="150.0" text="Trạng thái" />
+            </columns>
+        </TableView>
+
+        <HBox alignment="CENTER_RIGHT" spacing="15.0" style="-fx-background-color: #1e293b; -fx-padding: 15; -fx-background-radius: 12;">
+            <children>
+                <Label text="THAO TÁC NHANH:" textFill="#94a3b8">
+                    <font><Font name="System Bold" size="13.0" /></font>
+                </Label>
+                <Button fx:id="btnQuickCheckIn" onAction="#handleQuickCheckIn" prefHeight="40.0" prefWidth="130.0" style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="🔑 NHẬN PHÒNG" />
+                <Button fx:id="btnQuickCheckOut" onAction="#handleQuickCheckOut" prefHeight="40.0" prefWidth="130.0" style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="💳 TRẢ PHÒNG" />
+                <Button fx:id="btnCancelBooking" onAction="#handleCancelBooking" prefHeight="40.0" prefWidth="130.0" style="-fx-background-color: #ef4444; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="🚫 HỦY ĐƠN" />
+            </children>
+        </HBox>
+    </children>
+</VBox>

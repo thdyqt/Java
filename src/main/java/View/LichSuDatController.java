@@ -1,5 +1,6 @@
 package View;
 
+import BusinessBLL.DatPhongBLL;
 import DataDAL.DatPhongDAL;
 import javafx.beans.property.SimpleStringProperty; // Thêm import này
 import javafx.collections.FXCollections;
@@ -41,7 +42,7 @@ public class LichSuDatController {
             return new SimpleStringProperty(date != null ? date.format(formatter) : "");
         });
 
-        tbvLichSu.setItems(FXCollections.observableArrayList(DatPhongDAL.getLichSuDatPhong(soPhong)));
+        tbvLichSu.setItems(FXCollections.observableArrayList(DatPhongBLL.getLichSuDatPhong(soPhong)));
     }
 
     @FXML

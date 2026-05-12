@@ -5,6 +5,7 @@ import Utilities.DBHelper;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -95,6 +96,41 @@ public class DatPhongDAL {
         return list;
     }
 
+    public static List<Map<String, Object>> getAllBookingsWithDetails() {
+        List<Map<String, Object>> list = new ArrayList<>();
+
+        String sql = "SELECT dp.MaDatPhong, kh.HoTen, kh.SoDienThoai, " +
+                "dp.NgayCheckInDuKien, dp.NgayCheckOutDuKien, dp.TienCoc, dp.TrangThai, " +
+                "GROUP_CONCAT(p.SoPhong SEPARATOR ', ') AS DanhSachPhong " +
+                "FROM DatPhong dp " +
+                "JOIN KhachHang kh ON dp.MaKhachHang = kh.MaKhachHang " +
+                "LEFT JOIN ChiTietDatPhong ct ON dp.MaDatPhong = ct.MaDatPhong " +
+                "LEFT JOIN Phong p ON ct.MaPhong = p.MaPhong " +
+                "GROUP BY dp.MaDatPhong, kh.HoTen, kh.SoDienThoai, dp.NgayCheckInDuKien, dp.NgayCheckOutDuKien, dp.TienCoc, dp.TrangThai " +
+                "ORDER BY dp.MaDatPhong DESC";
+
+        try (Connection conn = DBHelper.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Map<String, Object> row = new HashMap<>();
+                row.put("MaDatPhong", rs.getInt("MaDatPhong"));
+                row.put("HoTen", rs.getString("HoTen"));
+                row.put("SoDienThoai", rs.getString("SoDienThoai"));
+                row.put("NgayIn", rs.getTimestamp("NgayCheckInDuKien").toLocalDateTime());
+                row.put("NgayOut", rs.getTimestamp("NgayCheckOutDuKien").toLocalDateTime());
+                row.put("TienCoc", rs.getDouble("TienCoc"));
+                row.put("TrangThai", rs.getString("TrangThai"));
+                row.put("DanhSachPhong", rs.getString("DanhSachPhong"));
+                list.add(row);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
     public static boolean checkDateConflict(String roomNumber, LocalDate checkInDate, LocalDate checkOutDate) {
         String sql = "SELECT COUNT(*) AS SoLuong FROM DatPhong dp " +
                 "JOIN ChiTietDatPhong ct ON dp.MaDatPhong = ct.MaDatPhong " +
@@ -166,6 +202,34 @@ public class DatPhongDAL {
                 conn.rollback();
                 ex.printStackTrace();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static boolean quickCheckIn(int maDatPhong) {
+        String sql = "UPDATE DatPhong SET TrangThai = 'Đang ở', NgayCheckInDuKien = ? WHERE MaDatPhong = ?";
+        try (Connection conn = DBHelper.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setTimestamp(1, java.sql.Timestamp.valueOf(LocalDateTime.now()));
+            stmt.setInt(2, maDatPhong);
+            return stmt.executeUpdate() > 0;
+        } catch (Exception e) { e.printStackTrace(); }
+        return false;
+    }
+
+    public static boolean changeStatus(int maDatPhong, String newStatus) {
+        String sql = "UPDATE DatPhong SET TrangThai = ? WHERE MaDatPhong = ?";
+
+        try (Connection conn = DBHelper.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, newStatus);
+            stmt.setInt(2, maDatPhong);
+
+            return stmt.executeUpdate() > 0;
+
         } catch (Exception e) {
             e.printStackTrace();
         }

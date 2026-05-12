@@ -14,43 +14,43 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="mainPane" prefWidth="550.0" spacing="20.0" styleClass="checkin-container" stylesheets="@checkin.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.CheckInController">
+<VBox fx:id="mainPane" prefWidth="650.0" spacing="20.0" style="-fx-background-color: white; -fx-padding: 30; -fx-background-radius: 12;" stylesheets="@checkin.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.CheckInController">
     <children>
-        <Label styleClass="header-label" text="THỦ TỤC NHẬN PHÒNG" />
+        <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="THỦ TỤC ĐẶT / NHẬN PHÒNG" />
 
-        <HBox styleClass="room-info-box">
+        <HBox spacing="20.0" style="-fx-background-color: #f8fafc; -fx-padding: 15; -fx-background-radius: 8; -fx-border-color: #e2e8f0; -fx-border-radius: 8;">
             <children>
                 <VBox HBox.hgrow="ALWAYS">
                     <children>
-                        <Label styleClass="info-title" text="PHÒNG ĐANG CHỌN" />
-                        <Label fx:id="lblSoPhong" styleClass="info-value" text="101" />
+                        <Label text="PHÒNG ĐANG CHỌN" textFill="#64748b" />
+                        <Label fx:id="lblSoPhong" style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #3b82f6;" text="---" />
                     </children>
                 </VBox>
                 <VBox HBox.hgrow="ALWAYS">
                     <children>
-                        <Label styleClass="info-title" text="HẠNG PHÒNG" />
-                        <Label fx:id="lblLoaiPhong" styleClass="info-value" text="STANDARD" />
+                        <Label text="LOẠI PHÒNG" textFill="#64748b" />
+                        <Label fx:id="lblLoaiPhong" style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #f59e0b;" text="---" />
                     </children>
                 </VBox>
             </children>
         </HBox>
 
-        <VBox spacing="10.0" style="-fx-background-color: #f8f9fa; -fx-padding: 15; -fx-background-radius: 8; -fx-border-color: #e2e8f0; -fx-border-radius: 8;">
-            <children>
-                <Label style="-fx-font-weight: bold; -fx-text-fill: #34495e;" text="CHỌN THÊM PHÒNG (CHO KHÁCH ĐOÀN):" />
-                <ScrollPane fitToWidth="true" prefHeight="85.0" style="-fx-background-color: transparent; -fx-border-color: transparent;">
-                    <content>
-                        <FlowPane fx:id="fpExtraRooms" hgap="15.0" vgap="10.0" />
-                    </content>
-                </ScrollPane>
-            </children>
-        </VBox>
-
         <GridPane hgap="15.0" vgap="15.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0" />
+                <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+            </rowConstraints>
             <children>
                 <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
                     <children>
-                        <Label text="Họ tên khách hàng (*)" />
+                        <Label text="Họ và tên khách hàng (*)" />
                         <TextField fx:id="txtHoTen" prefHeight="35.0" />
                     </children>
                 </VBox>
@@ -64,39 +64,51 @@
                 <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
                     <children>
                         <Label text="CCCD / Passport (*)" />
-                        <TextField fx:id="txtCCCD" prefHeight="35.0" />
+                        <TextField fx:id="txtCCCD" prefHeight="35.0" promptText="Nhập CCCD để tự động điền" />
                     </children>
                 </VBox>
                 <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <children>
-                        <Label text="Email (Tùy chọn)" />
+                        <Label text="Email" />
                         <TextField fx:id="txtEmail" prefHeight="35.0" />
                     </children>
                 </VBox>
 
-                <VBox spacing="5.0" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="2">
                     <children>
-                        <Label text="Địa chỉ (Tùy chọn)" />
+                        <Label text="Địa chỉ" />
                         <TextField fx:id="txtDiaChi" prefHeight="35.0" />
+                    </children>
+                </VBox>
+                <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                    <children>
+                        <Label text="Hình thức thuê" />
+                        <ComboBox fx:id="cbHinhThuc" maxWidth="1.7976931348623157E308" prefHeight="35.0" />
                     </children>
                 </VBox>
 
                 <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="3">
                     <children>
-                        <Label text="Hình thức thuê" />
-                        <ComboBox fx:id="cbHinhThuc" prefHeight="35.0" prefWidth="300.0" />
+                        <Label text="Ngày &amp; Giờ nhận dự kiến (*)" />
+                        <HBox spacing="10.0">
+                            <children>
+                                <DatePicker fx:id="dpCheckIn" prefHeight="35.0" prefWidth="137.0" />
+                                <ComboBox fx:id="cbGioCheckIn" prefHeight="35.0" prefWidth="70.0" promptText="Giờ" />
+                                <ComboBox fx:id="cbPhutCheckIn" prefHeight="35.0" prefWidth="70.0" promptText="Phút" />
+                            </children>
+                        </HBox>
                     </children>
                 </VBox>
                 <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                     <children>
-                        <Label text="Ngày trả phòng dự kiến" />
-                        <DatePicker fx:id="dpCheckOut" prefHeight="35.0" prefWidth="300.0" />
+                        <Label text="Ngày trả phòng dự kiến (*)" />
+                        <DatePicker fx:id="dpCheckOut" maxWidth="1.7976931348623157E308" prefHeight="35.0" />
                     </children>
                 </VBox>
 
                 <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="4">
                     <children>
-                        <Label text="Số giờ thuê (Nếu theo giờ)" />
+                        <Label text="Số giờ thuê (Nếu chọn Theo giờ)" />
                         <TextField fx:id="txtSoGioThue" prefHeight="35.0" promptText="VD: 2" />
                     </children>
                 </VBox>
@@ -107,23 +119,24 @@
                     </children>
                 </VBox>
             </children>
-            <columnConstraints>
-                <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0" />
-                <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0" />
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints />
-            </rowConstraints>
         </GridPane>
+
+        <VBox spacing="10.0">
+            <children>
+                <Label style="-fx-font-weight: bold; -fx-text-fill: #1e293b;" text="ĐẶT THÊM PHÒNG CHO ĐOÀN (Tùy chọn)" />
+                <ScrollPane fitToWidth="true" prefHeight="110.0" style="-fx-background-color: transparent; -fx-border-color: #cbd5e1; -fx-border-radius: 8;">
+                    <content>
+                        <FlowPane fx:id="fpExtraRooms" hgap="15.0" style="-fx-padding: 12;" vgap="12.0">
+                        </FlowPane>
+                    </content>
+                </ScrollPane>
+            </children>
+        </VBox>
 
         <HBox alignment="CENTER_RIGHT" spacing="15.0">
             <children>
-                <Button mnemonicParsing="false" onAction="#handleCancel" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: #f1f5f9; -fx-text-fill: #475569;" text="Hủy bỏ" />
-                <Button mnemonicParsing="false" onAction="#handleConfirmCheckIn" prefHeight="40.0" prefWidth="161.0" styleClass="btn-checkin" text="XÁC NHẬN VÀO Ở" />
+                <Button mnemonicParsing="false" onAction="#handleCancel" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #f1f5f9; -fx-text-fill: #475569; -fx-font-weight: bold; -fx-cursor: hand;" text="Hủy bỏ" />
+                <Button mnemonicParsing="false" onAction="#handleConfirmCheckIn" prefHeight="45.0" prefWidth="240.0" style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand;" text="XÁC NHẬN LƯU THÔNG TIN" />
             </children>
             <VBox.margin>
                 <Insets top="10.0" />
