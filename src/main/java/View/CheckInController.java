@@ -8,26 +8,22 @@ import Utilities.UserSession;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CheckInController {
     @FXML private VBox mainPane;
-    @FXML private Label lblSoPhong;
-    @FXML private Label lblLoaiPhong;
-
-    @FXML private TextField txtHoTen, txtSDT, txtCCCD, txtEmail, txtDiaChi, txtTienCoc;
+    @FXML private Label lblSoPhong, lblLoaiPhong;
+    @FXML private TextField txtHoTen, txtSDT, txtCCCD, txtEmail, txtDiaChi, txtTienCoc, txtSoGioThue;
+    @FXML private ComboBox<String> cbHinhThuc;
     @FXML private DatePicker dpCheckOut;
-
     @FXML private FlowPane fpExtraRooms;
 
     private Phong currentRoom;
@@ -43,12 +39,35 @@ public class CheckInController {
 
         dpCheckOut.setValue(LocalDate.now().plusDays(1));
 
+        cbHinhThuc.getItems().addAll("Theo ngày", "Qua đêm", "Theo giờ");
+        cbHinhThuc.setValue("Theo ngày");
+        txtSoGioThue.setDisable(true);
+
+        cbHinhThuc.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if ("Theo giờ".equals(newVal)) {
+                txtSoGioThue.setDisable(false);
+                dpCheckOut.setDisable(true);
+
+            } else if ("Qua đêm".equals(newVal)) {
+                txtSoGioThue.setDisable(true);
+                txtSoGioThue.clear();
+                dpCheckOut.setValue(LocalDate.now().plusDays(1));
+                dpCheckOut.setDisable(true);
+
+            } else {
+                txtSoGioThue.setDisable(true);
+                txtSoGioThue.clear();
+                dpCheckOut.setDisable(false);
+            }
+        });
+
         Others.setMaxLength(txtHoTen, 100);
         Others.setMaxLength(txtSDT, 10);
         Others.setMaxLength(txtCCCD, 20);
         Others.setMaxLength(txtEmail, 100);
         Others.setMaxLength(txtDiaChi, 255);
         Others.setMaxLength(txtTienCoc, 10);
+        Others.setMaxLength(txtSoGioThue, 3);
 
         txtSDT.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches("\\d*")) {
@@ -60,6 +79,10 @@ public class CheckInController {
             if (!newValue.matches("\\d*")) {
                 txtTienCoc.setText(newValue.replaceAll("[^\\d]", ""));
             }
+        });
+
+        txtSoGioThue.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal.matches("\\d*")) txtSoGioThue.setText(newVal.replaceAll("[^\\d]", ""));
         });
 
         loadExtraEmptyRooms(p.getSoPhong());
@@ -91,6 +114,12 @@ public class CheckInController {
             return;
         }
 
+        String hinhThuc = cbHinhThuc.getValue();
+        if ("Theo giờ".equals(hinhThuc) && txtSoGioThue.getText().isEmpty()) {
+            Others.showAlert(mainPane, "Vui lòng nhập số giờ muốn thuê!", true);
+            return;
+        }
+
         String hoTenChuan = Others.standardizeName(txtHoTen.getText());
         txtHoTen.setText(hoTenChuan);
 
@@ -103,7 +132,7 @@ public class CheckInController {
         }
 
         List<String> danhSachPhongChon = new ArrayList<>();
-        danhSachPhongChon.add(currentRoom.getSoPhong()); // Thêm phòng gốc
+        danhSachPhongChon.add(currentRoom.getSoPhong());
 
         if (fpExtraRooms != null) {
             for (Node node : fpExtraRooms.getChildren()) {
@@ -114,6 +143,19 @@ public class CheckInController {
                     }
                 }
             }
+        }
+
+        LocalDateTime thoiGianCheckOut = null;
+
+        if ("Theo ngày".equals(hinhThuc)) {
+            thoiGianCheckOut = dpCheckOut.getValue().atTime(12, 0);
+
+        } else if ("Qua đêm".equals(hinhThuc)) {
+            thoiGianCheckOut = dpCheckOut.getValue().atTime(8, 0);
+
+        } else if ("Theo giờ".equals(hinhThuc)) {
+            int soGio = Integer.parseInt(txtSoGioThue.getText());
+            thoiGianCheckOut = LocalDateTime.now().plusHours(soGio);
         }
 
         for (String soPhong : danhSachPhongChon) {
@@ -134,8 +176,8 @@ public class CheckInController {
         boolean isBookingSaved = DatPhongBLL.processCheckIn(
                 hoTenChuan, sdt, cccd, email, diaChi,
                 danhSachPhongChon, employeeId,
-                ngayCheckIn.atTime(14, 0),
-                ngayCheckOut.atTime(12, 0),
+                LocalDateTime.now(),
+                thoiGianCheckOut,
                 tienCoc
         );
 

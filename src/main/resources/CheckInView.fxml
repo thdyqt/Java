@@ -2,16 +2,19 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="mainPane" prefWidth="500.0" spacing="20.0" styleClass="checkin-container" stylesheets="@checkin.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.CheckInController">
+<VBox fx:id="mainPane" prefWidth="550.0" spacing="20.0" styleClass="checkin-container" stylesheets="@checkin.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.CheckInController">
     <children>
         <Label styleClass="header-label" text="THỦ TỤC NHẬN PHÒNG" />
 
@@ -35,13 +38,14 @@
         <VBox spacing="10.0" style="-fx-background-color: #f8f9fa; -fx-padding: 15; -fx-background-radius: 8; -fx-border-color: #e2e8f0; -fx-border-radius: 8;">
             <children>
                 <Label style="-fx-font-weight: bold; -fx-text-fill: #34495e;" text="CHỌN THÊM PHÒNG (CHO KHÁCH ĐOÀN):" />
-                <javafx.scene.control.ScrollPane fitToWidth="true" prefHeight="85.0" style="-fx-background-color: transparent; -fx-border-color: transparent;">
+                <ScrollPane fitToWidth="true" prefHeight="85.0" style="-fx-background-color: transparent; -fx-border-color: transparent;">
                     <content>
-                        <javafx.scene.layout.FlowPane fx:id="fpExtraRooms" hgap="15.0" vgap="10.0" />
+                        <FlowPane fx:id="fpExtraRooms" hgap="15.0" vgap="10.0" />
                     </content>
-                </javafx.scene.control.ScrollPane>
+                </ScrollPane>
             </children>
         </VBox>
+
         <GridPane hgap="15.0" vgap="15.0">
             <children>
                 <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
@@ -79,11 +83,24 @@
 
                 <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="3">
                     <children>
-                        <Label text="Ngày trả phòng dự kiến" />
-                        <DatePicker fx:id="dpCheckOut" prefHeight="35.0" prefWidth="250.0" />
+                        <Label text="Hình thức thuê" />
+                        <ComboBox fx:id="cbHinhThuc" prefHeight="35.0" prefWidth="300.0" />
                     </children>
                 </VBox>
                 <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                    <children>
+                        <Label text="Ngày trả phòng dự kiến" />
+                        <DatePicker fx:id="dpCheckOut" prefHeight="35.0" prefWidth="300.0" />
+                    </children>
+                </VBox>
+
+                <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="4">
+                    <children>
+                        <Label text="Số giờ thuê (Nếu theo giờ)" />
+                        <TextField fx:id="txtSoGioThue" prefHeight="35.0" promptText="VD: 2" />
+                    </children>
+                </VBox>
+                <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                     <children>
                         <Label text="Tiền trả trước / Tiền cọc (VNĐ)" />
                         <TextField fx:id="txtTienCoc" prefHeight="35.0" promptText="0" />
@@ -91,10 +108,11 @@
                 </VBox>
             </children>
             <columnConstraints>
-                <javafx.scene.layout.ColumnConstraints hgrow="ALWAYS" percentWidth="50.0" />
-                <javafx.scene.layout.ColumnConstraints hgrow="ALWAYS" percentWidth="50.0" />
+                <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0" />
+                <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0" />
             </columnConstraints>
             <rowConstraints>
+                <RowConstraints />
                 <RowConstraints />
                 <RowConstraints />
                 <RowConstraints />

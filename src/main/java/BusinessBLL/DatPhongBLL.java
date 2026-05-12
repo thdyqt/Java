@@ -18,13 +18,17 @@ public class DatPhongBLL {
                                          List<String> roomNumbers, int employeeId,
                                          LocalDateTime checkInDate, LocalDateTime checkOutDate, double deposit) {
 
-        int customerId = KhachHangDAL.findCustomerIdByPhone(phoneNumber);
+        int customerId = KhachHangDAL.findCustomerIdByCCCD(cccdPassport);
 
         if (customerId == -1) {
             KhachHang newCustomer = new KhachHang(0, fullName, cccdPassport, phoneNumber, email, address);
             customerId = KhachHangDAL.insertCustomer(newCustomer);
 
             if (customerId == -1) return false;
+
+        } else {
+            KhachHang existingCustomer = new KhachHang(customerId, fullName, cccdPassport, phoneNumber, email, address);
+            KhachHangDAL.updateCustomer(existingCustomer);
         }
 
         DatPhong booking = new DatPhong();
@@ -34,7 +38,6 @@ public class DatPhongBLL {
         booking.setNgayCheckInDuKien(checkInDate);
         booking.setNgayCheckOutDuKien(checkOutDate);
         booking.setTienCoc(deposit);
-
         booking.setTrangThai("Đang ở");
 
         return DatPhongDAL.insertCheckInTransaction(booking, roomNumbers);
