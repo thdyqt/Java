@@ -1,54 +1,254 @@
 package View;
 
-import BusinessBLL.PhongBLL;
-import EntitiesDTO.Phong;
+import BusinessBLL.*;
+import DataDAL.DatPhongDAL;
+import DataDAL.HoaDonDAL;
+import DataDAL.KhachHangDAL;
+import DataDAL.SuDungDichVuDAL;
+import EntitiesDTO.*;
 import Utilities.Others;
-import javafx.event.ActionEvent;
+import Utilities.UserSession;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 public class ChiTietPhongController {
+    @FXML private VBox mainPane;
+    // Thông tin khách hàng
+    @FXML private Label lblHoTen, lblSDT, lblCCCD, lblEmail, lblDiaChi;
+    // Thông tin thời gian
+    @FXML private Label lblNgayDat, lblNgayVao, lblNgayRa, lblDanhSachPhong;
+    // Thống kê chi phí
+    @FXML private Label lblTienPhong, lblTienDichVu, lblTienCoc, lblTongThanhToan;
+    // Nhập liệu điều chỉnh
+    @FXML private TextField txtPhuThu, txtGiamGia;
+    @FXML private ComboBox<String> cbPhuongThuc;
+    // Bảng chi tiết tiền từng phòng
+    @FXML private TableView<ChiTietDatPhong> tvChiTietPhong;
+    @FXML private TableColumn<ChiTietDatPhong, String> colSoPhong, colLoaiPhong, colTienPhongLe;
+    // Bảng dịch vụ
+    @FXML private TableView<SuDungDichVu> tvDichVu;
+    @FXML private TableColumn<SuDungDichVu, Number> colSTT;
+    @FXML private TableColumn<SuDungDichVu, String> colTenDV, colDonGia, colThanhTien, colThoiGian;
+    @FXML private TableColumn<SuDungDichVu, Integer> colSoLuong;
+
+    private int currentBookingId;
+    private DatPhong currentBooking;
+    private double totalRoomMoney = 0;
+    private double totalServiceMoney = 0;
 
     @FXML
-    private VBox mainPane;
+    public void initialize() {
+        cbPhuongThuc.getItems().addAll("Tiền mặt", "Chuyển khoản");
+        cbPhuongThuc.setValue("Tiền mặt");
 
-    @FXML
-    private Label lblSoPhong;
+        colSoPhong.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getSoPhong()));
+        colLoaiPhong.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getLoaiPhong()));
+        colTienPhongLe.setCellValueFactory(cellData -> new SimpleStringProperty(Others.formatPrice(cellData.getValue().getTienPhongThucTe())));
 
-    private Phong phongHienTai;
+        colSoPhong.prefWidthProperty().bind(tvChiTietPhong.widthProperty().multiply(0.30));
+        colLoaiPhong.prefWidthProperty().bind(tvChiTietPhong.widthProperty().multiply(0.30));
+        colTienPhongLe.prefWidthProperty().bind(tvChiTietPhong.widthProperty().multiply(0.395)); // Trừ hao 0.5% cho thanh cuộn
 
-    // Hàm này đón dữ liệu từ SoDoPhongController truyền sang
-    public void setPhongData(Phong p) {
-        this.phongHienTai = p;
-        lblSoPhong.setText("Phòng " + p.getSoPhong());
+        colSTT.setCellValueFactory(column -> new ReadOnlyObjectWrapper<>(tvDichVu.getItems().indexOf(column.getValue()) + 1));
+        colTenDV.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTenDichVu()));
+        colSoLuong.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().getSoLuong()));
+        colDonGia.setCellValueFactory(cellData -> {
+            double donGia = cellData.getValue().getThanhTien() / cellData.getValue().getSoLuong();
+            return new SimpleStringProperty(Others.formatPrice(donGia));
+        });
+        colThanhTien.setCellValueFactory(cellData -> new SimpleStringProperty(Others.formatPrice(cellData.getValue().getThanhTien())));
+        colThoiGian.setCellValueFactory(cellData -> new SimpleStringProperty(Others.formatDateTime(cellData.getValue().getThoiGianSuDung())));
 
-        // TODO: Sau này dùng p.getSoPhong() gọi Database lấy tên khách hàng và hiện lên giao diện
+        colSTT.prefWidthProperty().bind(tvDichVu.widthProperty().multiply(0.05));       // 5%
+        colTenDV.prefWidthProperty().bind(tvDichVu.widthProperty().multiply(0.25));     // 25%
+        colDonGia.prefWidthProperty().bind(tvDichVu.widthProperty().multiply(0.15));    // 15%
+        colSoLuong.prefWidthProperty().bind(tvDichVu.widthProperty().multiply(0.08));   // 8%
+        colThanhTien.prefWidthProperty().bind(tvDichVu.widthProperty().multiply(0.20)); // 20%
+        colThoiGian.prefWidthProperty().bind(tvDichVu.widthProperty().multiply(0.265)); // 26.5%
+
+        txtPhuThu.textProperty().addListener((obs, oldVal, newVal) -> calculateFinalTotal());
+        txtGiamGia.textProperty().addListener((obs, oldVal, newVal) -> calculateFinalTotal());
+        Others.setMaxLength(txtPhuThu, 10); Others.setNumericOnly(txtPhuThu);
+        Others.setMaxLength(txtGiamGia, 10); Others.setNumericOnly(txtGiamGia);
+
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem itemXoa = new MenuItem("🗑 Xóa dịch vụ này");
+
+        itemXoa.setOnAction(e -> handleDeleteService());
+        contextMenu.getItems().add(itemXoa);
+
+        tvDichVu.setContextMenu(contextMenu);
+    }
+
+    public void loadBookingData(int bookingId) {
+        this.currentBookingId = bookingId;
+
+        this.currentBooking = DatPhongBLL.getBookingById(bookingId);
+        if (currentBooking == null) return;
+
+        KhachHang kh = KhachHangBLL.getCustomerById(currentBooking.getMaKhachHang());
+        if (kh != null) {
+            lblHoTen.setText(kh.getHoTen());
+            lblSDT.setText("📞 " + kh.getSoDienThoai());
+            lblCCCD.setText("🆔 " + kh.getCccdPassport());
+            lblEmail.setText("📧 " + (kh.getEmail().isEmpty() ? "N/A" : kh.getEmail()));
+            lblDiaChi.setText("📍 " + (kh.getDiaChi().isEmpty() ? "N/A" : kh.getDiaChi()));
+        }
+
+        lblNgayDat.setText("Ngày đặt đơn: " + Others.formatDateTime(currentBooking.getNgayDat()));
+        lblNgayVao.setText("Giờ vào thực tế: " + Others.formatDateTime(currentBooking.getNgayCheckInDuKien()));
+        lblNgayRa.setText("Giờ ra dự kiến: " + Others.formatDateTime(currentBooking.getNgayCheckOutDuKien()));
+        lblTienCoc.setText(Others.formatPrice(currentBooking.getTienCoc()));
+
+        List<ChiTietDatPhong> roomDetails = ChiTietDatPhongBLL.getChiTietPhongTheoDoan(bookingId);
+        HoaDonBLL.tinhTienPhongThucTe(currentBooking.getNgayCheckInDuKien(), LocalDateTime.now(), roomDetails);
+
+        tvChiTietPhong.setItems(FXCollections.observableArrayList(roomDetails));
+        totalRoomMoney = roomDetails.stream().mapToDouble(ChiTietDatPhong::getTienPhongThucTe).sum();
+        lblTienPhong.setText(Others.formatPrice(totalRoomMoney));
+        lblDanhSachPhong.setText("Phòng đoàn: " + String.join(", ", roomDetails.stream().map(ChiTietDatPhong::getSoPhong).toList()));
+
+        List<SuDungDichVu> services = SuDungDichVuBLL.getServiceByBookingId(bookingId);
+        tvDichVu.setItems(FXCollections.observableArrayList(services));
+        totalServiceMoney = services.stream().mapToDouble(SuDungDichVu::getThanhTien).sum();
+        lblTienDichVu.setText(Others.formatPrice(totalServiceMoney));
+
+        calculateFinalTotal();
+    }
+
+    private void calculateFinalTotal() {
+        double phuThu = txtPhuThu.getText().isEmpty() ? 0 : Double.parseDouble(txtPhuThu.getText());
+        double giamGia = txtGiamGia.getText().isEmpty() ? 0 : Double.parseDouble(txtGiamGia.getText());
+        double tienCoc = currentBooking != null ? currentBooking.getTienCoc() : 0;
+
+        double finalTotal = (totalRoomMoney + totalServiceMoney + phuThu) - (tienCoc + giamGia);
+
+        if (finalTotal < 0) finalTotal = 0;
+        lblTongThanhToan.setText(Others.formatPrice(finalTotal));
     }
 
     @FXML
-    void handleThemDichVu(ActionEvent event) {
-        Others.showAlert(mainPane, "Tính năng Thêm dịch vụ đang được phát triển!", false);
+    void handleAddService() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ThemDichVuView.fxml"));
+            Parent root = loader.load();
+
+            ThemDichVuController controller = loader.getController();
+            controller.setBookingId(this.currentBookingId);
+
+            Stage stage = new Stage();
+            stage.setTitle("Thêm Dịch Vụ Mới");
+            stage.setScene(new javafx.scene.Scene(root));
+            stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            stage.setResizable(false);
+            stage.showAndWait();
+
+            if (controller.isSuccess()) {
+                loadBookingData(this.currentBookingId);
+                Others.showAlert(mainPane, "Đã thêm dịch vụ thành công!", false);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Others.showAlert(mainPane, "Không thể mở form thêm dịch vụ!", true);
+        }
     }
 
-    @FXML
-    void handleTraPhong(ActionEvent event) {
-        // Hỏi xác nhận xem khách có chắc chắn muốn trả phòng không
-        if (Others.showCustomConfirm("Thanh toán", "Khách hàng muốn thanh toán và trả phòng " + phongHienTai.getSoPhong() + "?", "Đồng ý", "Hủy")) {
+    private void handleDeleteService() {
+        SuDungDichVu selected = tvDichVu.getSelectionModel().getSelectedItem();
 
-            // TODO: Sau này sẽ có code tính toán tiền bạc, sinh hóa đơn ở đây
+        if (selected == null) {
+            Others.showAlert(mainPane, "Vui lòng chọn một dịch vụ để xóa!", true);
+            return;
+        }
 
-            // Chuyển trạng thái phòng thành "Đang dọn dẹp"
-            boolean success = PhongBLL.updateRoomStatus(phongHienTai.getSoPhong(), "Đang dọn dẹp");
+        boolean isConfirm = Others.showCustomConfirm(
+                "Xác nhận xóa",
+                "Bạn có chắc chắn muốn xóa dịch vụ: " + selected.getTenDichVu() + " khỏi danh sách?",
+                "Đồng ý", "Hủy"
+        );
 
+        if (isConfirm) {
+            boolean success = SuDungDichVuBLL.deleteService(selected.getMaSuDung());
             if (success) {
-                // Đóng cửa sổ Popup hiện tại lại
-                Stage stage = (Stage) lblSoPhong.getScene().getWindow();
-                stage.close();
+                loadBookingData(this.currentBookingId);
+                Others.showAlert(mainPane, "Đã xóa dịch vụ thành công!", false);
             } else {
-                Others.showAlert(mainPane, "Lỗi khi cập nhật trạng thái phòng!", true);
+                Others.showAlert(mainPane, "Lỗi khi xóa dịch vụ khỏi hệ thống!", true);
             }
         }
+    }
+
+    @FXML
+    void handleCheckOut() {
+        double phuThu = txtPhuThu.getText().isEmpty() ? 0 : Double.parseDouble(txtPhuThu.getText());
+        double giamGia = txtGiamGia.getText().isEmpty() ? 0 : Double.parseDouble(txtGiamGia.getText());
+
+        double finalTotal = (totalRoomMoney + totalServiceMoney + phuThu) - (currentBooking.getTienCoc() + giamGia);
+        if (finalTotal < 0) finalTotal = 0;
+
+        double finalTotal1 = finalTotal;
+        Runnable processSavingInvoice = () -> {
+            int newInvoiceId = HoaDonBLL.xuLyThanhToan(
+                    currentBookingId,
+                    UserSession.getInstance().getMaNhanVien(),
+                    totalRoomMoney, totalServiceMoney, phuThu, giamGia,
+                    currentBooking.getTienCoc(), finalTotal1, cbPhuongThuc.getValue()
+            );
+
+            if (newInvoiceId > 0) {
+                showInvoicePopup(newInvoiceId);
+                Others.showAlert(mainPane, "Thanh toán thành công! Hóa đơn đã được lưu.", false);
+                ((Stage) mainPane.getScene().getWindow()).close();
+            } else {
+                Others.showAlert(mainPane, "Lỗi hệ thống khi xử lý hóa đơn!", true);
+            }
+        };
+
+        if ("Chuyển khoản".equals(cbPhuongThuc.getValue())) {
+
+            String noiDungChuyenKhoan = "Thanh toán tiền phòng mã " + currentBookingId;
+            Others.showVietQR(
+                    (int) finalTotal,
+                    noiDungChuyenKhoan,
+                    "Xác nhận đã nhận tiền",
+                    mainPane,
+                    processSavingInvoice
+            );
+
+        } else {
+            processSavingInvoice.run();
+        }
+    }
+
+    private void showInvoicePopup(int invoiceId) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/HoaDonView.fxml"));
+            Parent root = loader.load();
+
+            HoaDon hd = HoaDonBLL.getInvoiceById(invoiceId);
+
+            HoaDonController controller = loader.getController();
+            controller.setInvoiceData(hd);
+
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Hóa đơn điện tử");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (Exception e) { e.printStackTrace(); }
     }
 }

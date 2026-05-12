@@ -10,6 +10,8 @@ public class SuDungDichVu {
     private LocalDateTime thoiGianSuDung;
     private double thanhTien;
 
+    private String tenDichVu;
+
     public SuDungDichVu() {}
 
     public SuDungDichVu(int maSuDung, int maDatPhong, int maDichVu, int soLuong, LocalDateTime thoiGianSuDung, double thanhTien) {
@@ -67,5 +69,13 @@ public class SuDungDichVu {
 
     public void setThanhTien(double thanhTien) {
         this.thanhTien = thanhTien;
+    }
+
+    public String getTenDichVu() {
+        return tenDichVu;
+    }
+
+    public void setTenDichVu(String tenDichVu) {
+        this.tenDichVu = tenDichVu;
     }
 }

@@ -79,7 +79,7 @@ CREATE TABLE DatPhong (
     MaKhachHang INT,
     MaNhanVien INT,
     NgayDat DATETIME DEFAULT CURRENT_TIMESTAMP,
-    NgayCheckInDuKien DATETIME,
+    NgayCheckInDuKien DATETIME,chitietdatphong
     NgayCheckOutDuKien DATETIME,
     TienCoc DOUBLE DEFAULT 0,
     TrangThai ENUM('Chờ nhận phòng', 'Đang ở', 'Đã trả phòng', 'Đã hủy') DEFAULT 'Chờ nhận phòng',
@@ -103,6 +103,35 @@ CREATE TABLE DichVu (
     TenDichVu VARCHAR(100) NOT NULL,
     DonGia DECIMAL(15, 2) NOT NULL
 );
+
+USE QuanLyKhachSan;
+INSERT INTO DichVu (TenDichVu, DonGia) VALUES
+-- Nhóm Nước uống (Mini bar)
+('Nước suối Lavie 500ml', 15000),
+('Nước suối Aquafina 500ml', 15000),
+('Nước ngọt Coca Cola', 20000),
+('Nước ngọt Pepsi', 20000),
+('Bò húc (Redbull)', 25000),
+('Bia Tiger', 25000),
+('Bia Heineken', 30000),
+('Cà phê sữa đá', 25000),
+
+-- Nhóm Thức ăn nhanh
+('Mì ly Hảo Hảo', 15000),
+('Mì ly Omachi', 20000),
+('Snack khoai tây (Oishi/Poca)', 15000),
+('Xúc xích ăn liền', 15000),
+('Buffet sáng (Vé người lớn)', 200000),
+('Buffet sáng (Vé trẻ em)', 100000),
+
+-- Nhóm Dịch vụ tiện ích & Phòng
+('Giặt ủi (Tính theo kg)', 40000),
+('Thuê xe máy tay số (1 ngày)', 120000),
+('Thuê xe máy tay ga (1 ngày)', 150000),
+('Đưa đón sân bay (Xe 4 chỗ)', 250000),
+('Đưa đón sân bay (Xe 7 chỗ)', 350000),
+('Phụ thu dọn dẹp phòng (Khách làm bẩn)', 100000),
+('Bảo đền thẻ từ (Làm mất)', 50000);
 
 -- 8. Bảng Sử Dụng Dịch Vụ
 CREATE TABLE SuDungDichVu (

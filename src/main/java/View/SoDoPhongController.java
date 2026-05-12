@@ -176,15 +176,23 @@ public class SoDoPhongController implements Initializable {
 
             Object controller = loader.getController();
             if (controller instanceof ChiTietPhongController) {
-                ((ChiTietPhongController) controller).setPhongData(selectedRoom);
+                int activeBookingId = BusinessBLL.DatPhongBLL.getActiveBookingIdByRoomId(selectedRoom.getMaPhong());
+
+                if (activeBookingId != -1) {
+                    ((ChiTietPhongController) controller).loadBookingData(activeBookingId);
+                } else {
+                    Others.showAlert(mainPane, "Lỗi dữ liệu: Không tìm thấy hồ sơ đặt phòng của phòng này!", true);
+                    return;
+                }
             }
-            else {
+            else if (controller instanceof CheckInController) {
                 ((CheckInController)controller).setPhongData(selectedRoom);
             }
 
             Stage stage = new Stage();
             stage.setTitle(title);
             stage.setScene(new Scene(root));
+            stage.setMaximized(true);
 
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();

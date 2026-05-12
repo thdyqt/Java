@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefWidth="450.0" spacing="20.0" style="-fx-background-color: white; -fx-padding: 25;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.ThemDichVuController">
+    <children>
+        <Label text="➕ THÊM DỊCH VỤ VÀO ĐOÀN" textFill="#1e293b">
+            <font><Font name="System Bold" size="20.0" /></font>
+        </Label>
+        <Separator />
+
+        <VBox spacing="15.0">
+            <children>
+                <VBox spacing="5.0">
+                    <children>
+                        <Label text="Chọn dịch vụ/Sản phẩm:" textFill="#64748b" />
+                        <ComboBox fx:id="cbDichVu" maxWidth="1.7976931348623157E308" prefHeight="40.0" />
+                    </children>
+                </VBox>
+
+                <HBox spacing="20.0">
+                    <children>
+                        <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                            <children>
+                                <Label text="Số lượng:" textFill="#64748b" />
+                                <Spinner fx:id="spSoLuong" editable="true" maxWidth="1.7976931348623157E308" prefHeight="40.0" />
+                            </children>
+                        </VBox>
+                        <VBox alignment="CENTER_RIGHT" spacing="5.0" HBox.hgrow="ALWAYS">
+                            <children>
+                                <Label text="Thành tiền" textFill="#64748b" />
+                                <Label fx:id="lblThanhTien" text="0 đ" textFill="#ef4444">
+                                    <font><Font name="System Bold" size="22.0" /></font>
+                                </Label>
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+
+        <HBox alignment="CENTER_RIGHT" spacing="15.0">
+            <children>
+                <Button mnemonicParsing="false" onAction="#handleCancel" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: #f1f5f9; -fx-text-fill: #475569; -fx-font-weight: bold; -fx-cursor: hand;" text="Hủy" />
+                <Button mnemonicParsing="false" onAction="#handleConfirm" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="Xác nhận" />
+            </children>
+            <VBox.margin>
+                <Insets top="10.0" />
+            </VBox.margin>
+        </HBox>
+    </children>
+</VBox>

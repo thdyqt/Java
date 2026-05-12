@@ -62,28 +62,12 @@ public class CheckInController {
         });
 
         Others.setMaxLength(txtHoTen, 100);
-        Others.setMaxLength(txtSDT, 10);
+        Others.setMaxLength(txtSDT, 10); Others.setNumericOnly(txtSDT);
         Others.setMaxLength(txtCCCD, 20);
         Others.setMaxLength(txtEmail, 100);
         Others.setMaxLength(txtDiaChi, 255);
-        Others.setMaxLength(txtTienCoc, 10);
-        Others.setMaxLength(txtSoGioThue, 3);
-
-        txtSDT.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) {
-                txtSDT.setText(newValue.replaceAll("[^\\d]", ""));
-            }
-        });
-
-        txtTienCoc.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) {
-                txtTienCoc.setText(newValue.replaceAll("[^\\d]", ""));
-            }
-        });
-
-        txtSoGioThue.textProperty().addListener((obs, oldVal, newVal) -> {
-            if (!newVal.matches("\\d*")) txtSoGioThue.setText(newVal.replaceAll("[^\\d]", ""));
-        });
+        Others.setMaxLength(txtTienCoc, 10); Others.setNumericOnly(txtTienCoc);
+        Others.setMaxLength(txtSoGioThue, 3); Others.setNumericOnly(txtSoGioThue);
 
         loadExtraEmptyRooms(p.getSoPhong());
     }
@@ -99,7 +83,7 @@ public class CheckInController {
                 String type = room.getMaLoaiPhong() == 2 ? "DELUXE" : (room.getMaLoaiPhong() == 3 ? "SUITE" : "STANDARD");
 
                 CheckBox cb = new CheckBox("Phòng " + room.getSoPhong() + " (" + type + ")");
-                cb.setUserData(room.getSoPhong()); // Lưu số phòng vào UserData
+                cb.setUserData(room.getSoPhong());
                 cb.setStyle("-fx-cursor: hand; -fx-text-fill: #34495e; -fx-font-size: 13px;");
 
                 fpExtraRooms.getChildren().add(cb);

@@ -11,6 +11,60 @@ import java.util.List;
 import java.util.Map;
 
 public class DatPhongDAL {
+    public static DatPhong getBookingById(int maDatPhong) {
+        String sql = "SELECT * FROM DatPhong WHERE MaDatPhong = ?";
+        try (Connection conn = DBHelper.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, maDatPhong);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                DatPhong dp = new DatPhong();
+                dp.setMaDatPhong(rs.getInt("MaDatPhong"));
+                dp.setMaKhachHang(rs.getInt("MaKhachHang"));
+                dp.setMaNhanVien(rs.getInt("MaNhanVien"));
+                if (rs.getTimestamp("NgayDat") != null) {
+                    dp.setNgayDat(rs.getTimestamp("NgayDat").toLocalDateTime());
+                }
+                if (rs.getTimestamp("NgayCheckInDuKien") != null) {
+                    dp.setNgayCheckInDuKien(rs.getTimestamp("NgayCheckInDuKien").toLocalDateTime());
+                }
+                if (rs.getTimestamp("NgayCheckOutDuKien") != null) {
+                    dp.setNgayCheckOutDuKien(rs.getTimestamp("NgayCheckOutDuKien").toLocalDateTime());
+                }
+
+                dp.setTienCoc(rs.getDouble("TienCoc"));
+                dp.setTrangThai(rs.getString("TrangThai"));
+
+                return dp;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static int getActiveBookingIdByRoomId(int maPhong) {
+        String sql = "SELECT dp.MaDatPhong FROM DatPhong dp " +
+                "JOIN ChiTietDatPhong ct ON dp.MaDatPhong = ct.MaDatPhong " +
+                "WHERE ct.MaPhong = ? AND dp.TrangThai = 'Đang ở'";
+
+        try (Connection conn = DBHelper.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, maPhong);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("MaDatPhong");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
     public static List<Map<String, Object>> getLichSuDatPhong(String soPhong) {
         List<Map<String, Object>> list = new ArrayList<>();
         String sql = "SELECT kh.HoTen, dp.NgayCheckInDuKien, dp.NgayCheckOutDuKien, dp.TrangThai " +
@@ -69,7 +123,10 @@ public class DatPhongDAL {
 
     public static boolean insertCheckInTransaction(DatPhong booking, List<String> roomList) {
         String sqlInsertBooking = "INSERT INTO DatPhong (MaKhachHang, MaNhanVien, NgayDat, NgayCheckInDuKien, NgayCheckOutDuKien, TienCoc, TrangThai) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        String sqlInsertDetail = "INSERT INTO ChiTietDatPhong (MaDatPhong, MaPhong, GiaThucTe) VALUES (?, (SELECT MaPhong FROM Phong WHERE SoPhong = ?), 0)";
+        String sqlInsertDetail = "INSERT INTO ChiTietDatPhong (MaDatPhong, MaPhong, GiaThucTe) " +
+                "SELECT ?, p.MaPhong, lp.DonGia " +
+                "FROM Phong p JOIN LoaiPhong lp ON p.MaLoaiPhong = lp.MaLoaiPhong " +
+                "WHERE p.SoPhong = ?";
 
         try (Connection conn = DBHelper.getConnection()) {
             conn.setAutoCommit(false);

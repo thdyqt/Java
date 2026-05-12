@@ -33,8 +33,17 @@ public class Others {
     private static final NumberFormat priceFormatter = NumberFormat.getNumberInstance(new Locale("vi", "VN"));
 
     // CHUẨN HÓA GIÁ TIỀN
-    public static String formatPrice(int price) {
+    public static String formatPrice(double price) {
         return priceFormatter.format(price) + " đ";
+    }
+
+    // ĐỊNH DẠNG THỜI GIAN
+    public static String formatDateTime(LocalDateTime dateTime) {
+        if (dateTime == null) {
+            return "---";
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        return dateTime.format(formatter);
     }
 
     // SET ĐỘ DÀI TỐI ĐA CHO TEXTFIELD
@@ -42,6 +51,16 @@ public class Others {
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.length() > maxLength) {
                 textField.setText(oldValue);
+            }
+        });
+    }
+
+
+    // RÀNG BUỘC NHẬP SỐ CHO TEXTFIELD
+    public static void setNumericOnly(TextField textField) {
+        textField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                textField.setText(newValue.replaceAll("[^\\d.]", ""));
             }
         });
     }

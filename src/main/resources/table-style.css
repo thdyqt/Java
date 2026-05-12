@@ -56,10 +56,10 @@
 
 /* Căn chỉnh chữ trong ô */
 .table-cell {
-    -fx-alignment: center-left;
-    -fx-padding: 0 15 0 15;
+    -fx-alignment: center;
+    -fx-padding: 0 10 0 10;
     -fx-text-fill: #334155;
-    -fx-font-size: 13px;
+    -fx-font-size: 14px;
 }
 
 /* Xóa thanh cuộn thừa và các đường kẻ dọc */
@@ -71,4 +71,43 @@
 .table-view .placeholder .label {
     -fx-text-fill: #94a3b8;
     -fx-font-style: italic;
+}
+
+.table-view .corner,
+.table-view .column-header-background .filler,
+.table-view .column-header-background .show-hide-columns-button {
+    -fx-background-color: #112240;
+}
+
+.context-menu {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 8;
+    -fx-padding: 5 0 5 0;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 15, 0, 0, 5);
+}
+
+/* Các mục (Item) bên trong Menu */
+.context-menu .menu-item {
+    -fx-padding: 8 20 8 20;
+    -fx-background-color: transparent;
+}
+
+/* Chữ của các mục */
+.context-menu .menu-item > .label {
+    -fx-text-fill: #1e293b;
+    -fx-font-size: 14px;
+}
+
+/* Hiệu ứng khi lia chuột vào Item (Hover/Focused) */
+.context-menu .menu-item:focused {
+    -fx-background-color: #f8fafc;
+}
+
+/* Đổi màu chữ khi đưa chuột vào */
+/* Lưu ý: Vì đây là nút "Xóa", tôi đổi màu Gold cũ của bạn thành màu Đỏ để hợp logic UX hơn nhé */
+.context-menu .menu-item:focused > .label {
+    -fx-text-fill: #ef4444;
+    -fx-font-weight: bold;
 }

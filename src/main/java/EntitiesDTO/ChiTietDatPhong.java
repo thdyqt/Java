@@ -6,6 +6,10 @@ public class ChiTietDatPhong {
     private int maPhong;
     private double giaThucTe;
 
+    private String soPhong;
+    private String loaiPhong;
+    private double tienPhongThucTe;
+
     public ChiTietDatPhong() {}
 
     public ChiTietDatPhong(int maChiTiet, int maDatPhong, int maPhong, double giaThucTe) {
@@ -45,5 +49,29 @@ public class ChiTietDatPhong {
 
     public void setGiaThucTe(double giaThucTe) {
         this.giaThucTe = giaThucTe;
+    }
+
+    public String getSoPhong() {
+        return soPhong;
+    }
+
+    public void setSoPhong(String soPhong) {
+        this.soPhong = soPhong;
+    }
+
+    public String getLoaiPhong() {
+        return loaiPhong;
+    }
+
+    public void setLoaiPhong(String loaiPhong) {
+        this.loaiPhong = loaiPhong;
+    }
+
+    public double getTienPhongThucTe() {
+        return tienPhongThucTe;
+    }
+
+    public void setTienPhongThucTe(double tienPhongThucTe) {
+        this.tienPhongThucTe = tienPhongThucTe;
     }
 }

@@ -10,6 +10,16 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class DatPhongBLL {
+    public static DatPhong getBookingById(int maDatPhong) {
+        if (maDatPhong <= 0) return null;
+        return DatPhongDAL.getBookingById(maDatPhong);
+    }
+
+    public static int getActiveBookingIdByRoomId(int maPhong) {
+        if (maPhong <= 0) return -1;
+        return DatPhongDAL.getActiveBookingIdByRoomId(maPhong);
+    }
+
     public static boolean checkDateConflict(String roomNumber, LocalDate checkInDate, LocalDate checkOutDate) {
         return DatPhongDAL.checkDateConflict(roomNumber, checkInDate, checkOutDate);
     }

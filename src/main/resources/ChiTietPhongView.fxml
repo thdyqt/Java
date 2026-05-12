@@ -2,29 +2,164 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<VBox fx:id="mainPane" alignment="TOP_CENTER" prefHeight="300.0" prefWidth="450.0" spacing="20.0" style="-fx-background-color: white; -fx-padding: 30;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.ChiTietPhongController">
+<VBox fx:id="mainPane" prefWidth="1150.0" spacing="20.0" style="-fx-background-color: #f1f5f9;" stylesheets="@checkin.css, @table-style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.ChiTietPhongController">
+    <padding><Insets bottom="25.0" left="25.0" right="25.0" top="25.0" /></padding>
     <children>
-        <Label fx:id="lblSoPhong" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #112240;" text="Phòng ---" />
-
-        <VBox alignment="CENTER" spacing="10.0" style="-fx-background-color: #f4f6f9; -fx-background-radius: 10; -fx-padding: 20;">
+        <HBox alignment="CENTER_LEFT" spacing="15.0">
             <children>
-                <Label style="-fx-font-size: 16px; -fx-text-fill: #7f8c8d;" text="Khách hàng: (Đang tải...)" />
-                <Label style="-fx-font-size: 14px; -fx-text-fill: #7f8c8d;" text="Thời gian Check-in: (Đang tải...)" />
+                <Label text="HỒ SƠ LƯU TRÚ &amp; QUẢN LÝ THANH TOÁN" textFill="#0f172a">
+                    <font><Font name="System Bold" size="24.0" /></font>
+                </Label>
+                <Pane HBox.hgrow="ALWAYS" />
             </children>
-        </VBox>
+        </HBox>
 
-        <HBox alignment="CENTER" spacing="15.0">
+        <HBox spacing="20.0" VBox.vgrow="ALWAYS">
             <children>
-                <Button mnemonicParsing="false" onAction="#handleThemDichVu" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 12 20; -fx-background-radius: 6; -fx-cursor: hand;" text="+ Thêm Dịch Vụ" />
-                <Button mnemonicParsing="false" onAction="#handleTraPhong" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 12 20; -fx-background-radius: 6; -fx-cursor: hand;" text="Thanh toán &amp; Trả phòng" />
+                <VBox prefWidth="380.0" spacing="20.0">
+                    <children>
+                        <VBox spacing="15.0" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 5);">
+                            <children>
+                                <Label style="-fx-font-weight: bold; -fx-text-fill: #64748b; -fx-font-size: 13px;" text="👤 THÔNG TIN KHÁCH HÀNG" />
+                                <VBox spacing="8.0">
+                                    <children>
+                                        <Label fx:id="lblHoTen" style="-fx-font-size: 18px; -fx-font-weight: bold;" text="---" />
+                                        <Label fx:id="lblSDT" text="📞 ---" />
+                                        <Label fx:id="lblCCCD" text="🆔 ---" />
+                                        <Label fx:id="lblEmail" text="📧 ---" />
+                                        <Label fx:id="lblDiaChi" text="📍 ---" wrapText="true" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="12.0" style="-fx-background-color: #1e293b; -fx-padding: 20; -fx-background-radius: 12;">
+                            <children>
+                                <Label style="-fx-font-weight: bold;" text="🕒 THỜI GIAN LƯU TRÚ" textFill="#94a3b8" />
+                                <VBox spacing="8.0">
+                                    <children>
+                                        <Label fx:id="lblNgayDat" text="Ngày đặt đơn: ---" textFill="#cbd5e1" />
+                                        <Label fx:id="lblNgayVao" style="-fx-font-weight: bold;" text="Giờ vào thực tế: ---" textFill="white" />
+                                        <Label fx:id="lblNgayRa" text="Giờ ra dự kiến: ---" textFill="#cbd5e1" />
+                                    </children>
+                                </VBox>
+                                <Separator opacity="0.2" />
+                                <Label fx:id="lblDanhSachPhong" style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Phòng: ---" textFill="#38bdf8" />
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="10.0" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 12;" VBox.vgrow="ALWAYS">
+                            <children>
+                                <Label style="-fx-font-weight: bold; -fx-text-fill: #1e293b;" text="🏠 CHI TIẾT TIỀN THEO PHÒNG" />
+                                <TableView fx:id="tvChiTietPhong" prefHeight="200.0">
+                                    <columns>
+                                        <TableColumn fx:id="colSoPhong" prefWidth="80.0" text="Phòng" />
+                                        <TableColumn fx:id="colLoaiPhong" prefWidth="100.0" text="Loại" />
+                                        <TableColumn fx:id="colTienPhongLe" prefWidth="166.18484497070312" text="Tiền phòng" />
+                                    </columns>
+                                </TableView>
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+
+                <VBox spacing="20.0" HBox.hgrow="ALWAYS">
+                    <children>
+                        <HBox spacing="15.0">
+                            <children>
+                                <VBox alignment="CENTER" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10;" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label text="Tổng tiền phòng" textFill="#64748b" />
+                                        <Label fx:id="lblTienPhong" style="-fx-font-size: 20px; -fx-font-weight: bold;" text="0" />
+                                    </children>
+                                </VBox>
+                                <VBox alignment="CENTER" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10;" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label text="Tổng tiền dịch vụ" textFill="#64748b" />
+                                        <Label fx:id="lblTienDichVu" style="-fx-font-size: 20px; -fx-font-weight: bold;" text="0" />
+                                    </children>
+                                </VBox>
+                                <VBox alignment="CENTER" style="-fx-background-color: #fff1f2; -fx-padding: 15; -fx-background-radius: 10;" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label text="Đã trả trước (Cọc)" textFill="#be123c" />
+                                        <Label fx:id="lblTienCoc" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #be123c;" text="0" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+
+                        <VBox spacing="10.0" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10;" VBox.vgrow="ALWAYS">
+                            <children>
+                                <HBox alignment="CENTER_LEFT">
+                                    <children>
+                                        <Label style="-fx-font-weight: bold; -fx-font-size: 15px;" text="🛒 DANH SÁCH DỊCH VỤ SỬ DỤNG" />
+                                        <Pane HBox.hgrow="ALWAYS" />
+                                        <Button onAction="#handleAddService" style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: bold;" text="+ Thêm dịch vụ" />
+                                    </children>
+                                </HBox>
+                                <TableView fx:id="tvDichVu" VBox.vgrow="ALWAYS">
+                                    <columns>
+                                        <TableColumn fx:id="colSTT" prefWidth="50.0" text="STT" />
+                                        <TableColumn fx:id="colTenDV" prefWidth="240.0" text="Dịch vụ / Sản phẩm" />
+                                        <TableColumn fx:id="colDonGia" prefWidth="120.0" text="Đơn giá" />
+                                        <TableColumn fx:id="colSoLuong" prefWidth="60.0" text="SL" />
+                                        <TableColumn fx:id="colThanhTien" prefWidth="130.0" text="Thành tiền" />
+                                        <TableColumn fx:id="colThoiGian" prefWidth="182.0" text="Thời gian dùng" />
+                                    </columns>
+                                </TableView>
+                            </children>
+                        </VBox>
+
+                        <HBox spacing="15.0" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10; -fx-border-color: #e2e8f0; -fx-border-radius: 10;">
+                            <children>
+                                <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label text="Phụ thu (+)" textFill="#64748b" />
+                                        <TextField fx:id="txtPhuThu" prefHeight="35.0" style="-fx-alignment: center-right; -fx-font-weight: bold;" text="0" />
+                                    </children>
+                                </VBox>
+                                <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label text="Giảm giá (-)" textFill="#27ae60" />
+                                        <TextField fx:id="txtGiamGia" prefHeight="35.0" style="-fx-alignment: center-right; -fx-font-weight: bold; -fx-text-fill: #27ae60;" text="0" />
+                                    </children>
+                                </VBox>
+                                <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label text="Phương thức thanh toán" textFill="#64748b" />
+                                        <ComboBox fx:id="cbPhuongThuc" maxWidth="1.7976931348623157E308" prefHeight="35.0" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+
+                        <HBox alignment="CENTER_RIGHT" spacing="30.0" style="-fx-background-color: #1e293b; -fx-padding: 20; -fx-background-radius: 12;">
+                            <children>
+                                <VBox alignment="CENTER_RIGHT">
+                                    <children>
+                                        <Label text="TỔNG THÀNH TOÁN THỰC TẾ" textFill="#94a3b8" />
+                                        <Label fx:id="lblTongThanhToan" text="0 VNĐ" textFill="white">
+                                            <font><Font name="System Bold" size="30.0" /></font>
+                                        </Label>
+                                    </children>
+                                </VBox>
+                                <Button onAction="#handleCheckOut" prefHeight="60.0" prefWidth="220.0" style="-fx-background-color: #ef4444; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-background-radius: 8;" text="XÁC NHẬN THANH TOÁN" />
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
             </children>
-            <VBox.margin>
-                <Insets top="10.0" />
-            </VBox.margin>
         </HBox>
     </children>
 </VBox>
