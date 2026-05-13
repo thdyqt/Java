@@ -50,23 +50,21 @@ public class HoaDonBLL {
             double donGiaGoc = phong.getGiaThucTe();
 
             if (soGioO <= 4) {
-                // Khách thuê theo giờ (Dưới 4 tiếng)
-                // Giờ đầu tiên tính 30% giá phòng, các giờ tiếp theo tính 15%
                 tienPhong = donGiaGoc * 0.3 + (soGioO - 1) * (donGiaGoc * 0.15);
             } else {
-                // Khách thuê qua đêm / dài ngày (Trên 4 tiếng)
                 long soNgay = soGioO / 24;
                 long gioLe = soGioO % 24;
 
                 tienPhong = soNgay * donGiaGoc;
 
-                // Xử lý phụ thu giờ lẻ dôi ra
                 if (gioLe > 0 && gioLe <= 6) {
-                    tienPhong += donGiaGoc * 0.5; // Lố dưới 6 tiếng: Phụ thu 50% tiền phòng
+                    tienPhong += donGiaGoc * 0.5;
                 } else if (gioLe > 6) {
-                    tienPhong += donGiaGoc;       // Lố trên 6 tiếng: Phụ thu thành 1 ngày trọn vẹn
+                    tienPhong += donGiaGoc;
                 }
             }
+
+            tienPhong = Math.round(tienPhong);
 
             phong.setTienPhongThucTe(tienPhong);
         }

@@ -95,24 +95,32 @@ public class QuanLyLoaiPhongController {
             return;
         }
 
-        LoaiPhong lp = new LoaiPhong();
-        lp.setTenLoaiPhong(ten);
-        lp.setDonGia(Double.parseDouble(giaStr));
-        lp.setSoNguoiToiDa(Integer.parseInt(soNguoiStr));
-        lp.setMoTa(txtMoTa.getText().trim());
+        try {
+            double donGia = Double.parseDouble(giaStr);
+            int soNguoi = Integer.parseInt(soNguoiStr);
 
-        boolean isEdit = (currentSelected != null);
-        if (isEdit) {
-            lp.setMaLoaiPhong(currentSelected.getMaLoaiPhong());
-        }
+            LoaiPhong lp = new LoaiPhong();
+            lp.setTenLoaiPhong(ten);
+            lp.setDonGia(donGia);
+            lp.setSoNguoiToiDa(soNguoi);
+            lp.setMoTa(txtMoTa.getText().trim());
 
-        String result = LoaiPhongBLL.saveLoaiPhong(lp, isEdit);
-        if ("SUCCESS".equals(result)) {
-            Others.showAlert(mainPane, isEdit ? "Cập nhật thành công!" : "Thêm mới thành công!", false);
-            loadData();
-            handleClear();
-        } else {
-            Others.showAlert(mainPane, result, true);
+            boolean isEdit = (currentSelected != null);
+            if (isEdit) {
+                lp.setMaLoaiPhong(currentSelected.getMaLoaiPhong());
+            }
+
+            String result = BusinessBLL.LoaiPhongBLL.saveLoaiPhong(lp, isEdit);
+            if ("SUCCESS".equals(result)) {
+                Others.showAlert(mainPane, isEdit ? "Cập nhật thành công!" : "Thêm mới thành công!", false);
+                loadData();
+                handleClear();
+            } else {
+                Others.showAlert(mainPane, result, true);
+            }
+
+        } catch (NumberFormatException e) {
+            Others.showAlert(mainPane, "Lỗi: Đơn giá và Số người phải là số hợp lệ!", true);
         }
     }
 }

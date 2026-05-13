@@ -12,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -332,18 +333,16 @@ public class Others {
         alert.setContentText(content);
 
         StackPane iconPane = new StackPane();
-        javafx.scene.shape.Circle bg = new javafx.scene.shape.Circle(22, Color.web("#FEF3C7"));
+        Circle bg = new Circle(22, Color.web("#FEF3C7"));
         Label exclamation = new Label("!");
         exclamation.setStyle("-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #D97706;");
         iconPane.getChildren().addAll(bg, exclamation);
         alert.setGraphic(iconPane);
 
-        // Tùy chỉnh chữ trên 2 nút bấm
-        ButtonType buttonYes = new ButtonType(btnYesText, javafx.scene.control.ButtonBar.ButtonData.OK_DONE);
-        ButtonType buttonNo = new ButtonType(btnNoText, javafx.scene.control.ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType buttonYes = new ButtonType(btnYesText, ButtonBar.ButtonData.OK_DONE);
+        ButtonType buttonNo = new ButtonType(btnNoText, ButtonBar.ButtonData.CANCEL_CLOSE);
         alert.getButtonTypes().setAll(buttonYes, buttonNo);
 
-        // Áp dụng CSS
         DialogPane dialogPane = alert.getDialogPane();
         try {
             dialogPane.getStylesheets().add(Others.class.getResource("/style.css").toExternalForm());
@@ -352,7 +351,6 @@ public class Others {
             System.out.println("Không tìm thấy file CSS cho Alert ở đường dẫn /GUI/style.css");
         }
 
-        // Hiển thị và chờ người dùng bấm, sau đó trả về true/false
         Optional<ButtonType> result = alert.showAndWait();
         return result.isPresent() && result.get() == buttonYes;
     }

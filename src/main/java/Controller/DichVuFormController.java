@@ -68,30 +68,46 @@ public class DichVuFormController {
 
     @FXML
     void handleSave(ActionEvent event) {
-        if (txtTenDV.getText().trim().isEmpty() || txtDonGia.getText().trim().isEmpty()) {
+        String tenDV = txtTenDV.getText().trim();
+        String donGiaStr = txtDonGia.getText().trim();
+
+        if (tenDV.isEmpty() || donGiaStr.isEmpty()) {
             Others.showAlert(mainPane, "Vui lòng nhập đầy đủ Tên và Đơn giá!", true);
             return;
         }
 
-        DichVu dv = new DichVu();
-        dv.setTenDichVu(txtTenDV.getText().trim());
-        dv.setDonGia(Double.parseDouble(txtDonGia.getText().trim()));
+        try {
+            double donGia = Double.parseDouble(donGiaStr);
 
-        boolean isSuccess;
-        if (editingMaDV == -1) {
-            dv.setTrangThai(DichVu.TrangThaiDichVu.DANG_BAN);
-            isSuccess = DichVuBLL.insertDichVu(dv);
-        } else {
-            dv.setMaDichVu(editingMaDV);
-            dv.setTrangThai(cbTrangThai.getValue());
-            isSuccess = DichVuBLL.updateDichVu(dv);
-        }
+            if (donGia < 0) {
+                Others.showAlert(mainPane, "Đơn giá không được là số âm!", true);
+                return;
+            }
 
-        if (isSuccess) {
-            Others.showAlert(mainPane, "Lưu thông tin thành công!", false);
-            ((Stage) mainPane.getScene().getWindow()).close();
-        } else {
-            Others.showAlert(mainPane, "Có lỗi xảy ra khi lưu vào Database!", true);
+            DichVu dv = new DichVu();
+            dv.setTenDichVu(tenDV);
+            dv.setDonGia(donGia);
+
+            boolean isSuccess;
+            if (editingMaDV == -1) {
+                dv.setTrangThai(DichVu.TrangThaiDichVu.DANG_BAN);
+                isSuccess = BusinessBLL.DichVuBLL.insertDichVu(dv);
+            } else {
+                dv.setMaDichVu(editingMaDV);
+                dv.setTrangThai(cbTrangThai.getValue());
+                isSuccess = BusinessBLL.DichVuBLL.updateDichVu(dv);
+            }
+
+            if (isSuccess) {
+                Others.showAlert(mainPane, "Lưu thông tin thành công!", false);
+                ((Stage) mainPane.getScene().getWindow()).close();
+            } else {
+                Others.showAlert(mainPane, "Có lỗi xảy ra khi lưu vào Database!", true);
+            }
+
+        } catch (NumberFormatException e) {
+            Others.showAlert(mainPane, "Lỗi: Đơn giá phải là một số hợp lệ!", true);
+            txtDonGia.requestFocus();
         }
     }
 
