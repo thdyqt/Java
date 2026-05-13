@@ -29,7 +29,7 @@
                     </children>
                 </VBox>
                 <Pane HBox.hgrow="ALWAYS" />
-                <Button mnemonicParsing="false" onAction="#handleNewBooking" prefHeight="45.0" style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;" text="➕ LẬP ĐƠN ĐẶT MỚI">
+                <Button fx:id="btnBook" mnemonicParsing="false" onAction="#handleNewBooking" prefHeight="45.0" style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;" text="➕ LẬP ĐƠN ĐẶT MỚI">
                     <padding><Insets left="20.0" right="20.0" /></padding>
                 </Button>
             </children>

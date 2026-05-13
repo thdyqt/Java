@@ -45,22 +45,24 @@
     </top>
 
     <left>
-        <AnchorPane fx:id="sidebar" prefWidth="250.0" styleClass="sidebar" BorderPane.alignment="CENTER">
+        <AnchorPane fx:id="sidebar" prefWidth="260.0" styleClass="sidebar" BorderPane.alignment="CENTER">
             <children>
-
-                <VBox AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <VBox spacing="8.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="20.0">
                     <children>
                         <Button fx:id="btnPhong" maxWidth="Infinity" mnemonicParsing="false" onAction="#showPhongView" styleClass="nav-button" text="Sơ Đồ Phòng" />
+
                         <Button fx:id="btnDatPhong" maxWidth="Infinity" mnemonicParsing="false" onAction="#showDatPhongView" styleClass="nav-button" text="Quản Lý Đặt Phòng" />
                         <Button fx:id="btnKhachHang" maxWidth="Infinity" mnemonicParsing="false" onAction="#showKhachHangView" styleClass="nav-button" text="Khách Hàng" />
                         <Button fx:id="btnHoaDon" maxWidth="Infinity" mnemonicParsing="false" onAction="#showHoaDonView" styleClass="nav-button" text="Hóa Đơn" />
+                        <Button fx:id="btnQuanLyPhong" maxWidth="Infinity" mnemonicParsing="false" onAction="#showQuanLyPhongView" styleClass="nav-button" text="Quản Lý Phòng" />
                         <Button fx:id="btnDichVu" maxWidth="Infinity" mnemonicParsing="false" onAction="#showDichVuView" styleClass="nav-button" text="Dịch Vụ &amp; Tiện Ích" />
                         <Button fx:id="btnNhanVien" maxWidth="Infinity" mnemonicParsing="false" onAction="#showNhanVienView" styleClass="nav-button" text="Nhân Sự" />
+
+                        <Button fx:id="btnThongKe" maxWidth="Infinity" mnemonicParsing="false" onAction="#showThongKeView" styleClass="nav-button" text="Thống Kê Báo Cáo" />
                     </children>
                 </VBox>
 
-                <Region fx:id="slideIndicator" prefHeight="50.0" prefWidth="5.0" styleClass="slide-indicator" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
-
+                <Region fx:id="slideIndicator" prefHeight="45.0" prefWidth="4.0" styleClass="slide-indicator" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="20.0" />
             </children>
         </AnchorPane>
     </left>

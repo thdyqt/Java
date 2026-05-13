@@ -32,7 +32,7 @@ public class QuanLyDatPhongController {
     @FXML private TableView<BookingRow> tvDatPhong;
     @FXML private TableColumn<BookingRow, String> colMaDat, colKhachHang, colSDT, colPhong, colCheckIn, colCheckOut, colTienCoc, colTrangThai;
 
-    @FXML private Button btnEditBooking, btnQuickCheckIn, btnQuickCheckOut, btnCancelBooking;
+    @FXML private Button btnBook, btnEditBooking, btnQuickCheckIn, btnQuickCheckOut, btnCancelBooking;
 
     private ObservableList<BookingRow> masterData = FXCollections.observableArrayList();
     private FilteredList<BookingRow> filteredData;
@@ -71,6 +71,7 @@ public class QuanLyDatPhongController {
     }
 
     private void setupButtons() {
+        Others.playButtonAnimation(btnBook);
         Others.playButtonAnimation(btnEditBooking);
         Others.playButtonAnimation(btnQuickCheckIn);
         Others.playButtonAnimation(btnQuickCheckOut);

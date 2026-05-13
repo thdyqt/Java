@@ -16,26 +16,6 @@
     -fx-font-size: 14px;
 }
 
-.sidebar {
-    -fx-background-color: #0a192f;
-    -fx-padding: 20 0 0 0;
-}
-
-.nav-button {
-    -fx-background-color: transparent;
-    -fx-text-fill: white;
-    -fx-font-size: 15px;
-    -fx-alignment: CENTER_LEFT;
-    -fx-padding: 15 20 15 30;
-    -fx-cursor: hand;
-    -fx-border-color: transparent;
-}
-
-.nav-button:hover {
-    -fx-background-color: #1d3557;
-    -fx-border-color: transparent transparent transparent #d4af37;
-}
-
 .logout-button {
     -fx-background-color: #d32f2f;
     -fx-text-fill: white;
@@ -121,15 +101,35 @@
     -fx-background-radius: 5;
 }
 
-.slide-indicator {
-    -fx-background-color: #d4af37;
-    -fx-background-radius: 0 5 5 0;
+.sidebar {
+    -fx-background-color: #0f172a;
+}
+
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #94a3b8;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 12 20 12 20;
+    -fx-cursor: hand;
+    -fx-background-radius: 8;
+    -fx-border-color: transparent;
+}
+
+.nav-button:hover {
+    -fx-background-color: #1e293b;
+    -fx-text-fill: #f8fafc;
 }
 
 .active-menu {
-    -fx-background-color: #1d3557;
+    -fx-background-color: #1e293b;
     -fx-text-fill: #d4af37;
-    -fx-font-weight: bold;
+}
+
+.slide-indicator {
+    -fx-background-color: #d4af37;
+    -fx-background-radius: 0 4 4 0;
 }
 
 /* --- STYLE CHO CONTEXT MENU (MENU CHUỘT PHẢI) --- */

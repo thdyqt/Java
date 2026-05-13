@@ -27,7 +27,7 @@ public class QuanLyDichVuController {
     @FXML private TableView<DichVuRow> tvDichVu;
     @FXML private TableColumn<DichVuRow, String> colMaDV, colTenDV, colDonGia, colTrangThai;
 
-    @FXML private Button btnEdit, btnStop, btnRestore;
+    @FXML private Button btnAdd, btnEdit, btnStop, btnRestore;
 
     private ObservableList<DichVuRow> masterData = FXCollections.observableArrayList();
     private FilteredList<DichVuRow> filteredData;
@@ -50,6 +50,7 @@ public class QuanLyDichVuController {
     }
 
     private void setupButtons() {
+        Others.playButtonAnimation(btnAdd);
         Others.playButtonAnimation(btnEdit);
         Others.playButtonAnimation(btnRestore);
         Others.playButtonAnimation(btnStop);

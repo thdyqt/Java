@@ -46,8 +46,7 @@ public class Frame implements Initializable {
     @FXML
     private MenuButton menuUser;
 
-    @FXML
-    private Button btnDatPhong, btnDichVu, btnHoaDon, btnKhachHang, btnNhanVien, btnPhong;
+    @FXML private Button btnDatPhong, btnDichVu, btnHoaDon, btnKhachHang, btnNhanVien, btnPhong, btnQuanLyPhong, btnThongKe;
 
     @FXML
     private Region slideIndicator;
@@ -67,17 +66,13 @@ public class Frame implements Initializable {
         menuUser.setText("Xin chào, " + currentStaff.getHoTen() + " (" + currentStaff.getChucVu() + ")");
 
         if (!"Admin".equals(currentStaff.getChucVu())) {
-            btnDichVu.setVisible(false);
-            btnDichVu.setManaged(false);
-
-            btnNhanVien.setVisible(false);
-            btnNhanVien.setManaged(false);
+            btnDichVu.setVisible(false); btnDichVu.setManaged(false);
+            btnQuanLyPhong.setVisible(false); btnQuanLyPhong.setManaged(false);
+            btnThongKe.setVisible(false); btnThongKe.setManaged(false);
+            btnNhanVien.setVisible(false); btnNhanVien.setManaged(false);
         }
 
-//        menuInfo.setOnAction(event -> openProfileDialog(true));
-//        menuEditAcc.setOnAction(event -> openProfileDialog(false));
-
-        menuButtons = new Button[]{btnPhong, btnDatPhong, btnKhachHang, btnDichVu, btnHoaDon, btnNhanVien};
+        menuButtons = new Button[]{btnPhong, btnQuanLyPhong, btnDatPhong, btnKhachHang, btnDichVu, btnHoaDon, btnNhanVien, btnThongKe};
         Platform.runLater(() -> setActiveMenu(btnPhong));
         showPhongView(null);
     }
@@ -275,6 +270,7 @@ public class Frame implements Initializable {
     }
 
     // SIDEBAR
+// SIDEBAR
     public void setActiveMenu(Button activeButton) {
         if (menuButtons == null) return;
 
@@ -286,13 +282,17 @@ public class Frame implements Initializable {
 
         if (activeButton != null) {
             activeButton.getStyleClass().add("active-menu");
-            TranslateTransition transition = new TranslateTransition(Duration.millis(250), slideIndicator);
-            double targetY = activeButton.getBoundsInParent().getMinY();
-            slideIndicator.setPrefHeight(activeButton.getHeight());
 
-            transition.setToY(targetY);
-            transition.setInterpolator(Interpolator.EASE_BOTH);
-            transition.play();
+            Platform.runLater(() -> {
+                TranslateTransition transition = new TranslateTransition(Duration.millis(250), slideIndicator);
+
+                double targetY = activeButton.getLayoutY();
+                slideIndicator.setPrefHeight(activeButton.getHeight());
+
+                transition.setToY(targetY);
+                transition.setInterpolator(Interpolator.EASE_BOTH);
+                transition.play();
+            });
         }
     }
 
@@ -350,6 +350,22 @@ public class Frame implements Initializable {
         if ("Admin".equals(UserSession.getInstance().getChucVu())) {
             setActiveMenu(btnNhanVien);
             switchForm("/NhanVienView.fxml");
+        }
+    }
+
+    @FXML
+    void showQuanLyPhongView(ActionEvent event) {
+        if ("Admin".equals(UserSession.getInstance().getChucVu())) {
+            setActiveMenu(btnQuanLyPhong);
+            switchForm("/QuanLyPhongView.fxml");
+        }
+    }
+
+    @FXML
+    void showThongKeView(ActionEvent event) {
+        if ("Admin".equals(UserSession.getInstance().getChucVu())) {
+            setActiveMenu(btnThongKe);
+            switchForm("/ThongKeView.fxml");
         }
     }
 }

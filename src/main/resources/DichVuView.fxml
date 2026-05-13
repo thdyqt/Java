@@ -33,7 +33,7 @@
                         <Priority fx:constant="ALWAYS" />
                     </HBox.hgrow>
                 </Pane>
-                <Button mnemonicParsing="false" onAction="#handleAddNew" prefHeight="45.0" style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;" text="➕ THÊM DỊCH VỤ MỚI">
+                <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#handleAddNew" prefHeight="45.0" style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;" text="➕ THÊM DỊCH VỤ MỚI">
                     <padding><Insets left="20.0" right="20.0" /></padding>
                 </Button>
             </children>
