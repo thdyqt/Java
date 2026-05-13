@@ -224,6 +224,13 @@ public class QuanLyNhanVienController {
     @FXML void handleStop() {
         StaffRow selected = tvNhanVien.getSelectionModel().getSelectedItem();
         if (selected == null) return;
+
+        String currentLoggedInUser = UserSession.getInstance().getNhanVien().getTenDangNhap();
+        if (selected.getUsername().equals(currentLoggedInUser)) {
+            Others.showAlert(mainPane, "Lỗi bảo mật: Bạn không thể tự khóa tài khoản hoặc tự cho chính mình nghỉ việc!", true);
+            return;
+        }
+
         if (Others.showCustomConfirm("Xác nhận", "Cho nhân viên " + selected.getHoTen() + " nghỉ việc?\nTài khoản này sẽ không thể đăng nhập.", "Xác nhận", "Hủy")) {
             if (NhanVienBLL.stopNhanVien(selected.getMaNV())) {
                 loadData();

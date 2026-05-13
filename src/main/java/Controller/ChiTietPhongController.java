@@ -134,14 +134,19 @@ public class ChiTietPhongController {
     }
 
     private void calculateFinalTotal() {
-        double phuThu = txtPhuThu.getText().isEmpty() ? 0 : Double.parseDouble(txtPhuThu.getText());
-        double giamGia = txtGiamGia.getText().isEmpty() ? 0 : Double.parseDouble(txtGiamGia.getText());
-        double tienCoc = currentBooking != null ? currentBooking.getTienCoc() : 0;
+        try {
+            double phuThu = txtPhuThu.getText().isEmpty() ? 0 : Double.parseDouble(txtPhuThu.getText());
+            double giamGia = txtGiamGia.getText().isEmpty() ? 0 : Double.parseDouble(txtGiamGia.getText());
+            double tienCoc = currentBooking != null ? currentBooking.getTienCoc() : 0;
 
-        double finalTotal = (totalRoomMoney + totalServiceMoney + phuThu) - (tienCoc + giamGia);
+            double finalTotal = (totalRoomMoney + totalServiceMoney + phuThu) - (tienCoc + giamGia);
 
-        if (finalTotal < 0) finalTotal = 0;
-        lblTongThanhToan.setText(Others.formatPrice(finalTotal));
+            if (finalTotal < 0) finalTotal = 0;
+            lblTongThanhToan.setText(Others.formatPrice(finalTotal));
+
+        } catch (NumberFormatException e) {
+            lblTongThanhToan.setText("Đang tính...");
+        }
     }
 
     @FXML

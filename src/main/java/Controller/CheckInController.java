@@ -264,7 +264,11 @@ public class CheckInController {
             if ("Theo ngày".equals(hinhThuc)) {
                 thoiGianCheckOut = dpCheckOut.getValue().atTime(12, 0);
             } else if ("Qua đêm".equals(hinhThuc)) {
-                thoiGianCheckOut = thoiGianCheckIn.toLocalDate().plusDays(1).atTime(8, 0);
+                if (thoiGianCheckIn.getHour() >= 0 && thoiGianCheckIn.getHour() <= 6) {
+                    thoiGianCheckOut = thoiGianCheckIn.toLocalDate().atTime(8, 0);
+                } else {
+                    thoiGianCheckOut = thoiGianCheckIn.toLocalDate().plusDays(1).atTime(8, 0);
+                }
             } else {
                 String soGioStr = txtSoGioThue.getText().trim();
                 if (soGioStr.isEmpty()) {

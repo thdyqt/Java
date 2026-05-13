@@ -284,6 +284,11 @@ public class QuanLyDatPhongController {
         BookingRow selected = tvDatPhong.getSelectionModel().getSelectedItem();
         if (selected == null) return;
 
+        if (!"Chờ nhận phòng".equals(selected.getTrangThai())) {
+            Others.showAlert(mainPane, "Lỗi nghiệp vụ: Bạn chỉ có thể hủy những đơn đang ở trạng thái 'Chờ nhận phòng'!", true);
+            return;
+        }
+
         boolean confirm = Others.showCustomConfirm("Cảnh báo", "Bạn có chắc chắn muốn HỦY đơn đặt phòng của " + selected.hoTen + " không?", "Đồng ý", "Đóng");
         if (confirm) {
             DatPhongBLL.changeStatus(selected.maDat, "Đã hủy");
