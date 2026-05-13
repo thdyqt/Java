@@ -9,4 +9,24 @@ public class LoaiPhongBLL {
     public static List<LoaiPhong> getAllLoaiPhong() {
         return LoaiPhongDAL.getAllLoaiPhong();
     }
+
+    public static String saveLoaiPhong(LoaiPhong lp, boolean isEdit) {
+        if (lp.getTenLoaiPhong() == null || lp.getTenLoaiPhong().trim().isEmpty()) {
+            return "Tên loại phòng không được để trống!";
+        }
+        if (lp.getDonGia() <= 0) {
+            return "Đơn giá phải lớn hơn 0!";
+        }
+        if (lp.getSoNguoiToiDa() <= 0) {
+            return "Số người tối đa phải từ 1 trở lên!";
+        }
+
+        int excludeId = isEdit ? lp.getMaLoaiPhong() : -1;
+        if (LoaiPhongDAL.isTenLoaiPhongExists(lp.getTenLoaiPhong(), excludeId)) {
+            return "Tên loại phòng này đã tồn tại!";
+        }
+
+        boolean success = isEdit ? LoaiPhongDAL.updateLoaiPhong(lp) : LoaiPhongDAL.insertLoaiPhong(lp);
+        return success ? "SUCCESS" : "Lỗi khi lưu dữ liệu vào hệ thống!";
+    }
 }

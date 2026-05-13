@@ -204,7 +204,22 @@ public class QuanLyPhongController {
     }
 
     @FXML void handleManageRoomType() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/LoaiPhongView.fxml"));
+            javafx.scene.Parent root = loader.load();
 
+            Stage stage = new Stage();
+            stage.setTitle("Quản lý danh mục Loại Phòng");
+            stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            stage.setScene(new javafx.scene.Scene(root));
+
+            stage.showAndWait();
+            loadData();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Others.showAlert(mainPane, "Lỗi khi mở giao diện Quản lý Loại phòng!", true);
+        }
     }
 
     public static class RoomRow {

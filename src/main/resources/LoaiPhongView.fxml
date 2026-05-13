@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<HBox fx:id="mainPane" prefHeight="550.0" prefWidth="900.0" spacing="20.0" style="-fx-background-color: #f1f5f9; -fx-padding: 20;" stylesheets="@style.css, @table-style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.QuanLyLoaiPhongController">
+    <children>
+        <VBox spacing="10.0" HBox.hgrow="ALWAYS">
+            <children>
+                <Label text="DANH SÁCH LOẠI PHÒNG" textFill="#0f172a">
+                    <font><Font name="System Bold" size="18.0" /></font>
+                </Label>
+                <TableView fx:id="tvLoaiPhong" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colTen" prefWidth="150.0" text="Tên Loại" />
+                        <TableColumn fx:id="colGia" prefWidth="120.0" text="Đơn Giá" />
+                        <TableColumn fx:id="colSoNguoi" prefWidth="100.0" text="Sức Chứa" />
+                    </columns>
+                </TableView>
+            </children>
+        </VBox>
+
+        <VBox prefWidth="350.0" spacing="15.0" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);">
+            <children>
+                <Label fx:id="lblFormTitle" text="THÊM LOẠI PHÒNG MỚI" textFill="#3b82f6">
+                    <font><Font name="System Bold" size="16.0" /></font>
+                </Label>
+
+                <VBox spacing="5.0">
+                    <Label text="Tên loại phòng (*):" textFill="#334155"><font><Font name="System Bold" size="13.0" /></font></Label>
+                    <TextField fx:id="txtTenLoai" prefHeight="35.0" promptText="VD: VIP, Standard..." style="-fx-background-radius: 6;" />
+                </VBox>
+
+                <VBox spacing="5.0">
+                    <Label text="Đơn giá / Ngày (*):" textFill="#334155"><font><Font name="System Bold" size="13.0" /></font></Label>
+                    <TextField fx:id="txtGia" prefHeight="35.0" promptText="Nhập số tiền..." style="-fx-background-radius: 6;" />
+                </VBox>
+
+                <VBox spacing="5.0">
+                    <Label text="Số người tối đa (*):" textFill="#334155"><font><Font name="System Bold" size="13.0" /></font></Label>
+                    <TextField fx:id="txtSoNguoi" prefHeight="35.0" promptText="VD: 2, 4..." style="-fx-background-radius: 6;" />
+                </VBox>
+
+                <VBox spacing="5.0" VBox.vgrow="ALWAYS">
+                    <Label text="Mô tả tiện ích:" textFill="#334155"><font><Font name="System Bold" size="13.0" /></font></Label>
+                    <TextArea fx:id="txtMoTa" prefRowCount="4" promptText="Mô tả ngắn gọn về phòng..." style="-fx-background-radius: 6;" wrapText="true" />
+                </VBox>
+
+                <HBox alignment="CENTER_RIGHT" spacing="10.0">
+                    <children>
+                        <Button fx:id="btnClear" onAction="#handleClear" prefHeight="35.0" prefWidth="100.0" style="-fx-background-color: #f1f5f9; -fx-text-fill: #475569; -fx-font-weight: bold; -fx-cursor: hand;" text="LÀM MỚI" />
+                        <Button fx:id="btnSave" onAction="#handleSave" prefHeight="35.0" prefWidth="120.0" style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="✔ LƯU LẠI" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</HBox>
