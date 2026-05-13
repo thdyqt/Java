@@ -73,6 +73,25 @@ public class FrameController implements Initializable {
         menuButtons = new Button[]{btnPhong, btnQuanLyPhong, btnDatPhong, btnKhachHang, btnDichVu, btnHoaDon, btnNhanVien, btnThongKe};
         Platform.runLater(() -> setActiveMenu(btnPhong));
         showPhongView(null);
+
+        Platform.runLater(() -> {
+            Stage stage = (Stage) mainPane.getScene().getWindow();
+            stage.setOnCloseRequest(event -> {
+                boolean isConfirm = Others.showCustomConfirm(
+                        "Xác nhận thoát",
+                        "Bạn có chắc chắn muốn đóng phần mềm và kết thúc phiên làm việc?",
+                        "Thoát phần mềm", "Hủy bỏ"
+                );
+
+                if (isConfirm) {
+                    NhanVienBLL.logout();
+                    Platform.exit();
+                    System.exit(0);
+                } else {
+                    event.consume();
+                }
+            });
+        });
     }
 
     public void loadForm() {
@@ -268,7 +287,6 @@ public class FrameController implements Initializable {
     }
 
     // SIDEBAR
-// SIDEBAR
     public void setActiveMenu(Button activeButton) {
         if (menuButtons == null) return;
 
