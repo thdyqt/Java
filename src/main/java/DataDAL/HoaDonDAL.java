@@ -4,8 +4,52 @@ import EntitiesDTO.HoaDon;
 import Utilities.DBHelper;
 
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.util.List;
 
 public class HoaDonDAL {
+    public static class HoaDonViewModel {
+        public int maHoaDon;
+        public String tenKhachHang;
+        public String soDienThoai;
+        public LocalDateTime ngayThanhToan;
+        public double tongThanhToan;
+        public String phuongThuc;
+
+        public HoaDonViewModel(int maHoaDon, String tenKhachHang, String soDienThoai, LocalDateTime ngayThanhToan, double tongThanhToan, String phuongThuc) {
+            this.maHoaDon = maHoaDon;
+            this.tenKhachHang = tenKhachHang;
+            this.soDienThoai = soDienThoai;
+            this.ngayThanhToan = ngayThanhToan;
+            this.tongThanhToan = tongThanhToan;
+            this.phuongThuc = phuongThuc;
+        }
+    }
+
+    public static List<HoaDonViewModel> getDanhSachHoaDon() {
+        List<HoaDonViewModel> list = new java.util.ArrayList<>();
+        String sql = "SELECT hd.MaHoaDon, kh.HoTen, kh.SoDienThoai, hd.NgayThanhToan, hd.TongThanhToan, hd.PhuongThucThanhToan " +
+                "FROM HoaDon hd " +
+                "JOIN DatPhong dp ON hd.MaDatPhong = dp.MaDatPhong " +
+                "JOIN KhachHang kh ON dp.MaKhachHang = kh.MaKhachHang " +
+                "ORDER BY hd.NgayThanhToan DESC";
+        try (Connection conn = DBHelper.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                list.add(new HoaDonViewModel(
+                        rs.getInt("MaHoaDon"),
+                        rs.getString("HoTen"),
+                        rs.getString("SoDienThoai"), // Lấy dữ liệu SĐT từ ResultSet
+                        rs.getTimestamp("NgayThanhToan").toLocalDateTime(),
+                        rs.getDouble("TongThanhToan"),
+                        rs.getString("PhuongThucThanhToan")
+                ));
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return list;
+    }
+
     public static int saveInvoiceTransaction(HoaDon hd) {
         String sqlHD = "INSERT INTO HoaDon (MaDatPhong, MaNhanVien, NgayThanhToan, TongTienPhong, " +
                 "TongTienDichVu, PhuThu, GiamGia, TongThanhToan, PhuongThucThanhToan) " +

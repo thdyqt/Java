@@ -342,6 +342,7 @@ public class Frame implements Initializable {
     @FXML
     void showHoaDonView(ActionEvent event) {
         setActiveMenu(btnHoaDon);
+        switchForm("/QuanLyHoaDonView.fxml");
     }
 
     @FXML

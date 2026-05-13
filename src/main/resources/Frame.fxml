@@ -53,7 +53,7 @@
                         <Button fx:id="btnPhong" maxWidth="Infinity" mnemonicParsing="false" onAction="#showPhongView" styleClass="nav-button" text="Sơ Đồ Phòng" />
                         <Button fx:id="btnDatPhong" maxWidth="Infinity" mnemonicParsing="false" onAction="#showDatPhongView" styleClass="nav-button" text="Quản Lý Đặt Phòng" />
                         <Button fx:id="btnKhachHang" maxWidth="Infinity" mnemonicParsing="false" onAction="#showKhachHangView" styleClass="nav-button" text="Khách Hàng" />
-                        <Button fx:id="btnHoaDon" maxWidth="Infinity" mnemonicParsing="false" onAction="#showHoaDonView" styleClass="nav-button" text="Hóa Đơn &amp; Doanh Thu" />
+                        <Button fx:id="btnHoaDon" maxWidth="Infinity" mnemonicParsing="false" onAction="#showHoaDonView" styleClass="nav-button" text="Hóa Đơn" />
                         <Button fx:id="btnDichVu" maxWidth="Infinity" mnemonicParsing="false" onAction="#showDichVuView" styleClass="nav-button" text="Dịch Vụ &amp; Tiện Ích" />
                         <Button fx:id="btnNhanVien" maxWidth="Infinity" mnemonicParsing="false" onAction="#showNhanVienView" styleClass="nav-button" text="Nhân Sự" />
                     </children>

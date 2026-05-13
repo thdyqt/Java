@@ -9,6 +9,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class HoaDonBLL {
+    public static List<HoaDonDAL.HoaDonViewModel> getDanhSachHoaDon() {
+        return HoaDonDAL.getDanhSachHoaDon();
+    }
+
     public static int xuLyThanhToan(int maDatPhong, int maNhanVien, double tienPhong,
                                     double tienDV, double phuThu, double giamGia,
                                     double tienCoc, double tongThanhToan, String phuongThuc) {

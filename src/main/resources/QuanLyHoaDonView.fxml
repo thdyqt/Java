@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="mainPane" prefHeight="750.0" prefWidth="1150.0" spacing="20.0" style="-fx-background-color: #f1f5f9;" stylesheets="@style.css, @table-style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.QuanLyHoaDonController">
+    <padding>
+        <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+    </padding>
+    <children>
+        <HBox alignment="CENTER_LEFT" spacing="15.0">
+            <children>
+                <VBox>
+                    <children>
+                        <Label text="SỔ CÁI HÓA ĐƠN" textFill="#0f172a">
+                            <font><Font name="System Bold" size="24.0" /></font>
+                        </Label>
+                        <Label text="Tra cứu lịch sử thanh toán và xem chi tiết hóa đơn điện tử" textFill="#64748b" />
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+
+        <HBox alignment="CENTER_LEFT" spacing="15.0" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 5);">
+            <children>
+                <VBox prefWidth="350.0" spacing="5.0">
+                    <children>
+                        <Label text="Tìm kiếm" textFill="#64748b" />
+                        <TextField fx:id="txtSearch" prefHeight="35.0" promptText="Nhập Mã HD hoặc Tên khách hàng..." style="-fx-background-radius: 8;" />
+                    </children>
+                </VBox>
+                <VBox prefWidth="180.0" spacing="5.0">
+                    <children>
+                        <Label text="Từ ngày" textFill="#64748b" />
+                        <DatePicker fx:id="dpTuNgay" prefHeight="35.0" style="-fx-background-radius: 8;" />
+                    </children>
+                </VBox>
+                <VBox prefWidth="180.0" spacing="5.0">
+                    <children>
+                        <Label text="Đến ngày" textFill="#64748b" />
+                        <DatePicker fx:id="dpDenNgay" prefHeight="35.0" style="-fx-background-radius: 8;" />
+                    </children>
+                </VBox>
+                <Pane>
+                    <HBox.hgrow>
+                        <Priority fx:constant="ALWAYS" />
+                    </HBox.hgrow>
+                </Pane>
+                <Button fx:id="btnResetFilter" onAction="#handleResetFilter" prefHeight="35.0" style="-fx-background-color: #f1f5f9; -fx-text-fill: #475569; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;" text="Xóa bộ lọc" />
+            </children>
+        </HBox>
+
+        <TableView fx:id="tvHoaDon" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="colMaHD" prefWidth="100.0" text="Mã HD" />
+                <TableColumn fx:id="colTenKhach" prefWidth="200.0" text="Tên Khách Hàng" />
+                <TableColumn fx:id="colSDT" prefWidth="150.0" text="Số Điện Thoại" />
+                <TableColumn fx:id="colNgayThanhToan" prefWidth="180.0" text="Ngày Thanh Toán" />
+                <TableColumn fx:id="colPhuongThuc" prefWidth="150.0" text="Phương Thức" />
+                <TableColumn fx:id="colTongTien" prefWidth="180.0" text="Tổng Thanh Toán" />
+            </columns>
+        </TableView>
+
+        <HBox alignment="CENTER_RIGHT" spacing="15.0" style="-fx-background-color: #1e293b; -fx-padding: 15; -fx-background-radius: 12;">
+            <children>
+                <Button fx:id="btnViewDetails" onAction="#handleViewDetails" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand; -fx-background-radius: 8;" text="📄 XEM CHI TIẾT HÓA ĐƠN" />
+            </children>
+        </HBox>
+    </children>
+</VBox>
