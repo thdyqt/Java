@@ -1,4 +1,4 @@
-package View;
+package Controller;
 
 import BusinessBLL.ThongKeBLL;
 import Utilities.Others;

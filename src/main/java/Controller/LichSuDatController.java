@@ -1,7 +1,6 @@
-package View;
+package Controller;
 
 import BusinessBLL.DatPhongBLL;
-import DataDAL.DatPhongDAL;
 import Utilities.Others;
 import javafx.beans.property.SimpleStringProperty; // Thêm import này
 import javafx.collections.FXCollections;

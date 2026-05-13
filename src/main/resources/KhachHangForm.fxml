@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="mainPane" prefWidth="550.0" spacing="20.0" style="-fx-background-color: #ffffff; -fx-padding: 30; -fx-background-radius: 12; -fx-border-radius: 12;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.KhachHangFormController">
+<VBox fx:id="mainPane" prefWidth="550.0" spacing="20.0" style="-fx-background-color: #ffffff; -fx-padding: 30; -fx-background-radius: 12; -fx-border-radius: 12;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.KhachHangFormController">
     <children>
         <VBox spacing="8.0">
             <children>

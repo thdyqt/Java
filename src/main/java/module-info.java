@@ -13,6 +13,6 @@ module com.example.javaproject_102240130_102240141 {
 
     opens Application to javafx.graphics, javafx.fxml;
     exports Application;
-    opens View to javafx.fxml;
-    exports View;
+    opens Controller to javafx.fxml;
+    exports Controller;
 }

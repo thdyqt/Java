@@ -1,10 +1,6 @@
-package View;
+package Controller;
 
 import BusinessBLL.*;
-import DataDAL.DatPhongDAL;
-import DataDAL.HoaDonDAL;
-import DataDAL.KhachHangDAL;
-import DataDAL.SuDungDichVuDAL;
 import EntitiesDTO.*;
 import Utilities.Others;
 import Utilities.UserSession;
@@ -16,7 +12,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;

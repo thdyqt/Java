@@ -1,4 +1,4 @@
-package View;
+package Controller;
 
 import BusinessBLL.NhanVienBLL;
 import EntitiesDTO.NhanVien;
@@ -26,8 +26,6 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.net.URL;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 public class Frame implements Initializable {

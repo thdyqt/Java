@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="mainPane" prefWidth="650.0" spacing="20.0" style="-fx-background-color: white; -fx-padding: 30; -fx-background-radius: 12;" stylesheets="@checkin.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.CheckInController">
+<VBox fx:id="mainPane" prefWidth="650.0" spacing="20.0" style="-fx-background-color: white; -fx-padding: 30; -fx-background-radius: 12;" stylesheets="@checkin.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.CheckInController">
     <children>
         <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="THỦ TỤC ĐẶT / NHẬN PHÒNG" />
 

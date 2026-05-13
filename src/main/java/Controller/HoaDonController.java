@@ -1,4 +1,4 @@
-package View;
+package Controller;
 
 import EntitiesDTO.DatPhong; // Bổ sung import DatPhong
 import EntitiesDTO.HoaDon;

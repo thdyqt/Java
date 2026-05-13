@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefWidth="450.0" spacing="20.0" style="-fx-background-color: white; -fx-padding: 25;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.ThemDichVuController">
+<VBox prefWidth="450.0" spacing="20.0" style="-fx-background-color: white; -fx-padding: 25;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.ThemDichVuController">
     <children>
         <Label text="➕ THÊM DỊCH VỤ VÀO ĐOÀN" textFill="#1e293b">
             <font><Font name="System Bold" size="20.0" /></font>

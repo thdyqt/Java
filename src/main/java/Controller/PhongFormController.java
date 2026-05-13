@@ -1,8 +1,7 @@
-package View;
+package Controller;
 
 import BusinessBLL.LoaiPhongBLL;
 import BusinessBLL.PhongBLL;
-import DataDAL.LoaiPhongDAL;
 import EntitiesDTO.LoaiPhong;
 import EntitiesDTO.Phong;
 import Utilities.Others;
