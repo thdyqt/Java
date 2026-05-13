@@ -1,6 +1,7 @@
 package Controller;
 
 import BusinessBLL.DatPhongBLL;
+import BusinessBLL.PhongBLL;
 import Utilities.Others;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -245,6 +246,14 @@ public class QuanLyDatPhongController {
         boolean confirm = Others.showCustomConfirm("Xác nhận", "Khách hàng " + selected.hoTen + " đã đến nhận phòng?", "Xác nhận", "Hủy");
         if (confirm) {
             DatPhongBLL.quickCheckIn(selected.maDat);
+
+            if (selected.dsPhong != null && !selected.dsPhong.isEmpty()) {
+                String[] danhSachPhong = selected.dsPhong.split(", ");
+                for (String soPhong : danhSachPhong) {
+                    PhongBLL.updateRoomStatus(soPhong, "Đang có khách");
+                }
+            }
+
             Others.showAlert(mainPane, "Đã check-in thành công!", false);
             loadData();
         }

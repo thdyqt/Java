@@ -37,7 +37,7 @@ public class DatPhongBLL {
         return DatPhongDAL.getHistoryByCustomerId(maKH);
     }
 
-    public static boolean checkDateConflict(String roomNumber, LocalDate checkInDate, LocalDate checkOutDate, int excludeMaDatPhong) {
+    public static boolean checkDateConflict(String roomNumber, LocalDateTime checkInDate, LocalDateTime checkOutDate, int excludeMaDatPhong) {
         return DatPhongDAL.checkDateConflict(roomNumber, checkInDate, checkOutDate, excludeMaDatPhong);
     }
 

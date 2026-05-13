@@ -108,15 +108,16 @@ public class KhachHangDAL {
     }
 
     public static boolean updateCustomer(KhachHang customer) {
-        String sql = "UPDATE KhachHang SET HoTen = ?, SoDienThoai = ?, Email = ?, DiaChi = ? WHERE MaKhachHang = ?";
+        String sql = "UPDATE KhachHang SET HoTen = ?, CCCD_Passport = ?, SoDienThoai = ?, Email = ?, DiaChi = ? WHERE MaKhachHang = ?";
         try (Connection conn = DBHelper.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, customer.getHoTen());
-            stmt.setString(2, customer.getSoDienThoai());
-            stmt.setString(3, customer.getEmail());
-            stmt.setString(4, customer.getDiaChi());
-            stmt.setInt(5, customer.getMaKhachHang());
+            stmt.setString(2, customer.getCccdPassport());
+            stmt.setString(3, customer.getSoDienThoai());
+            stmt.setString(4, customer.getEmail());
+            stmt.setString(5, customer.getDiaChi());
+            stmt.setInt(6, customer.getMaKhachHang());
 
             return stmt.executeUpdate() > 0;
         } catch (Exception e) {

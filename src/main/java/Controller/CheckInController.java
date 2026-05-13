@@ -18,6 +18,7 @@ import javafx.stage.Stage;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -99,9 +100,19 @@ public class CheckInController {
         });
 
         dpCheckOut.valueProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null && dpCheckIn.getValue() != null && newVal.isBefore(dpCheckIn.getValue())) {
-                Others.showAlert(mainPane, "Ngày trả phòng không được phép trước ngày nhận phòng!", true);
-                Platform.runLater(() -> dpCheckOut.setValue(oldVal != null ? oldVal : dpCheckIn.getValue().plusDays(1)));
+            if (newVal != null) {
+                if (dpCheckIn.getValue() != null && newVal.isBefore(dpCheckIn.getValue())) {
+                    Others.showAlert(mainPane, "Ngày trả phòng không được phép trước ngày nhận phòng!", true);
+                    Platform.runLater(() -> dpCheckOut.setValue(dpCheckIn.getValue().plusDays(1)));
+                    return;
+                }
+
+                if ("Theo ngày".equals(cbHinhThuc.getValue()) && newVal.isEqual(LocalDate.now())) {
+                    if (LocalTime.now().isAfter(LocalTime.of(12, 0))) {
+                        Others.showAlert(mainPane, "Hiện tại đã quá 12:00, không thể chọn trả phòng vào 12:00 hôm nay. \nVui lòng chọn từ ngày mai!", true);
+                        Platform.runLater(() -> dpCheckOut.setValue(LocalDate.now().plusDays(1)));
+                    }
+                }
             }
         });
     }
@@ -113,9 +124,15 @@ public class CheckInController {
         txtSoGioThue.setDisable(true);
 
         cbHinhThuc.valueProperty().addListener((obs, oldVal, newVal) -> {
-            dpCheckIn.setDisable(false);
-            cbGioCheckIn.setDisable(false);
-            cbPhutCheckIn.setDisable(false);
+            if (isReservationMode) {
+                dpCheckIn.setDisable(false);
+                cbGioCheckIn.setDisable(false);
+                cbPhutCheckIn.setDisable(false);
+            } else {
+                dpCheckIn.setDisable(true);
+                cbGioCheckIn.setDisable(true);
+                cbPhutCheckIn.setDisable(true);
+            }
 
             if ("Theo giờ".equals(newVal)) {
                 txtSoGioThue.setDisable(false);
@@ -140,6 +157,23 @@ public class CheckInController {
         Others.setMaxLength(txtCCCD, 20);
         Others.setMaxLength(txtTienCoc, 10); Others.setNumericOnly(txtTienCoc);
         Others.setMaxLength(txtSoGioThue, 3); Others.setNumericOnly(txtSoGioThue);
+
+        if (!isReservationMode) {
+            LocalDateTime now = LocalDateTime.now();
+            dpCheckIn.setValue(now.toLocalDate());
+            cbGioCheckIn.setValue(now.getHour());
+            cbPhutCheckIn.setValue(now.getMinute());
+
+            dpCheckIn.setDisable(true);
+            cbGioCheckIn.setDisable(true);
+            cbPhutCheckIn.setDisable(true);
+
+            dpCheckIn.setStyle("-fx-opacity: 0.8;");
+        } else {
+            dpCheckIn.setDisable(false);
+            cbGioCheckIn.setDisable(false);
+            cbPhutCheckIn.setDisable(false);
+        }
     }
 
     private void setupCustomerAutoFill() {
@@ -203,74 +237,114 @@ public class CheckInController {
 
     @FXML
     void handleConfirmCheckIn(ActionEvent event) {
-        if (txtHoTen.getText().isEmpty() || txtSDT.getText().isEmpty() || txtCCCD.getText().isEmpty()) {
+        if (txtHoTen.getText().trim().isEmpty() || txtSDT.getText().trim().isEmpty() || txtCCCD.getText().trim().isEmpty()) {
             Others.showAlert(mainPane, "Vui lòng nhập đầy đủ thông tin (*)", true);
             return;
         }
 
-        String hinhThuc = cbHinhThuc.getValue();
-        LocalDate ngayCheckIn = dpCheckIn.getValue();
+        try {
+            String hinhThuc = cbHinhThuc.getValue();
 
-        LocalDateTime thoiGianCheckIn = ngayCheckIn.atTime(cbGioCheckIn.getValue(), cbPhutCheckIn.getValue());
-        LocalDateTime thoiGianCheckOut = null;
+            LocalDateTime thoiGianCheckIn;
+            if (!isReservationMode) {
+                thoiGianCheckIn = LocalDateTime.now();
+            } else {
+                LocalDate ngayCheckIn = dpCheckIn.getValue();
+                Integer gio = cbGioCheckIn.getValue() != null ? cbGioCheckIn.getValue() : 14;
+                Integer phut = cbPhutCheckIn.getValue() != null ? cbPhutCheckIn.getValue() : 0;
+                thoiGianCheckIn = ngayCheckIn.atTime(gio, phut);
 
-        if ("Theo ngày".equals(hinhThuc)) {
-            thoiGianCheckOut = dpCheckOut.getValue().atTime(12, 0);
-        } else if ("Qua đêm".equals(hinhThuc)) {
-            thoiGianCheckOut = thoiGianCheckIn.toLocalDate().plusDays(1).atTime(8, 0);
-        } else {
-            int soGio = Integer.parseInt(txtSoGioThue.getText());
-            thoiGianCheckOut = thoiGianCheckIn.plusHours(soGio);
-        }
+                if (thoiGianCheckIn.isBefore(LocalDateTime.now().minusMinutes(10))) {
+                    Others.showAlert(mainPane, "Thời gian nhận phòng đặt trước không thể nằm trong quá khứ!", true);
+                    return;
+                }
+            }
 
-        if (thoiGianCheckIn.isBefore(LocalDateTime.now().minusMinutes(10))) {
-            Others.showAlert(mainPane, "Thời gian nhận phòng không thể nằm trong quá khứ!", true);
-            return;
-        }
+            LocalDateTime thoiGianCheckOut = null;
+            if ("Theo ngày".equals(hinhThuc)) {
+                thoiGianCheckOut = dpCheckOut.getValue().atTime(12, 0);
+            } else if ("Qua đêm".equals(hinhThuc)) {
+                thoiGianCheckOut = thoiGianCheckIn.toLocalDate().plusDays(1).atTime(8, 0);
+            } else {
+                String soGioStr = txtSoGioThue.getText().trim();
+                if (soGioStr.isEmpty()) {
+                    Others.showAlert(mainPane, "Vui lòng nhập số giờ thuê!", true);
+                    return;
+                }
+                int soGio = Integer.parseInt(soGioStr);
+                if (soGio <= 0) {
+                    Others.showAlert(mainPane, "Số giờ thuê phải lớn hơn 0!", true);
+                    return;
+                }
+                thoiGianCheckOut = thoiGianCheckIn.plusHours(soGio);
+            }
 
-        List<String> danhSachPhongChon = new ArrayList<>();
-        if (currentRoom != null) danhSachPhongChon.add(currentRoom.getSoPhong());
-        for (Node node : fpExtraRooms.getChildren()) {
-            if (node instanceof CheckBox cb && cb.isSelected()) danhSachPhongChon.add((String) cb.getUserData());
-        }
-
-        if (danhSachPhongChon.isEmpty()) {
-            Others.showAlert(mainPane, "Vui lòng chọn ít nhất 1 phòng!", true);
-            return;
-        }
-
-        for (String soPhong : danhSachPhongChon) {
-            if (DatPhongBLL.checkDateConflict(soPhong, thoiGianCheckIn.toLocalDate(), thoiGianCheckOut.toLocalDate(), editingMaDatPhong)) {
-                Others.showAlert(mainPane, "Phòng " + soPhong + " đã có người đặt trong thời gian này!", true);
+            if (thoiGianCheckOut != null && (thoiGianCheckOut.isBefore(thoiGianCheckIn) || thoiGianCheckOut.isEqual(thoiGianCheckIn))) {
+                if ("Theo ngày".equals(hinhThuc)) {
+                    Others.showAlert(mainPane, "Thời gian trả phòng (12:00 hôm nay) đã qua hoặc trùng với giờ nhận. \nVui lòng chọn ngày trả phòng là ngày mai!", true);
+                } else {
+                    Others.showAlert(mainPane, "Thời gian trả phòng phải sau thời gian nhận phòng!", true);
+                }
                 return;
             }
-        }
 
-        String trangThaiDon;
-        if (isReservationMode) {
-            trangThaiDon = "Chờ nhận phòng";
-        } else {
-            trangThaiDon = thoiGianCheckIn.isAfter(LocalDateTime.now().plusMinutes(15)) ? "Chờ nhận phòng" : "Đang ở";
-        }
-
-        double tienCoc = txtTienCoc.getText().isEmpty() ? 0 : Double.parseDouble(txtTienCoc.getText());
-        boolean isSuccess;
-
-        if (editingMaDatPhong != -1) {
-            isSuccess = DatPhongBLL.updateBooking(editingMaDatPhong, Others.standardizeName(txtHoTen.getText()), txtSDT.getText(), txtCCCD.getText(), txtEmail.getText(), txtDiaChi.getText(), danhSachPhongChon, thoiGianCheckIn, thoiGianCheckOut, tienCoc);
-        } else {
-            isSuccess = DatPhongBLL.processCheckIn(Others.standardizeName(txtHoTen.getText()), txtSDT.getText(), txtCCCD.getText(), txtEmail.getText(), txtDiaChi.getText(), danhSachPhongChon, UserSession.getInstance().getMaNhanVien(), thoiGianCheckIn, thoiGianCheckOut, tienCoc, trangThaiDon);
-
-            if (isSuccess && "Đang ở".equals(trangThaiDon)) {
-                for (String soPhong : danhSachPhongChon) PhongBLL.updateRoomStatus(soPhong, "Đang có khách");
+            List<String> danhSachPhongChon = new ArrayList<>();
+            if (currentRoom != null) danhSachPhongChon.add(currentRoom.getSoPhong());
+            for (Node node : fpExtraRooms.getChildren()) {
+                if (node instanceof CheckBox cb && cb.isSelected()) danhSachPhongChon.add((String) cb.getUserData());
             }
-        }
 
-        if (isSuccess) {
-            Others.showAlert(mainPane, "Lưu thông tin thành công!", false);
-            ((Stage) mainPane.getScene().getWindow()).close();
-        } else {
-            Others.showAlert(mainPane, "Có lỗi xảy ra khi lưu dữ liệu!", true);
+            if (danhSachPhongChon.isEmpty()) {
+                Others.showAlert(mainPane, "Vui lòng chọn ít nhất 1 phòng!", true);
+                return;
+            }
+
+            for (String soPhong : danhSachPhongChon) {
+                if (BusinessBLL.DatPhongBLL.checkDateConflict(soPhong, thoiGianCheckIn, thoiGianCheckOut, editingMaDatPhong)) {
+                    Others.showAlert(mainPane, "Phòng " + soPhong + " đã có người đặt trong khoảng thời gian này!", true);
+                    return;
+                }
+            }
+
+            String trangThaiDon;
+            if (isReservationMode) {
+                trangThaiDon = "Chờ nhận phòng";
+            } else {
+                trangThaiDon = thoiGianCheckIn.isAfter(LocalDateTime.now().plusMinutes(15)) ? "Chờ nhận phòng" : "Đang ở";
+            }
+
+            double tienCoc = 0;
+            String tienCocStr = txtTienCoc.getText().trim();
+            if (!tienCocStr.isEmpty()) {
+                tienCoc = Double.parseDouble(tienCocStr);
+                if (tienCoc < 0) {
+                    Others.showAlert(mainPane, "Tiền cọc không được là số âm!", true);
+                    return;
+                }
+            }
+
+            boolean isSuccess;
+            if (editingMaDatPhong != -1) {
+                isSuccess = BusinessBLL.DatPhongBLL.updateBooking(editingMaDatPhong, Others.standardizeName(txtHoTen.getText()), txtSDT.getText(), txtCCCD.getText(), txtEmail.getText(), txtDiaChi.getText(), danhSachPhongChon, thoiGianCheckIn, thoiGianCheckOut, tienCoc);
+            } else {
+                isSuccess = BusinessBLL.DatPhongBLL.processCheckIn(Others.standardizeName(txtHoTen.getText()), txtSDT.getText(), txtCCCD.getText(), txtEmail.getText(), txtDiaChi.getText(), danhSachPhongChon, Utilities.UserSession.getInstance().getNhanVien().getMaNhanVien(), thoiGianCheckIn, thoiGianCheckOut, tienCoc, trangThaiDon);
+
+                if (isSuccess && "Đang ở".equals(trangThaiDon)) {
+                    for (String soPhong : danhSachPhongChon) {
+                        BusinessBLL.PhongBLL.updateRoomStatus(soPhong, "Đang có khách");
+                    }
+                }
+            }
+
+            if (isSuccess) {
+                Others.showAlert(mainPane, "Lưu thông tin thành công!", false);
+                ((Stage) mainPane.getScene().getWindow()).close();
+            } else {
+                Others.showAlert(mainPane, "Có lỗi xảy ra khi lưu dữ liệu!", true);
+            }
+
+        } catch (NumberFormatException e) {
+            Others.showAlert(mainPane, "Lỗi: Số giờ thuê hoặc Tiền cọc phải là chữ số hợp lệ!", true);
         }
     }
 

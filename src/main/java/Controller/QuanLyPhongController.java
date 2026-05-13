@@ -102,15 +102,23 @@ public class QuanLyPhongController {
             masterData.add(new RoomRow(p.maPhong, p.soPhong, p.tenLoaiPhong, p.donGia, p.soNguoiToiDa, p.trangThai));
         }
 
+        String currentFilter = cbFilterLoaiPhong.getValue();
         List<String> loaiPhongs = list.stream().map(p -> p.tenLoaiPhong).distinct().collect(Collectors.toList());
         loaiPhongs.add(0, "Tất cả");
         cbFilterLoaiPhong.setItems(FXCollections.observableArrayList(loaiPhongs));
-        cbFilterLoaiPhong.getSelectionModel().select(0);
+
+        if (currentFilter != null && loaiPhongs.contains(currentFilter)) {
+            cbFilterLoaiPhong.getSelectionModel().select(currentFilter);
+        } else {
+            cbFilterLoaiPhong.getSelectionModel().select(0);
+        }
 
         filteredData = new FilteredList<>(masterData, p -> true);
         SortedList<RoomRow> sortedData = new SortedList<>(filteredData);
         sortedData.comparatorProperty().bind(tvPhong.comparatorProperty());
         tvPhong.setItems(sortedData);
+
+        applyFilters();
     }
 
     private void applyFilters() {
@@ -194,7 +202,7 @@ public class QuanLyPhongController {
         }
 
         if (Others.showCustomConfirm("Thay đổi trạng thái kinh doanh", confirmMsg, "Xác nhận", "Hủy bỏ")) {
-            if (BusinessBLL.PhongBLL.updateRoomStatus(selected.soPhong, newStatus)) { // [cite: 31]
+            if (BusinessBLL.PhongBLL.updateRoomStatus(selected.soPhong, newStatus)) {
                 Others.showAlert(mainPane, "Đã cập nhật trạng thái phòng thành công!", false);
                 loadData();
             } else {

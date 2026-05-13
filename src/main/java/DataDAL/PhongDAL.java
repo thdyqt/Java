@@ -27,7 +27,7 @@ public class PhongDAL {
         List<PhongViewModel> list = new ArrayList<>();
         String sql = "SELECT p.MaPhong, p.SoPhong, lp.TenLoaiPhong, lp.DonGia, lp.SoNguoiToiDa, p.TrangThai " +
                 "FROM Phong p " +
-                "JOIN LoaiPhong lp ON p.MaLoaiPhong = lp.MaLoaiPhong " +
+                "LEFT JOIN LoaiPhong lp ON p.MaLoaiPhong = lp.MaLoaiPhong " + // CHUYỂN THÀNH LEFT JOIN
                 "ORDER BY p.SoPhong ASC";
 
         try (Connection conn = DBHelper.getConnection();
@@ -49,7 +49,7 @@ public class PhongDAL {
 
     public static List<Phong> getAllRooms() {
         List<Phong> list = new ArrayList<>();
-        String sql = "SELECT * FROM phong";
+        String sql = "SELECT * FROM Phong";
 
         try (Connection conn = DBHelper.getConnection();
              Statement stmt = conn.createStatement()) {

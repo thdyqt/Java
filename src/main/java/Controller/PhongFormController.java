@@ -91,6 +91,13 @@ public class PhongFormController {
             Phong newP = new Phong(0, soPhong, loaiPhong.getMaLoaiPhong(), cbTrangThai.getValue());
             success = PhongBLL.insertPhong(newP);
         }
+
+        if (success) {
+            Others.showAlert(mainPane, "Lưu thông tin phòng thành công!", false);
+            handleCancel();
+        } else {
+            Others.showAlert(mainPane, "Có lỗi xảy ra khi lưu vào Database!", true);
+        }
     }
 
     @FXML

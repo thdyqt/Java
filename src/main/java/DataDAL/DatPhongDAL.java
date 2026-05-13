@@ -145,7 +145,7 @@ public class DatPhongDAL {
             if (rs.next()) {
                 result.put("HoTen", rs.getString("HoTen"));
                 result.put("SoDienThoai", rs.getString("SoDienThoai"));
-                result.put("CCCD", rs.getString("CCCD_Passport")); // Vẫn giữ Key là CCCD để Controller dùng không bị lỗi
+                result.put("CCCD", rs.getString("CCCD_Passport"));
                 result.put("Email", rs.getString("Email"));
                 result.put("DiaChi", rs.getString("DiaChi"));
                 result.put("NgayIn", rs.getTimestamp("NgayCheckInDuKien").toLocalDateTime());
@@ -183,13 +183,13 @@ public class DatPhongDAL {
         return list;
     }
 
-    public static boolean checkDateConflict(String roomNumber, LocalDate checkInDate, LocalDate checkOutDate, int excludeMaDatPhong) {
+    public static boolean checkDateConflict(String roomNumber, LocalDateTime checkInDate, LocalDateTime checkOutDate, int excludeMaDatPhong) {
         String sql = "SELECT COUNT(*) AS SoLuong FROM DatPhong dp " +
                 "JOIN ChiTietDatPhong ct ON dp.MaDatPhong = ct.MaDatPhong " +
                 "JOIN Phong p ON ct.MaPhong = p.MaPhong " +
                 "WHERE p.SoPhong = ? " +
-                "AND dp.TrangThai IN ('Chờ nhận phòng', 'Đang ở') " + // Xét cả khách đang ở
-                "AND dp.MaDatPhong != ? " + // BỎ QUA CHÍNH ĐƠN ĐANG SỬA
+                "AND dp.TrangThai IN ('Chờ nhận phòng', 'Đang ở') " +
+                "AND dp.MaDatPhong != ? " +
                 "AND dp.NgayCheckInDuKien < ? " +
                 "AND dp.NgayCheckOutDuKien > ?";
 
@@ -197,9 +197,9 @@ public class DatPhongDAL {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, roomNumber);
-            stmt.setInt(2, excludeMaDatPhong); 
-            stmt.setDate(3, java.sql.Date.valueOf(checkOutDate));
-            stmt.setDate(4, java.sql.Date.valueOf(checkInDate));
+            stmt.setInt(2, excludeMaDatPhong);
+            stmt.setTimestamp(3, Timestamp.valueOf(checkOutDate));
+            stmt.setTimestamp(4, Timestamp.valueOf(checkInDate));
 
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
@@ -218,7 +218,9 @@ public class DatPhongDAL {
                 "FROM Phong p JOIN LoaiPhong lp ON p.MaLoaiPhong = lp.MaLoaiPhong " +
                 "WHERE p.SoPhong = ?";
 
-        try (Connection conn = DBHelper.getConnection()) {
+        Connection conn = null;
+        try {
+            conn = DBHelper.getConnection();
             conn.setAutoCommit(false);
 
             try (PreparedStatement stmtBooking = conn.prepareStatement(sqlInsertBooking, Statement.RETURN_GENERATED_KEYS)) {
@@ -258,6 +260,13 @@ public class DatPhongDAL {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.setAutoCommit(true);
+                    conn.close();
+                } catch (SQLException ex) { ex.printStackTrace(); }
+            }
         }
         return false;
     }
@@ -314,7 +323,11 @@ public class DatPhongDAL {
             try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM ChiTietDatPhong WHERE MaDatPhong=?")) {
                 stmt.setInt(1, maDatPhong); stmt.executeUpdate();
             }
-            String insCt = "INSERT INTO ChiTietDatPhong (MaDatPhong, MaPhong) VALUES (?, (SELECT MaPhong FROM Phong WHERE SoPhong = ?))";
+
+            String insCt = "INSERT INTO ChiTietDatPhong (MaDatPhong, MaPhong, GiaThucTe) " +
+                    "SELECT ?, p.MaPhong, lp.DonGia " +
+                    "FROM Phong p JOIN LoaiPhong lp ON p.MaLoaiPhong = lp.MaLoaiPhong " +
+                    "WHERE p.SoPhong = ?";
             try (PreparedStatement stmt = conn.prepareStatement(insCt)) {
                 for (String soPhong : roomNumbers) {
                     stmt.setInt(1, maDatPhong); stmt.setString(2, soPhong); stmt.addBatch();
