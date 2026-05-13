@@ -46,4 +46,49 @@ public class ThongKeDAL {
         } catch (Exception e) { e.printStackTrace(); }
         return map;
     }
+
+    public static Map<String, Integer> getThongKeLoaiPhong(LocalDate tuNgay, LocalDate denNgay) {
+        Map<String, Integer> map = new LinkedHashMap<>();
+        String sql = "SELECT lp.TenLoaiPhong, COUNT(ctdp.MaPhong) AS SoLuotDat " +
+                "FROM HoaDon hd " +
+                "JOIN DatPhong dp ON hd.MaDatPhong = dp.MaDatPhong " +
+                "JOIN ChiTietDatPhong ctdp ON dp.MaDatPhong = ctdp.MaDatPhong " +
+                "JOIN Phong p ON ctdp.MaPhong = p.MaPhong " +
+                "JOIN LoaiPhong lp ON p.MaLoaiPhong = lp.MaLoaiPhong " +
+                "WHERE DATE(hd.NgayThanhToan) >= ? AND DATE(hd.NgayThanhToan) <= ? " +
+                "GROUP BY lp.TenLoaiPhong " +
+                "ORDER BY SoLuotDat DESC LIMIT 5";
+        try (Connection conn = DBHelper.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setDate(1, java.sql.Date.valueOf(tuNgay));
+            stmt.setDate(2, java.sql.Date.valueOf(denNgay));
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                map.put(rs.getString("TenLoaiPhong"), rs.getInt("SoLuotDat"));
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return map;
+    }
+
+    public static Map<String, Integer> getThongKeDichVu(LocalDate tuNgay, LocalDate denNgay) {
+        Map<String, Integer> map = new LinkedHashMap<>();
+        String sql = "SELECT dv.TenDichVu, SUM(sddv.SoLuong) AS TongSoLuong " +
+                "FROM HoaDon hd " +
+                "JOIN DatPhong dp ON hd.MaDatPhong = dp.MaDatPhong " +
+                "JOIN SuDungDichVu sddv ON dp.MaDatPhong = sddv.MaDatPhong " +
+                "JOIN DichVu dv ON sddv.MaDichVu = dv.MaDichVu " +
+                "WHERE DATE(hd.NgayThanhToan) >= ? AND DATE(hd.NgayThanhToan) <= ? " +
+                "GROUP BY dv.TenDichVu " +
+                "ORDER BY TongSoLuong DESC LIMIT 5";
+        try (Connection conn = DBHelper.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setDate(1, java.sql.Date.valueOf(tuNgay));
+            stmt.setDate(2, java.sql.Date.valueOf(denNgay));
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                map.put(rs.getString("TenDichVu"), rs.getInt("TongSoLuong"));
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return map;
+    }
 }

@@ -14,4 +14,14 @@ public class ThongKeBLL {
         if (tuNgay == null || denNgay == null || tuNgay.isAfter(denNgay)) return null;
         return ThongKeDAL.getDoanhThuTheoNgay(tuNgay, denNgay);
     }
+
+    public static Map<String, Integer> getThongKeLoaiPhong(LocalDate tuNgay, LocalDate denNgay) {
+        if (tuNgay == null || denNgay == null || tuNgay.isAfter(denNgay)) return null;
+        return ThongKeDAL.getThongKeLoaiPhong(tuNgay, denNgay);
+    }
+
+    public static Map<String, Integer> getThongKeDichVu(LocalDate tuNgay, LocalDate denNgay) {
+        if (tuNgay == null || denNgay == null || tuNgay.isAfter(denNgay)) return null;
+        return ThongKeDAL.getThongKeDichVu(tuNgay, denNgay);
+    }
 }
