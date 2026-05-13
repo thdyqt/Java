@@ -23,6 +23,7 @@ public class LichSuDatController {
     @FXML private TableColumn<Map<String, Object>, String> colTenKhach, colNgayIn, colNgayOut, colTrangThai;
 
     public void loadData(String soPhong) {
+        Others.animateTableRows(tbvLichSu);
         Others.playButtonAnimation(btnExit);
         lblTitle.setText("Lịch sử & Lịch đặt phòng: " + soPhong);
 

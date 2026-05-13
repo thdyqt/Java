@@ -40,6 +40,7 @@ public class QuanLyDatPhongController {
 
     @FXML
     public void initialize() {
+        Others.animateTableRows(tvDatPhong);
         setupColumns();
         setupButtons();
         setupStatusTabs();

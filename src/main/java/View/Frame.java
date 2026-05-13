@@ -11,11 +11,18 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
+import javafx.scene.control.PasswordField;
 import javafx.scene.layout.*;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.net.URL;
@@ -58,6 +65,14 @@ public class Frame implements Initializable {
 
         currentStaff = UserSession.getInstance().getNhanVien();
         menuUser.setText("Xin chào, " + currentStaff.getHoTen() + " (" + currentStaff.getChucVu() + ")");
+
+        if (!"Admin".equals(currentStaff.getChucVu())) {
+            btnDichVu.setVisible(false);
+            btnDichVu.setManaged(false);
+
+            btnNhanVien.setVisible(false);
+            btnNhanVien.setManaged(false);
+        }
 
 //        menuInfo.setOnAction(event -> openProfileDialog(true));
 //        menuEditAcc.setOnAction(event -> openProfileDialog(false));
@@ -127,12 +142,115 @@ public class Frame implements Initializable {
 
     @FXML
     void handleViewProfile(ActionEvent event) {
-        System.out.println("Mở popup xem thông tin nhân viên");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/NhanVienForm.fxml"));
+            Parent root = loader.load();
+
+            NhanVienFormController controller = loader.getController();
+            controller.setNhanVien(UserSession.getInstance().getNhanVien());
+
+            controller.setViewOnlyMode();
+            Stage stage = new Stage();
+            stage.setTitle("Thông tin cá nhân");
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Others.showAlert(mainPane, "Không thể hiển thị hồ sơ cá nhân!", true);
+        }
     }
 
     @FXML
     void handleChangePassword(ActionEvent event) {
-        System.out.println("Mở popup đổi mật khẩu");
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setTitle("Bảo mật tài khoản");
+        stage.setResizable(false);
+
+        VBox root = new VBox(15);
+        root.setPadding(new Insets(25));
+        root.setStyle("-fx-background-color: white; -fx-background-radius: 12;");
+
+        Label lblTitle = new Label("ĐỔI MẬT KHẨU");
+        lblTitle.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #0f172a;");
+
+        String inputStyle = "-fx-pref-height: 40; -fx-background-radius: 8; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-color: #f8fafc; -fx-font-size: 14px;";
+
+        PasswordField txtOld = new PasswordField();
+        txtOld.setPromptText("Mật khẩu hiện tại");
+        txtOld.setStyle(inputStyle);
+
+        PasswordField txtNew = new PasswordField();
+        txtNew.setPromptText("Mật khẩu mới (ít nhất 6 ký tự)");
+        txtNew.setStyle(inputStyle);
+
+        PasswordField txtConfirm = new PasswordField();
+        txtConfirm.setPromptText("Xác nhận mật khẩu mới");
+        txtConfirm.setStyle(inputStyle);
+
+        Label lblError = new Label();
+        lblError.setStyle("-fx-text-fill: #ef4444; -fx-font-weight: bold; -fx-font-size: 12px;");
+        lblError.setWrapText(true);
+
+        Button btnSave = new Button("✔ CẬP NHẬT");
+        Others.playButtonAnimation(btnSave);
+        btnSave.setStyle("-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand; -fx-pref-height: 40; -fx-pref-width: 130;");
+
+        Button btnCancel = new Button("HỦY BỎ");
+        Others.playButtonAnimation(btnCancel);
+        btnCancel.setStyle("-fx-background-color: white; -fx-text-fill: #475569; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-font-weight: bold; -fx-cursor: hand; -fx-pref-height: 40; -fx-pref-width: 100;");
+
+        btnCancel.setOnAction(e -> stage.close());
+
+        btnSave.setOnAction(e -> {
+            String oldPass = txtOld.getText();
+            String newPass = txtNew.getText();
+            String confirmPass = txtConfirm.getText();
+
+            if (oldPass.isEmpty() || newPass.isEmpty() || confirmPass.isEmpty()) {
+                lblError.setText("Vui lòng điền đầy đủ các trường!");
+                return;
+            }
+
+            if (!oldPass.equals(UserSession.getInstance().getMatKhau())) {
+                lblError.setText("Mật khẩu hiện tại không chính xác!");
+                txtOld.requestFocus();
+                return;
+            }
+
+            if (newPass.length() < 6) {
+                lblError.setText("Mật khẩu mới phải có ít nhất 6 ký tự!");
+                txtNew.requestFocus();
+                return;
+            }
+
+            if (!newPass.equals(confirmPass)) {
+                lblError.setText("Mật khẩu xác nhận không khớp!");
+                txtConfirm.clear();
+                txtConfirm.requestFocus();
+                return;
+            }
+
+            if (NhanVienBLL.changePassword(UserSession.getInstance().getMaNhanVien(), newPass)) {
+                UserSession.getInstance().setMatKhau(newPass);
+                stage.close();
+                Others.showAlert(mainPane, "Đổi mật khẩu thành công!", false);
+            } else {
+                lblError.setText("Có lỗi xảy ra, không thể cập nhật!");
+            }
+        });
+
+        HBox btnBox = new HBox(15, btnCancel, btnSave);
+        btnBox.setAlignment(Pos.CENTER_RIGHT);
+        btnBox.setPadding(new Insets(10, 0, 0, 0));
+
+        root.getChildren().addAll(lblTitle, txtOld, txtNew, txtConfirm, lblError, btnBox);
+
+        Scene scene = new Scene(root, 400, 340);
+        stage.setScene(scene);
+        stage.showAndWait();
     }
 
     @FXML
@@ -210,11 +328,15 @@ public class Frame implements Initializable {
     @FXML
     void showKhachHangView(ActionEvent event) {
         setActiveMenu(btnKhachHang);
+        switchForm("/KhachHangView.fxml");
     }
 
     @FXML
     void showDichVuView(ActionEvent event) {
-        setActiveMenu(btnDichVu);
+        if ("Admin".equals(UserSession.getInstance().getChucVu())) {
+            setActiveMenu(btnDichVu);
+            switchForm("/DichVuView.fxml");
+        }
     }
 
     @FXML
@@ -224,6 +346,9 @@ public class Frame implements Initializable {
 
     @FXML
     void showNhanVienView(ActionEvent event) {
-        setActiveMenu(btnNhanVien);
+        if ("Admin".equals(UserSession.getInstance().getChucVu())) {
+            setActiveMenu(btnNhanVien);
+            switchForm("/NhanVienView.fxml");
+        }
     }
 }

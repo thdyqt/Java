@@ -33,6 +33,10 @@ public class DatPhongBLL {
         return DatPhongDAL.getBookingFullInfo(maDatPhong);
     }
 
+    public static List<Map<String, Object>> getHistoryByCustomerId(int maKH) {
+        return DatPhongDAL.getHistoryByCustomerId(maKH);
+    }
+
     public static boolean checkDateConflict(String roomNumber, LocalDate checkInDate, LocalDate checkOutDate, int excludeMaDatPhong) {
         return DatPhongDAL.checkDateConflict(roomNumber, checkInDate, checkOutDate, excludeMaDatPhong);
     }

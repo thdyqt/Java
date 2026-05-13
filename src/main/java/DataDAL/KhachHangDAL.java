@@ -7,8 +7,35 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class KhachHangDAL {
+    public static List<KhachHang> getAllCustomers() {
+        List<KhachHang> list = new ArrayList<>();
+        String sql = "SELECT * FROM KhachHang ORDER BY MaKhachHang DESC";
+
+        try (Connection conn = DBHelper.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                KhachHang kh = new KhachHang();
+                kh.setMaKhachHang(rs.getInt("MaKhachHang"));
+                kh.setHoTen(rs.getString("HoTen"));
+                kh.setCccdPassport(rs.getString("CCCD_Passport"));
+                kh.setSoDienThoai(rs.getString("SoDienThoai"));
+                kh.setEmail(rs.getString("Email"));
+                kh.setDiaChi(rs.getString("DiaChi"));
+
+                list.add(kh);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
     public static KhachHang getCustomerById(int maKhachHang) {
         String sql = "SELECT * FROM KhachHang WHERE MaKhachHang = ?";
         try (Connection conn = DBHelper.getConnection();

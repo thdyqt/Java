@@ -157,6 +157,32 @@ public class DatPhongDAL {
         return result;
     }
 
+    public static List<Map<String, Object>> getHistoryByCustomerId(int maKH) {
+        List<Map<String, Object>> list = new ArrayList<>();
+        String sql = "SELECT dp.MaDatPhong, " +
+                "(SELECT GROUP_CONCAT(p.SoPhong SEPARATOR ', ') FROM ChiTietDatPhong ct JOIN Phong p ON ct.MaPhong = p.MaPhong WHERE ct.MaDatPhong = dp.MaDatPhong) AS DanhSachPhong, " +
+                "dp.NgayCheckInDuKien, dp.NgayCheckOutDuKien, dp.TrangThai " +
+                "FROM DatPhong dp " +
+                "WHERE dp.MaKhachHang = ? " +
+                "ORDER BY dp.NgayCheckInDuKien DESC";
+
+        try (Connection conn = DBHelper.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, maKH);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Map<String, Object> row = new HashMap<>();
+                row.put("MaDatPhong", rs.getInt("MaDatPhong"));
+                row.put("DanhSachPhong", rs.getString("DanhSachPhong"));
+                row.put("NgayIn", rs.getTimestamp("NgayCheckInDuKien").toLocalDateTime());
+                row.put("NgayOut", rs.getTimestamp("NgayCheckOutDuKien").toLocalDateTime());
+                row.put("TrangThai", rs.getString("TrangThai"));
+                list.add(row);
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return list;
+    }
+
     public static boolean checkDateConflict(String roomNumber, LocalDate checkInDate, LocalDate checkOutDate, int excludeMaDatPhong) {
         String sql = "SELECT COUNT(*) AS SoLuong FROM DatPhong dp " +
                 "JOIN ChiTietDatPhong ct ON dp.MaDatPhong = ct.MaDatPhong " +

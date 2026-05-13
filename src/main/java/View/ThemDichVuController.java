@@ -24,7 +24,7 @@ public class ThemDichVuController {
 
     @FXML
     public void initialize() {
-        List<DichVu> menu = DichVuBLL.getAllDichVu();
+        List<DichVu> menu = DichVuBLL.getActiveDichVu();
         ObservableList<DichVu> items = FXCollections.observableArrayList(menu);
         FilteredList<DichVu> filteredItems = new FilteredList<>(items, p -> true);
 

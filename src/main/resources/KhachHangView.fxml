@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="mainPane" prefHeight="750.0" prefWidth="1150.0" spacing="20.0" style="-fx-background-color: #f1f5f9;" stylesheets="@style.css, @table-style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.QuanLyKhachHangController">
+    <padding>
+        <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+    </padding>
+    <children>
+        <HBox alignment="CENTER_LEFT" spacing="15.0">
+            <children>
+                <VBox>
+                    <children>
+                        <Label text="QUẢN LÝ DANH SÁCH KHÁCH HÀNG" textFill="#0f172a">
+                            <font><Font name="System Bold" size="24.0" /></font>
+                        </Label>
+                        <Label text="Lưu trữ và quản lý thông tin khách hàng đã và đang lưu trú" textFill="#64748b" />
+                    </children>
+                </VBox>
+                <Pane HBox.hgrow="ALWAYS" />
+                <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#handleAddNewCustomer" prefHeight="45.0" style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;" text="➕ THÊM KHÁCH HÀNG">
+                    <padding><Insets left="20.0" right="20.0" /></padding>
+                </Button>
+            </children>
+        </HBox>
+
+        <HBox spacing="15.0" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 5);">
+            <children>
+                <VBox prefWidth="400.0" spacing="5.0">
+                    <children>
+                        <Label text="Tìm kiếm thông minh" textFill="#64748b" />
+                        <TextField fx:id="txtSearch" prefHeight="35.0" promptText="Tìm theo Tên, SĐT, Email hoặc CCCD/Passport..." style="-fx-background-radius: 8;" />
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+
+        <TableView fx:id="tvKhachHang" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="colMaKH" prefWidth="80.0" text="Mã KH" />
+                <TableColumn fx:id="colHoTen" prefWidth="200.0" text="Họ và Tên" />
+                <TableColumn fx:id="colCCCD" prefWidth="150.0" text="CCCD / Passport" />
+                <TableColumn fx:id="colSDT" prefWidth="120.0" text="Số điện thoại" />
+                <TableColumn fx:id="colEmail" prefWidth="200.0" text="Email" />
+                <TableColumn fx:id="colDiaChi" prefWidth="300.0" text="Địa chỉ" />
+            </columns>
+        </TableView>
+
+        <HBox alignment="CENTER_RIGHT" spacing="15.0" style="-fx-background-color: #1e293b; -fx-padding: 15; -fx-background-radius: 12;">
+            <children>
+                <Label text="THAO TÁC NHANH:" textFill="#94a3b8">
+                    <font><Font name="System Bold" size="13.0" /></font>
+                </Label>
+                <Button fx:id="btnEdit" onAction="#handleEditCustomer" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: #f59e0b; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="📝 SỬA THÔNG TIN" />
+                <Button fx:id="btnViewHistory" onAction="#handleViewBookingHistory" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="📜 LỊCH SỬ ĐẶT" />
+            </children>
+        </HBox>
+    </children>
+</VBox>

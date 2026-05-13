@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="mainPane" prefHeight="750.0" prefWidth="1150.0" spacing="20.0" style="-fx-background-color: #f1f5f9;" stylesheets="@style.css, @table-style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.QuanLyDichVuController">
+    <padding>
+        <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+    </padding>
+    <children>
+        <HBox alignment="CENTER_LEFT" spacing="15.0">
+            <children>
+                <VBox>
+                    <children>
+                        <Label text="QUẢN LÝ DANH MỤC DỊCH VỤ" textFill="#0f172a">
+                            <font><Font name="System Bold" size="24.0" /></font>
+                        </Label>
+                        <Label text="Thiết lập bảng giá và trạng thái kinh doanh của các dịch vụ" textFill="#64748b" />
+                    </children>
+                </VBox>
+                <Pane>
+                    <HBox.hgrow>
+                        <Priority fx:constant="ALWAYS" />
+                    </HBox.hgrow>
+                </Pane>
+                <Button mnemonicParsing="false" onAction="#handleAddNew" prefHeight="45.0" style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;" text="➕ THÊM DỊCH VỤ MỚI">
+                    <padding><Insets left="20.0" right="20.0" /></padding>
+                </Button>
+            </children>
+        </HBox>
+
+        <HBox alignment="CENTER_LEFT" spacing="15.0" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 5);">
+            <children>
+                <VBox prefWidth="400.0" spacing="5.0">
+                    <children>
+                        <Label text="Tìm kiếm nhanh" textFill="#64748b" />
+                        <TextField fx:id="txtSearch" prefHeight="35.0" promptText="Nhập tên dịch vụ hoặc tiện ích..." style="-fx-background-radius: 8;" />
+                    </children>
+                </VBox>
+                <Pane>
+                    <HBox.hgrow>
+                        <Priority fx:constant="ALWAYS" />
+                    </HBox.hgrow>
+                </Pane>
+                <CheckBox fx:id="chkShowHidden" mnemonicParsing="false" text="Hiển thị các dịch vụ đã ngừng bán" textFill="#64748b">
+                    <font>
+                        <Font name="System Bold" size="13.0" />
+                    </font>
+                    <HBox.margin>
+                        <Insets right="10.0" />
+                    </HBox.margin>
+                </CheckBox>
+            </children>
+        </HBox>
+
+        <TableView fx:id="tvDichVu" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="colMaDV" prefWidth="120.0" text="Mã Dịch Vụ" />
+                <TableColumn fx:id="colTenDV" prefWidth="380.0" text="Tên Dịch Vụ / Tiện ích" />
+                <TableColumn fx:id="colDonGia" prefWidth="200.0" text="Đơn Giá (VNĐ)" />
+                <TableColumn fx:id="colTrangThai" prefWidth="180.0" text="Trạng Thái" />
+            </columns>
+        </TableView>
+
+        <HBox alignment="CENTER_RIGHT" spacing="15.0" style="-fx-background-color: #1e293b; -fx-padding: 15; -fx-background-radius: 12;">
+            <children>
+                <Label text="THAO TÁC QUẢN TRỊ:" textFill="#94a3b8">
+                    <font><Font name="System Bold" size="13.0" /></font>
+                </Label>
+                <Button fx:id="btnEdit" onAction="#handleEdit" prefHeight="40.0" prefWidth="140.0" style="-fx-background-color: #f59e0b; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="📝 CHỈNH SỬA" />
+                <Button fx:id="btnRestore" onAction="#handleRestore" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="🔄 MỞ BÁN LẠI" />
+                <Button fx:id="btnStop" onAction="#handleStop" prefHeight="40.0" prefWidth="140.0" style="-fx-background-color: #ef4444; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="🚫 NGỪNG BÁN" />
+            </children>
+        </HBox>
+    </children>
+</VBox>

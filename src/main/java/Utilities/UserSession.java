@@ -10,6 +10,7 @@ public class UserSession {
     private String tenDangNhap;
     private String matKhau;
     private String soDienThoai;
+    private NhanVien.TrangThaiNhanVien trangThai;
 
     public static UserSession getInstance() {
         if (instance == null) {
@@ -19,25 +20,17 @@ public class UserSession {
     }
 
     public NhanVien getNhanVien() {
-        return new NhanVien (maNhanVien, hoTen, chucVu, tenDangNhap, matKhau, soDienThoai);
-    }
-
-    public void setNhanVien(int id, String name, String role, String user, String pass, String phone) {
-        this.maNhanVien = id;
-        this.hoTen = name;
-        this.chucVu = role;
-        this.tenDangNhap = user;
-        this.matKhau = pass;
-        this.soDienThoai = phone;
+        return new NhanVien(maNhanVien, hoTen, chucVu, tenDangNhap, matKhau, soDienThoai, trangThai);
     }
 
     public void setNhanVien(NhanVien nv) {
         this.maNhanVien = nv.getMaNhanVien();
-        this.hoTen =  nv.getHoTen();
+        this.hoTen = nv.getHoTen();
         this.chucVu = nv.getChucVu();
         this.tenDangNhap = nv.getTenDangNhap();
         this.matKhau = nv.getMatKhau();
         this.soDienThoai = nv.getSoDienThoai();
+        this.trangThai = nv.getTrangThai();
     }
 
     public void clearSession() {
@@ -47,53 +40,46 @@ public class UserSession {
         this.tenDangNhap = null;
         this.matKhau = null;
         this.soDienThoai = null;
+        this.trangThai = null;
     }
 
-    public int getMaNhanVien() {
-        return maNhanVien;
+    public int getMaNhanVien() { return maNhanVien; }
+    public String getHoTen() { return hoTen; }
+    public String getChucVu() { return chucVu; }
+    public String getTenDangNhap() { return tenDangNhap; }
+    public String getMatKhau() { return matKhau; }
+    public String getSoDienThoai() { return soDienThoai; }
+    public NhanVien.TrangThaiNhanVien getTrangThai() { return trangThai; }
+
+    public static void setInstance(UserSession instance) {
+        UserSession.instance = instance;
     }
 
     public void setMaNhanVien(int maNhanVien) {
         this.maNhanVien = maNhanVien;
     }
 
-    public String getHoTen() {
-        return hoTen;
-    }
-
     public void setHoTen(String hoTen) {
         this.hoTen = hoTen;
-    }
-
-    public String getChucVu() {
-        return chucVu;
     }
 
     public void setChucVu(String chucVu) {
         this.chucVu = chucVu;
     }
 
-    public String getTenDangNhap() {
-        return tenDangNhap;
-    }
-
     public void setTenDangNhap(String tenDangNhap) {
         this.tenDangNhap = tenDangNhap;
-    }
-
-    public String getMatKhau() {
-        return matKhau;
     }
 
     public void setMatKhau(String matKhau) {
         this.matKhau = matKhau;
     }
 
-    public String getSoDienThoai() {
-        return soDienThoai;
-    }
-
     public void setSoDienThoai(String soDienThoai) {
         this.soDienThoai = soDienThoai;
+    }
+
+    public void setTrangThai(NhanVien.TrangThaiNhanVien trangThai) {
+        this.trangThai = trangThai;
     }
 }
