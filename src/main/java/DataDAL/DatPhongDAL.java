@@ -157,12 +157,13 @@ public class DatPhongDAL {
         return result;
     }
 
-    public static boolean checkDateConflict(String roomNumber, LocalDate checkInDate, LocalDate checkOutDate) {
+    public static boolean checkDateConflict(String roomNumber, LocalDate checkInDate, LocalDate checkOutDate, int excludeMaDatPhong) {
         String sql = "SELECT COUNT(*) AS SoLuong FROM DatPhong dp " +
                 "JOIN ChiTietDatPhong ct ON dp.MaDatPhong = ct.MaDatPhong " +
                 "JOIN Phong p ON ct.MaPhong = p.MaPhong " +
                 "WHERE p.SoPhong = ? " +
-                "AND dp.TrangThai = 'Chờ nhận phòng' " +
+                "AND dp.TrangThai IN ('Chờ nhận phòng', 'Đang ở') " + // Xét cả khách đang ở
+                "AND dp.MaDatPhong != ? " + // BỎ QUA CHÍNH ĐƠN ĐANG SỬA
                 "AND dp.NgayCheckInDuKien < ? " +
                 "AND dp.NgayCheckOutDuKien > ?";
 
@@ -170,8 +171,9 @@ public class DatPhongDAL {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, roomNumber);
-            stmt.setDate(2, java.sql.Date.valueOf(checkOutDate));
-            stmt.setDate(3, java.sql.Date.valueOf(checkInDate));
+            stmt.setInt(2, excludeMaDatPhong); 
+            stmt.setDate(3, java.sql.Date.valueOf(checkOutDate));
+            stmt.setDate(4, java.sql.Date.valueOf(checkInDate));
 
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {

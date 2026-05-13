@@ -18,6 +18,7 @@ import javafx.stage.Stage;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -79,7 +80,8 @@ public class CheckInController {
         for (int i = 0; i < 24; i++) cbGioCheckIn.getItems().add(i);
         for (int i = 0; i < 60; i += 5) cbPhutCheckIn.getItems().add(i);
 
-        cbGioCheckIn.setValue(14);
+        int currentHour = LocalDateTime.now().getHour();
+        cbGioCheckIn.setValue(currentHour);
         cbPhutCheckIn.setValue(0);
     }
 
@@ -92,29 +94,15 @@ public class CheckInController {
 
                 if (newVal.isBefore(LocalDate.now())) {
                     Others.showAlert(mainPane, "Ngày nhận phòng không được chọn trong quá khứ!", true);
-                    Platform.runLater(() -> {
-                        if (oldVal != null && !oldVal.isBefore(LocalDate.now())) {
-                            dpCheckIn.setValue(oldVal);
-                        } else {
-                            dpCheckIn.setValue(LocalDate.now());
-                        }
-                    });
+                    Platform.runLater(() -> dpCheckIn.setValue(oldVal != null ? oldVal : LocalDate.now()));
                 }
             }
         });
 
         dpCheckOut.valueProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null && dpCheckIn.getValue() != null) {
-                if (newVal.isBefore(dpCheckIn.getValue())) {
-                    Others.showAlert(mainPane, "Ngày trả phòng không được phép trước ngày nhận phòng!", true);
-                    Platform.runLater(() -> {
-                        if (oldVal != null && !oldVal.isBefore(dpCheckIn.getValue())) {
-                            dpCheckOut.setValue(oldVal);
-                        } else {
-                            dpCheckOut.setValue(dpCheckIn.getValue().plusDays(1));
-                        }
-                    });
-                }
+            if (newVal != null && dpCheckIn.getValue() != null && newVal.isBefore(dpCheckIn.getValue())) {
+                Others.showAlert(mainPane, "Ngày trả phòng không được phép trước ngày nhận phòng!", true);
+                Platform.runLater(() -> dpCheckOut.setValue(oldVal != null ? oldVal : dpCheckIn.getValue().plusDays(1)));
             }
         });
     }
@@ -126,44 +114,33 @@ public class CheckInController {
         txtSoGioThue.setDisable(true);
 
         cbHinhThuc.valueProperty().addListener((obs, oldVal, newVal) -> {
+            dpCheckIn.setDisable(false);
+            cbGioCheckIn.setDisable(false);
+            cbPhutCheckIn.setDisable(false);
+
             if ("Theo giờ".equals(newVal)) {
                 txtSoGioThue.setDisable(false);
-                dpCheckIn.setDisable(true);
                 dpCheckOut.setDisable(true);
-                cbGioCheckIn.setDisable(true);
-                cbPhutCheckIn.setDisable(true);
-                dpCheckIn.setValue(LocalDate.now());
             } else if ("Qua đêm".equals(newVal)) {
                 txtSoGioThue.setDisable(true);
                 txtSoGioThue.clear();
-                dpCheckIn.setDisable(true);
                 dpCheckOut.setDisable(true);
-                cbGioCheckIn.setDisable(true);
-                cbPhutCheckIn.setDisable(true);
-                dpCheckIn.setValue(LocalDate.now());
-                dpCheckOut.setValue(LocalDate.now().plusDays(1));
+                cbGioCheckIn.setValue(22);
             } else {
                 txtSoGioThue.setDisable(true);
                 txtSoGioThue.clear();
-                dpCheckIn.setDisable(false);
                 dpCheckOut.setDisable(false);
-                cbGioCheckIn.setDisable(false);
-                cbPhutCheckIn.setDisable(false);
+                cbGioCheckIn.setValue(14);
             }
         });
     }
 
     private void setupInputConstraints() {
         Others.setMaxLength(txtHoTen, 100);
-        Others.setMaxLength(txtSDT, 10);
-        Others.setNumericOnly(txtSDT);
+        Others.setMaxLength(txtSDT, 10); Others.setNumericOnly(txtSDT);
         Others.setMaxLength(txtCCCD, 20);
-        Others.setMaxLength(txtEmail, 100);
-        Others.setMaxLength(txtDiaChi, 255);
-        Others.setMaxLength(txtTienCoc, 10);
-        Others.setNumericOnly(txtTienCoc);
-        Others.setMaxLength(txtSoGioThue, 3);
-        Others.setNumericOnly(txtSoGioThue);
+        Others.setMaxLength(txtTienCoc, 10); Others.setNumericOnly(txtTienCoc);
+        Others.setMaxLength(txtSoGioThue, 3); Others.setNumericOnly(txtSoGioThue);
     }
 
     private void setupCustomerAutoFill() {
@@ -175,7 +152,6 @@ public class CheckInController {
                     txtSDT.setText(kh.getSoDienThoai());
                     txtEmail.setText(kh.getEmail());
                     txtDiaChi.setText(kh.getDiaChi());
-                    Others.showAlert(mainPane, "👋 Chào mừng khách quen quay lại: " + kh.getHoTen(), false);
                 }
             }
         });
@@ -185,13 +161,8 @@ public class CheckInController {
         if (fpExtraRooms == null) return;
         fpExtraRooms.getChildren().clear();
         List<Phong> allRooms = PhongBLL.getAllRooms();
-
         for (Phong room : allRooms) {
-            if ("Trống".equals(room.getTrangThai())) {
-                if (primaryRoomNumber != null && room.getSoPhong().equals(primaryRoomNumber)) {
-                    continue;
-                }
-
+            if ("Trống".equals(room.getTrangThai()) && (primaryRoomNumber == null || !room.getSoPhong().equals(primaryRoomNumber))) {
                 String type = room.getMaLoaiPhong() == 2 ? "DELUXE" : (room.getMaLoaiPhong() == 3 ? "SUITE" : "STANDARD");
                 CheckBox cb = new CheckBox("Phòng " + room.getSoPhong() + " (" + type + ")");
                 cb.setUserData(room.getSoPhong());
@@ -209,8 +180,8 @@ public class CheckInController {
         txtHoTen.setText((String) data.get("HoTen"));
         txtSDT.setText((String) data.get("SoDienThoai"));
         txtCCCD.setText((String) data.get("CCCD"));
-        txtEmail.setText(data.get("Email") != null ? (String) data.get("Email") : "");
-        txtDiaChi.setText(data.get("DiaChi") != null ? (String) data.get("DiaChi") : "");
+        txtEmail.setText((String) data.get("Email"));
+        txtDiaChi.setText((String) data.get("DiaChi"));
         txtTienCoc.setText(String.valueOf(data.get("TienCoc")).replace(".0", ""));
 
         LocalDateTime in = (LocalDateTime) data.get("NgayIn");
@@ -224,10 +195,8 @@ public class CheckInController {
         if (dsPhongStr != null) {
             oldDanhSachPhong = java.util.Arrays.asList(dsPhongStr.split(", "));
             for (Node node : fpExtraRooms.getChildren()) {
-                if (node instanceof CheckBox cb) {
-                    if (oldDanhSachPhong.contains((String) cb.getUserData())) {
-                        cb.setSelected(true);
-                    }
+                if (node instanceof CheckBox cb && oldDanhSachPhong.contains((String) cb.getUserData())) {
+                    cb.setSelected(true);
                 }
             }
         }
@@ -236,76 +205,44 @@ public class CheckInController {
     @FXML
     void handleConfirmCheckIn(ActionEvent event) {
         if (txtHoTen.getText().isEmpty() || txtSDT.getText().isEmpty() || txtCCCD.getText().isEmpty()) {
-            Others.showAlert(mainPane, "Vui lòng nhập đầy đủ thông tin bắt buộc (*)", true);
+            Others.showAlert(mainPane, "Vui lòng nhập đầy đủ thông tin (*)", true);
             return;
         }
 
         String hinhThuc = cbHinhThuc.getValue();
-        if ("Theo giờ".equals(hinhThuc) && txtSoGioThue.getText().isEmpty()) {
-            Others.showAlert(mainPane, "Vui lòng nhập số giờ muốn thuê!", true);
-            return;
+        LocalDate ngayCheckIn = dpCheckIn.getValue();
+
+        LocalDateTime thoiGianCheckIn = ngayCheckIn.atTime(cbGioCheckIn.getValue(), cbPhutCheckIn.getValue());
+        LocalDateTime thoiGianCheckOut = null;
+
+        if ("Theo ngày".equals(hinhThuc)) {
+            thoiGianCheckOut = dpCheckOut.getValue().atTime(12, 0);
+        } else if ("Qua đêm".equals(hinhThuc)) {
+            thoiGianCheckOut = thoiGianCheckIn.toLocalDate().plusDays(1).atTime(8, 0);
+        } else {
+            int soGio = Integer.parseInt(txtSoGioThue.getText());
+            thoiGianCheckOut = thoiGianCheckIn.plusHours(soGio);
         }
 
-        LocalDate ngayCheckIn = dpCheckIn.getValue();
-        LocalDate ngayCheckOut = dpCheckOut.getValue();
-
-        if (ngayCheckIn == null || ngayCheckIn.isBefore(LocalDate.now())) {
-            Others.showAlert(mainPane, "Ngày nhận phòng không hợp lệ!", true);
+        if (thoiGianCheckIn.isBefore(LocalDateTime.now().minusMinutes(10))) {
+            Others.showAlert(mainPane, "Thời gian nhận phòng không thể nằm trong quá khứ!", true);
             return;
         }
 
         List<String> danhSachPhongChon = new ArrayList<>();
-
-        if (currentRoom != null) {
-            danhSachPhongChon.add(currentRoom.getSoPhong());
-        }
-
-        if (fpExtraRooms != null) {
-            for (Node node : fpExtraRooms.getChildren()) {
-                if (node instanceof CheckBox && ((CheckBox) node).isSelected()) {
-                    danhSachPhongChon.add((String) node.getUserData());
-                }
-            }
+        if (currentRoom != null) danhSachPhongChon.add(currentRoom.getSoPhong());
+        for (Node node : fpExtraRooms.getChildren()) {
+            if (node instanceof CheckBox cb && cb.isSelected()) danhSachPhongChon.add((String) cb.getUserData());
         }
 
         if (danhSachPhongChon.isEmpty()) {
-            Others.showAlert(mainPane, "Vui lòng chọn ít nhất 1 phòng để đặt!", true);
-            return;
-        }
-
-        LocalDateTime thoiGianCheckIn;
-        LocalDateTime thoiGianCheckOut = null;
-
-        if ("Theo ngày".equals(hinhThuc)) {
-            thoiGianCheckIn = ngayCheckIn.atTime(cbGioCheckIn.getValue(), cbPhutCheckIn.getValue());
-            thoiGianCheckOut = ngayCheckOut.atTime(12, 0);
-        } else if ("Qua đêm".equals(hinhThuc)) {
-            thoiGianCheckIn = LocalDateTime.now();
-            thoiGianCheckOut = ngayCheckOut.atTime(8, 0);
-        } else {
-            thoiGianCheckIn = LocalDateTime.now();
-            int soGio = Integer.parseInt(txtSoGioThue.getText());
-            thoiGianCheckOut = LocalDateTime.now().plusHours(soGio);
-        }
-
-        if (thoiGianCheckIn.isBefore(LocalDateTime.now().minusMinutes(5))) {
-            Others.showAlert(mainPane, "Thời gian nhận phòng không hợp lệ (đang nằm trong quá khứ)! Vui lòng chỉnh lại Giờ/Phút.", true);
-
-            cbGioCheckIn.setStyle("-fx-border-color: red; -fx-border-radius: 4;");
-            cbPhutCheckIn.setStyle("-fx-border-color: red; -fx-border-radius: 4;");
-
-            cbGioCheckIn.setOnMouseClicked(e -> cbGioCheckIn.setStyle(""));
-            cbPhutCheckIn.setOnMouseClicked(e -> cbPhutCheckIn.setStyle(""));
-
+            Others.showAlert(mainPane, "Vui lòng chọn ít nhất 1 phòng!", true);
             return;
         }
 
         for (String soPhong : danhSachPhongChon) {
-            if (editingMaDatPhong != -1 && oldDanhSachPhong.contains(soPhong)) {
-                continue;
-            }
-            if (DatPhongBLL.checkDateConflict(soPhong, ngayCheckIn, ngayCheckOut)) {
-                Others.showAlert(mainPane, "Phòng " + soPhong + " đã có khách đặt trong khoảng thời gian này!", true);
+            if (DatPhongBLL.checkDateConflict(soPhong, thoiGianCheckIn.toLocalDate(), thoiGianCheckOut.toLocalDate(), editingMaDatPhong)) {
+                Others.showAlert(mainPane, "Phòng " + soPhong + " đã có người đặt trong thời gian này!", true);
                 return;
             }
         }
@@ -314,11 +251,7 @@ public class CheckInController {
         if (isReservationMode) {
             trangThaiDon = "Chờ nhận phòng";
         } else {
-            if (thoiGianCheckIn.isAfter(LocalDateTime.now().plusMinutes(15))) {
-                trangThaiDon = "Chờ nhận phòng";
-            } else {
-                trangThaiDon = "Đang ở";
-            }
+            trangThaiDon = thoiGianCheckIn.isAfter(LocalDateTime.now().plusMinutes(15)) ? "Chờ nhận phòng" : "Đang ở";
         }
 
         double tienCoc = txtTienCoc.getText().isEmpty() ? 0 : Double.parseDouble(txtTienCoc.getText());
@@ -335,15 +268,14 @@ public class CheckInController {
         }
 
         if (isSuccess) {
-            Others.showAlert(mainPane, editingMaDatPhong != -1 ? "Cập nhật đơn thành công!" : "Lập đơn thành công!", false);
+            Others.showAlert(mainPane, "Lưu thông tin thành công!", false);
             ((Stage) mainPane.getScene().getWindow()).close();
         } else {
-            Others.showAlert(mainPane, "Đã có lỗi xảy ra khi kết nối CSDL!", true);
+            Others.showAlert(mainPane, "Có lỗi xảy ra khi lưu dữ liệu!", true);
         }
     }
 
-    @FXML
-    void handleCancel(ActionEvent event) {
+    @FXML void handleCancel(ActionEvent event) {
         ((Stage) mainPane.getScene().getWindow()).close();
     }
 }

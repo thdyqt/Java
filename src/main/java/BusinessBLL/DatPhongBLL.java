@@ -33,8 +33,8 @@ public class DatPhongBLL {
         return DatPhongDAL.getBookingFullInfo(maDatPhong);
     }
 
-    public static boolean checkDateConflict(String roomNumber, LocalDate checkInDate, LocalDate checkOutDate) {
-        return DatPhongDAL.checkDateConflict(roomNumber, checkInDate, checkOutDate);
+    public static boolean checkDateConflict(String roomNumber, LocalDate checkInDate, LocalDate checkOutDate, int excludeMaDatPhong) {
+        return DatPhongDAL.checkDateConflict(roomNumber, checkInDate, checkOutDate, excludeMaDatPhong);
     }
 
     public static boolean processCheckIn(String fullName, String phoneNumber, String cccdPassport, String email, String address,
