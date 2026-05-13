@@ -28,7 +28,7 @@ import javafx.util.Duration;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class Frame implements Initializable {
+public class FrameController implements Initializable {
     @FXML
     private BorderPane mainPane;
 
@@ -50,7 +50,7 @@ public class Frame implements Initializable {
     private Region slideIndicator;
 
     private NhanVien currentStaff;
-    public static Frame instance;
+    public static FrameController instance;
     private Button[] menuButtons;
     private boolean isSidebarVisible = true;
     private Timeline sidebarTimeline;

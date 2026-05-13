@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane fx:id="mainPane" prefHeight="600.0" prefWidth="900.0" styleClass="main-wrapper" stylesheets="@login.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Login">
+<StackPane fx:id="mainPane" prefHeight="600.0" prefWidth="900.0" styleClass="main-wrapper" stylesheets="@login.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.LoginController">
     <children>
 
         <HBox fx:id="loginBox" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" styleClass="split-container">
