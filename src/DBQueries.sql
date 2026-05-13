@@ -64,7 +64,8 @@ CREATE TABLE NhanVien (
     ChucVu VARCHAR(50),
     TenDangNhap VARCHAR(50) UNIQUE,
     MatKhau VARCHAR(255),
-    SoDienThoai VARCHAR(15)
+    SoDienThoai VARCHAR(15),
+    TrangThai ENUM('Đang làm việc', 'Đã nghỉ việc') DEFAULT 'Đang làm việc'
 );
 
 USE quanlykhachsan;
@@ -79,7 +80,7 @@ CREATE TABLE DatPhong (
     MaKhachHang INT,
     MaNhanVien INT,
     NgayDat DATETIME DEFAULT CURRENT_TIMESTAMP,
-    NgayCheckInDuKien DATETIME,chitietdatphong
+    NgayCheckInDuKien DATETIME,
     NgayCheckOutDuKien DATETIME,
     TienCoc DOUBLE DEFAULT 0,
     TrangThai ENUM('Chờ nhận phòng', 'Đang ở', 'Đã trả phòng', 'Đã hủy') DEFAULT 'Chờ nhận phòng',
@@ -101,7 +102,8 @@ CREATE TABLE ChiTietDatPhong (
 CREATE TABLE DichVu (
     MaDichVu INT AUTO_INCREMENT PRIMARY KEY,
     TenDichVu VARCHAR(100) NOT NULL,
-    DonGia DECIMAL(15, 2) NOT NULL
+    DonGia DECIMAL(15, 2) NOT NULL,
+    TrangThai ENUM('Đang bán', 'Ngừng kinh doanh') DEFAULT 'Đang bán'
 );
 
 USE QuanLyKhachSan;
