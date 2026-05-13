@@ -19,11 +19,13 @@ import java.util.List;
 public class HoaDonController {
     @FXML private Label lblMaHoaDon, lblTenKhach, lblNgayThanhToan, lblDanhSachPhong;
     @FXML private Label lblTongPhong, lblTongDV, lblPhuThu, lblGiamGia, lblTongThanhToan;
+    @FXML private Button btnExit;
     @FXML private TableView<InvoiceRow> tvChiTiet;
     @FXML private TableColumn<InvoiceRow, String> colNoiDung, colThanhTien;
 
     @FXML
     public void initialize() {
+        Others.playButtonAnimation(btnExit);
         tvChiTiet.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         colNoiDung.prefWidthProperty().bind(tvChiTiet.widthProperty().multiply(0.65));
         colThanhTien.prefWidthProperty().bind(tvChiTiet.widthProperty().multiply(0.34));

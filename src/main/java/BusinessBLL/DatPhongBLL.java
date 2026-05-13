@@ -29,6 +29,10 @@ public class DatPhongBLL {
         return DatPhongDAL.getAllBookingsWithDetails();
     }
 
+    public static Map<String, Object> getBookingFullInfo(int maDatPhong) {
+        return DatPhongDAL.getBookingFullInfo(maDatPhong);
+    }
+
     public static boolean checkDateConflict(String roomNumber, LocalDate checkInDate, LocalDate checkOutDate) {
         return DatPhongDAL.checkDateConflict(roomNumber, checkInDate, checkOutDate);
     }
@@ -81,4 +85,7 @@ public class DatPhongBLL {
         return DatPhongDAL.changeStatus(maDatPhong, newStatus);
     }
 
+    public static boolean updateBooking(int maDatPhong, String hoTen, String sdt, String cccd, String email, String diaChi, List<String> roomNumbers, LocalDateTime checkIn, LocalDateTime checkOut, double tienCoc) {
+        return DatPhongDAL.updateBookingTransaction(maDatPhong, hoTen, sdt, cccd, email, diaChi, roomNumbers, checkIn, checkOut, tienCoc);
+    }
 }

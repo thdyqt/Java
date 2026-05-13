@@ -135,8 +135,8 @@
 
         <HBox alignment="CENTER_RIGHT" spacing="15.0">
             <children>
-                <Button mnemonicParsing="false" onAction="#handleCancel" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #f1f5f9; -fx-text-fill: #475569; -fx-font-weight: bold; -fx-cursor: hand;" text="Hủy bỏ" />
-                <Button mnemonicParsing="false" onAction="#handleConfirmCheckIn" prefHeight="45.0" prefWidth="240.0" style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand;" text="XÁC NHẬN LƯU THÔNG TIN" />
+                <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#handleCancel" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #f1f5f9; -fx-text-fill: #475569; -fx-font-weight: bold; -fx-cursor: hand;" text="Hủy bỏ" />
+                <Button fx:id="btnSave" mnemonicParsing="false" onAction="#handleConfirmCheckIn" prefHeight="45.0" prefWidth="240.0" style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand;" text="XÁC NHẬN LƯU THÔNG TIN" />
             </children>
             <VBox.margin>
                 <Insets top="10.0" />

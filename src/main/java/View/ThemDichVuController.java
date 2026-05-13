@@ -17,6 +17,7 @@ public class ThemDichVuController {
     @FXML private ComboBox<DichVu> cbDichVu;
     @FXML private Spinner<Integer> spSoLuong;
     @FXML private Label lblThanhTien;
+    @FXML private Button btnConfirm, btnCancel;
 
     private int bookingId;
     private boolean isSuccess = false;
@@ -26,8 +27,11 @@ public class ThemDichVuController {
         List<DichVu> menu = DichVuBLL.getAllDichVu();
         ObservableList<DichVu> items = FXCollections.observableArrayList(menu);
         FilteredList<DichVu> filteredItems = new FilteredList<>(items, p -> true);
-        cbDichVu.setItems(filteredItems);
 
+        Others.playButtonAnimation(btnConfirm);
+        Others.playButtonAnimation(btnCancel);
+
+        cbDichVu.setItems(filteredItems);
         cbDichVu.setConverter(new StringConverter<DichVu>() {
             @Override
             public String toString(DichVu object) {

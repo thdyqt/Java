@@ -2,9 +2,11 @@ package View;
 
 import BusinessBLL.DatPhongBLL;
 import DataDAL.DatPhongDAL;
+import Utilities.Others;
 import javafx.beans.property.SimpleStringProperty; // Thêm import này
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -16,10 +18,12 @@ import java.util.Map;
 
 public class LichSuDatController {
     @FXML private Label lblTitle;
+    @FXML private Button btnExit;
     @FXML private TableView<Map<String, Object>> tbvLichSu;
     @FXML private TableColumn<Map<String, Object>, String> colTenKhach, colNgayIn, colNgayOut, colTrangThai;
 
     public void loadData(String soPhong) {
+        Others.playButtonAnimation(btnExit);
         lblTitle.setText("Lịch sử & Lịch đặt phòng: " + soPhong);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");

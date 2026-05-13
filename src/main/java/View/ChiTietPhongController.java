@@ -26,18 +26,24 @@ import java.util.List;
 
 public class ChiTietPhongController {
     @FXML private VBox mainPane;
+
     // Thông tin khách hàng
     @FXML private Label lblHoTen, lblSDT, lblCCCD, lblEmail, lblDiaChi;
+
     // Thông tin thời gian
     @FXML private Label lblNgayDat, lblNgayVao, lblNgayRa, lblDanhSachPhong;
+
     // Thống kê chi phí
     @FXML private Label lblTienPhong, lblTienDichVu, lblTienCoc, lblTongThanhToan;
-    // Nhập liệu điều chỉnh
+
     @FXML private TextField txtPhuThu, txtGiamGia;
     @FXML private ComboBox<String> cbPhuongThuc;
+    @FXML private Button btnAddService, btnCheckout;
+
     // Bảng chi tiết tiền từng phòng
     @FXML private TableView<ChiTietDatPhong> tvChiTietPhong;
     @FXML private TableColumn<ChiTietDatPhong, String> colSoPhong, colLoaiPhong, colTienPhongLe;
+
     // Bảng dịch vụ
     @FXML private TableView<SuDungDichVu> tvDichVu;
     @FXML private TableColumn<SuDungDichVu, Number> colSTT;
@@ -51,6 +57,9 @@ public class ChiTietPhongController {
 
     @FXML
     public void initialize() {
+        Others.playButtonAnimation(btnCheckout);
+        Others.playButtonAnimation(btnAddService);
+
         cbPhuongThuc.getItems().addAll("Tiền mặt", "Chuyển khoản");
         cbPhuongThuc.setValue("Tiền mặt");
 

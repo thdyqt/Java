@@ -32,7 +32,7 @@ public class QuanLyDatPhongController {
     @FXML private TableView<BookingRow> tvDatPhong;
     @FXML private TableColumn<BookingRow, String> colMaDat, colKhachHang, colSDT, colPhong, colCheckIn, colCheckOut, colTienCoc, colTrangThai;
 
-    @FXML private Button btnQuickCheckIn, btnQuickCheckOut, btnCancelBooking;
+    @FXML private Button btnEditBooking, btnQuickCheckIn, btnQuickCheckOut, btnCancelBooking;
 
     private ObservableList<BookingRow> masterData = FXCollections.observableArrayList();
     private FilteredList<BookingRow> filteredData;
@@ -41,6 +41,7 @@ public class QuanLyDatPhongController {
     @FXML
     public void initialize() {
         setupColumns();
+        setupButtons();
         setupStatusTabs();
         setupListeners();
         loadData();
@@ -66,6 +67,13 @@ public class QuanLyDatPhongController {
         colCheckOut.prefWidthProperty().bind(tvDatPhong.widthProperty().multiply(0.12));
         colTienCoc.prefWidthProperty().bind(tvDatPhong.widthProperty().multiply(0.10));
         colTrangThai.prefWidthProperty().bind(tvDatPhong.widthProperty().multiply(0.11));
+    }
+
+    private void setupButtons() {
+        Others.playButtonAnimation(btnEditBooking);
+        Others.playButtonAnimation(btnQuickCheckIn);
+        Others.playButtonAnimation(btnQuickCheckOut);
+        Others.playButtonAnimation(btnCancelBooking);
     }
 
     private void setupStatusTabs() {
@@ -123,10 +131,12 @@ public class QuanLyDatPhongController {
         tvDatPhong.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 String st = newSelection.trangThai;
+                btnEditBooking.setDisable(!st.equals("Chờ nhận phòng"));
                 btnQuickCheckIn.setDisable(!st.equals("Chờ nhận phòng"));
                 btnCancelBooking.setDisable(!st.equals("Chờ nhận phòng"));
                 btnQuickCheckOut.setDisable(!st.equals("Đang ở"));
             } else {
+                btnEditBooking.setDisable(true);
                 btnQuickCheckIn.setDisable(true);
                 btnQuickCheckOut.setDisable(true);
                 btnCancelBooking.setDisable(true);
@@ -196,6 +206,28 @@ public class QuanLyDatPhongController {
 
             Stage stage = new Stage();
             stage.setTitle("Lập Đơn Đặt Phòng Mới");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+
+            loadData();
+        } catch (Exception e) { e.printStackTrace(); }
+    }
+
+    @FXML void handleEditBooking() {
+        BookingRow selected = tvDatPhong.getSelectionModel().getSelectedItem();
+        if (selected == null) return;
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/CheckInView.fxml"));
+            Parent root = loader.load();
+
+            CheckInController controller = loader.getController();
+            controller.setPhongData(null);
+            controller.loadExistBooking(selected.getMaDat());
+
+            Stage stage = new Stage();
+            stage.setTitle("Chỉnh Sửa Đơn Đặt Trước");
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();

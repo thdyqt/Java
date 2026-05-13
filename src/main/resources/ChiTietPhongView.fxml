@@ -105,7 +105,7 @@
                                     <children>
                                         <Label style="-fx-font-weight: bold; -fx-font-size: 15px;" text="🛒 DANH SÁCH DỊCH VỤ SỬ DỤNG" />
                                         <Pane HBox.hgrow="ALWAYS" />
-                                        <Button onAction="#handleAddService" style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: bold;" text="+ Thêm dịch vụ" />
+                                        <Button fx:id="btnAddService" onAction="#handleAddService" style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: bold;" text="+ Thêm dịch vụ" />
                                     </children>
                                 </HBox>
                                 <TableView fx:id="tvDichVu" VBox.vgrow="ALWAYS">
@@ -154,7 +154,7 @@
                                         </Label>
                                     </children>
                                 </VBox>
-                                <Button onAction="#handleCheckOut" prefHeight="60.0" prefWidth="220.0" style="-fx-background-color: #ef4444; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-background-radius: 8;" text="XÁC NHẬN THANH TOÁN" />
+                                <Button fx:id="btnCheckout" onAction="#handleCheckOut" prefHeight="60.0" prefWidth="220.0" style="-fx-background-color: #ef4444; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-background-radius: 8;" text="XÁC NHẬN THANH TOÁN" />
                             </children>
                         </HBox>
                     </children>

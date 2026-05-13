@@ -87,6 +87,7 @@
                 <Label text="THAO TÁC NHANH:" textFill="#94a3b8">
                     <font><Font name="System Bold" size="13.0" /></font>
                 </Label>
+                <Button fx:id="btnEditBooking" onAction="#handleEditBooking" prefHeight="40.0" prefWidth="130.0" style="-fx-background-color: #f59e0b; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="📝 SỬA ĐƠN" />
                 <Button fx:id="btnQuickCheckIn" onAction="#handleQuickCheckIn" prefHeight="40.0" prefWidth="130.0" style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="🔑 NHẬN PHÒNG" />
                 <Button fx:id="btnQuickCheckOut" onAction="#handleQuickCheckOut" prefHeight="40.0" prefWidth="130.0" style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="💳 TRẢ PHÒNG" />
                 <Button fx:id="btnCancelBooking" onAction="#handleCancelBooking" prefHeight="40.0" prefWidth="130.0" style="-fx-background-color: #ef4444; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="🚫 HỦY ĐƠN" />
