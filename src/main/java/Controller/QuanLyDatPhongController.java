@@ -211,6 +211,7 @@ public class QuanLyDatPhongController {
             stage.setTitle("Chỉnh Sửa Đơn Đặt Trước");
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setMaximized(true);
             stage.showAndWait();
 
             loadData();
@@ -265,6 +266,7 @@ public class QuanLyDatPhongController {
             stage.setTitle("Quản lý Thanh Toán");
             stage.setScene(new Scene(root, 1200, 800));
             stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setMaximized(true);
             stage.showAndWait();
 
             loadData();
