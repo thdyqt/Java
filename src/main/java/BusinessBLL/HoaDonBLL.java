@@ -36,7 +36,6 @@ public class HoaDonBLL {
         return HoaDonDAL.getInvoiceById(maHoaDon);
     }
 
-    // Đổi kiểu trả về thành mảng double: result[0] = Phụ Thu, result[1] = Giảm Giá
     public static double[] tinhTienPhongThucTe(LocalDateTime thoiGianVao, LocalDateTime thoiGianRaDuKien, LocalDateTime thoiGianRaThucTe, List<ChiTietDatPhong> danhSachPhong) {
         if (thoiGianVao == null || thoiGianRaDuKien == null || thoiGianRaThucTe == null || danhSachPhong == null) {
             return new double[]{0, 0};
@@ -53,7 +52,6 @@ public class HoaDonBLL {
             double donGiaGoc = phong.getGiaThucTe();
             double tienPhongGoc = 0;
 
-            // 1. TÍNH TIỀN PHÒNG GỐC THEO DỰ KIẾN (Để hiển thị cứng trên Bill)
             if (isTheoGio) {
                 long expectedMins = Duration.between(thoiGianVao, thoiGianRaDuKien).toMinutes();
                 if (expectedMins < 60) expectedMins = 60;
@@ -70,24 +68,21 @@ public class HoaDonBLL {
                 tienPhongGoc = donGiaGoc * heSo;
             }
 
-            // Luôn khóa cứng giá tiền phòng hiển thị là giá lúc đặt
             phong.setTienPhongThucTe(Math.round(tienPhongGoc));
 
-            // 2. TÍNH PHỤ THU (Khách trả trễ giờ - Áp dụng mọi hình thức)
             if (thoiGianRaThucTe.isAfter(thoiGianRaDuKien)) {
                 long lateMinutes = Duration.between(thoiGianRaDuKien, thoiGianRaThucTe).toMinutes();
                 long lateHours = (long) Math.ceil(lateMinutes / 60.0);
-                tongPhuThu += (donGiaGoc * 0.10) * lateHours; // Phạt 10%/giờ
+                tongPhuThu += (donGiaGoc * 0.10) * lateHours;
             }
 
-            // 3. TÍNH GIẢM GIÁ (Khách trả sớm - Chỉ áp dụng linh động cho Theo Giờ)
+
             if (isTheoGio && thoiGianRaThucTe.isBefore(thoiGianRaDuKien)) {
                 long actualMins = Duration.between(thoiGianVao, thoiGianRaThucTe).toMinutes();
-                if (actualMins < 60) actualMins = 60; // Tính tối thiểu 1 giờ
+                if (actualMins < 60) actualMins = 60;
                 long actualHours = (long) Math.ceil(actualMins / 60.0);
                 double tienThucTeHienTai = donGiaGoc * (actualHours * 0.15);
 
-                // Độ chênh lệch giữa tiền khách đã đặt và tiền thực tế ở -> Cho vào mục Giảm Giá
                 double chenhLech = tienPhongGoc - tienThucTeHienTai;
                 if (chenhLech > 0) {
                     tongGiamGia += chenhLech;

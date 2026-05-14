@@ -77,8 +77,6 @@ public class DatPhongBLL {
         return DatPhongDAL.insertCheckInTransaction(booking, roomNumbers);
     }
 
-    // Đã xóa bỏ hoàn toàn hàm quickCheckIn() để ngăn chặn lỗi sai lệch giá phòng khi thanh toán
-
     public static boolean changeStatus(int maDatPhong, String newStatus) {
         if (maDatPhong <= 0 || newStatus == null || newStatus.trim().isEmpty()) {
             return false;

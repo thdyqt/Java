@@ -19,12 +19,10 @@ public class DichVuBLL {
             return false;
         }
 
-        // Chặn tên dịch vụ quá dài
         if (dv.getTenDichVu().length() > 100) {
             return false;
         }
 
-        // Chặn đơn giá âm hoặc vượt quá giới hạn 10 chữ số (9,999,999,999)
         if (dv.getDonGia() < 0 || dv.getDonGia() > 9999999999L) {
             return false;
         }
@@ -38,12 +36,10 @@ public class DichVuBLL {
             return false;
         }
 
-        // Chặn tên dịch vụ quá dài
         if (dv.getTenDichVu().length() > 100) {
             return false;
         }
 
-        // Chặn đơn giá âm hoặc vượt quá giới hạn 10 chữ số (9,999,999,999)
         if (dv.getDonGia() < 0 || dv.getDonGia() > 9999999999L) {
             return false;
         }

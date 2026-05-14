@@ -271,8 +271,6 @@ public class DatPhongDAL {
         return false;
     }
 
-    // Đã xóa hàm quickCheckIn() để không chọc vào thay đổi NgayCheckInDuKien nữa.
-
     public static boolean changeStatus(int maDatPhong, String newStatus) {
         String sql = "UPDATE DatPhong SET TrangThai = ? WHERE MaDatPhong = ?";
 

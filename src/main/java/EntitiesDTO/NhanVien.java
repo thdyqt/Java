@@ -41,7 +41,6 @@ public class NhanVien {
         this.trangThai = trangThai;
     }
 
-    // --- GETTERS & SETTERS ---
     public int getMaNhanVien() { return maNhanVien; }
     public void setMaNhanVien(int maNhanVien) { this.maNhanVien = maNhanVien; }
 

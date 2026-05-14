@@ -9,7 +9,7 @@ public class DBHelper {
     private static final String PORT = "3306";
     private static final String DB_NAME = "QuanLyKhachSan";
     private static final String USER = "root";
-    private static final String PASSWORD = "12345678";
+    private static final String PASSWORD = "Ptd_2907";
 
     private static final String URL = "jdbc:mysql://" + HOST + ":" + PORT + "/" + DB_NAME + "?sslMode=REQUIRED&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Ho_Chi_Minh";
 

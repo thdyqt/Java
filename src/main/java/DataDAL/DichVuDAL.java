@@ -22,7 +22,7 @@ public class DichVuDAL {
                         rs.getInt("MaDichVu"),
                         rs.getString("TenDichVu"),
                         rs.getDouble("DonGia"),
-                        DichVu.TrangThaiDichVu.fromString(rs.getString("TrangThai")) // Ép kiểu SQL sang Enum
+                        DichVu.TrangThaiDichVu.fromString(rs.getString("TrangThai"))
                 ));
             }
         } catch (Exception e) { e.printStackTrace(); }
@@ -53,7 +53,7 @@ public class DichVuDAL {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, dv.getTenDichVu());
             stmt.setDouble(2, dv.getDonGia());
-            stmt.setString(3, dv.getTrangThai().getText()); // Lấy chuỗi từ Enum đưa xuống SQL
+            stmt.setString(3, dv.getTrangThai().getText());
             return stmt.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();

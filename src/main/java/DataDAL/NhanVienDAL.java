@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NhanVienDAL {
-
-    // Đã thay đổi hàm này để chỉ tìm kiếm theo Username
     public static NhanVien findActiveStaffByUsername(String username) {
         String sql = "SELECT * FROM NhanVien WHERE TenDangNhap = ? AND TrangThai = 'Đang làm việc'";
 
@@ -25,7 +23,7 @@ public class NhanVienDAL {
                             rs.getString("HoTen"),
                             rs.getString("ChucVu"),
                             rs.getString("TenDangNhap"),
-                            rs.getString("MatKhau"), // Đây sẽ là chuỗi Hash Bcrypt
+                            rs.getString("MatKhau"),
                             rs.getString("SoDienThoai"),
                             NhanVien.TrangThaiNhanVien.fromString(rs.getString("TrangThai"))
                     );
@@ -96,7 +94,7 @@ public class NhanVienDAL {
             stmt.setString(1, nv.getHoTen());
             stmt.setString(2, nv.getChucVu());
             stmt.setString(3, nv.getTenDangNhap());
-            stmt.setString(4, nv.getMatKhau()); // Mật khẩu lúc này đã được mã hóa từ BLL
+            stmt.setString(4, nv.getMatKhau());
             stmt.setString(5, nv.getSoDienThoai());
             stmt.setString(6, nv.getTrangThai().getText());
             return stmt.executeUpdate() > 0;
@@ -123,7 +121,7 @@ public class NhanVienDAL {
         String sql = "UPDATE NhanVien SET MatKhau = ? WHERE MaNhanVien = ?";
         try (Connection conn = DBHelper.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, newPassword); // Mật khẩu lúc này đã được mã hóa từ BLL
+            stmt.setString(1, newPassword);
             stmt.setInt(2, maNhanVien);
             return stmt.executeUpdate() > 0;
         } catch (Exception e) { e.printStackTrace(); }
