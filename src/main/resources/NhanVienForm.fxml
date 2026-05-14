@@ -23,7 +23,7 @@
                         <Font name="System Bold" size="22.0" />
                     </font>
                 </Label>
-                <Label text="Vui lòng thiết lập thông tin định danh và quyền hạn (*)" textFill="#64748b">
+                <Label fx:id="lblDesc" text="Vui lòng thiết lập thông tin định danh và quyền hạn (*)" textFill="#64748b">
                     <font>
                         <Font size="14.0" />
                     </font>

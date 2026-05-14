@@ -24,6 +24,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -225,14 +226,15 @@ public class FrameController implements Initializable {
                 return;
             }
 
-            if (!oldPass.equals(UserSession.getInstance().getMatKhau())) {
+            if (!BCrypt.checkpw(oldPass, UserSession.getInstance().getMatKhau())) {
                 lblError.setText("Mật khẩu hiện tại không chính xác!");
                 txtOld.requestFocus();
                 return;
             }
 
-            if (newPass.length() < 6) {
-                lblError.setText("Mật khẩu mới phải có ít nhất 6 ký tự!");
+            String regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{6,}$";
+            if (!newPass.matches(regex)) {
+                lblError.setText("Mật khẩu phải có ít nhất 6 ký tự, gồm chữ hoa, thường, số và ký tự đặc biệt!");
                 txtNew.requestFocus();
                 return;
             }
@@ -245,11 +247,13 @@ public class FrameController implements Initializable {
             }
 
             if (NhanVienBLL.changePassword(UserSession.getInstance().getMaNhanVien(), newPass)) {
-                UserSession.getInstance().setMatKhau(newPass);
+                String newHash = BCrypt.hashpw(newPass, BCrypt.gensalt(12));
+                UserSession.getInstance().setMatKhau(newHash);
+
                 stage.close();
                 Others.showAlert(mainPane, "Đổi mật khẩu thành công!", false);
             } else {
-                lblError.setText("Có lỗi xảy ra, không thể cập nhật!");
+                lblError.setText("Có lỗi xảy ra, không thể cập nhật vào cơ sở dữ liệu!");
             }
         });
 
@@ -259,7 +263,7 @@ public class FrameController implements Initializable {
 
         root.getChildren().addAll(lblTitle, txtOld, txtNew, txtConfirm, lblError, btnBox);
 
-        Scene scene = new Scene(root, 400, 340);
+        Scene scene = new Scene(root, 550, 340);
         stage.setScene(scene);
         stage.showAndWait();
     }

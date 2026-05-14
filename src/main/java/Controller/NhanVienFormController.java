@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 
 public class NhanVienFormController {
     @FXML private VBox mainPane;
-    @FXML private Label lblTitle, lblMatKhau, lblTrangThai;
+    @FXML private Label lblTitle, lblDesc, lblMatKhau, lblTrangThai;
     @FXML private Button btnSave, btnCancel;
     @FXML private TextField txtHoTen, txtSDT, txtUsername;
     @FXML private PasswordField txtMatKhau;
@@ -153,6 +153,7 @@ public class NhanVienFormController {
         btnCancel.setText("ĐÓNG");
 
         lblTitle.setText("HỒ SƠ CÁ NHÂN (CHỈ XEM)");
+        lblDesc.setText("");
     }
 
     @FXML
