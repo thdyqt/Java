@@ -10,6 +10,17 @@ public class LoaiPhongBLL {
         return LoaiPhongDAL.getAllLoaiPhong();
     }
 
+    // --- BỔ SUNG HÀM NÀY ĐỂ LẤY GIÁ TIỀN TỪ DB ---
+    public static double getDonGiaByMaLoai(int maLoaiPhong) {
+        List<LoaiPhong> danhSach = LoaiPhongDAL.getAllLoaiPhong();
+        for (LoaiPhong lp : danhSach) {
+            if (lp.getMaLoaiPhong() == maLoaiPhong) {
+                return lp.getDonGia();
+            }
+        }
+        return 0; // Trả về 0 nếu không tìm thấy (tránh lỗi crash)
+    }
+
     public static String saveLoaiPhong(LoaiPhong lp, boolean isEdit) {
         if (lp.getTenLoaiPhong() == null || lp.getTenLoaiPhong().trim().isEmpty()) {
             return "Tên loại phòng không được để trống!";

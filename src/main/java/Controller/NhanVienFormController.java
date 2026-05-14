@@ -45,8 +45,11 @@ public class NhanVienFormController {
 
     private void setupConstraints() {
         Others.setMaxLength(txtHoTen, 100);
-        Others.setMaxLength(txtSDT, 15);
+
+        // RÀNG BUỘC SỐ ĐIỆN THOẠI TRÊN GIAO DIỆN
+        Others.setMaxLength(txtSDT, 10);
         Others.setNumericOnly(txtSDT);
+
         Others.setMaxLength(txtUsername, 50);
     }
 

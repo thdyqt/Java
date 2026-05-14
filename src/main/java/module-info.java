@@ -10,6 +10,7 @@ module com.example.javaproject_102240130_102240141 {
     requires java.sql;
     requires mysql.connector.j;
     requires java.desktop;
+    requires jbcrypt;
 
     opens Application to javafx.graphics, javafx.fxml;
     exports Application;

@@ -13,12 +13,15 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +38,11 @@ public class CheckInController {
     @FXML private RadioButton rbTrucTiep, rbDatTruoc;
     @FXML private ToggleGroup tgCheckInMode;
 
+    // --- BIẾN HIỂN THỊ VÀ LƯU TỔNG TIỀN ---
+    @FXML private Label lblTongTien;
+    private double expectedTotalAmount = 0;
+    private List<Phong> allRoomsCache = new ArrayList<>();
+
     private Phong currentRoom;
     private boolean isReservationMode = false;
     private int editingMaDatPhong = -1;
@@ -47,6 +55,9 @@ public class CheckInController {
             this.isReservationMode = rbDatTruoc.isSelected();
         }
 
+        // Cache danh sách phòng để lấy đơn giá tính tiền
+        this.allRoomsCache = PhongBLL.getAllRooms();
+
         setupRoomInfo(p);
         setupButtons();
         initDefaultDateTime();
@@ -56,6 +67,86 @@ public class CheckInController {
         setupDateTimeValidators();
         setupCustomerAutoFill();
         loadExtraEmptyRooms(p != null ? p.getSoPhong() : null);
+
+        // Gắn sự kiện lắng nghe để tính tiền Real-time
+        attachCalculationListeners();
+        calculateTotalAmount(); // Tính lần đầu khi vừa mở form
+    }
+
+    private void attachCalculationListeners() {
+        cbHinhThuc.valueProperty().addListener((obs, o, n) -> calculateTotalAmount());
+        dpCheckIn.valueProperty().addListener((obs, o, n) -> calculateTotalAmount());
+        cbGioCheckIn.valueProperty().addListener((obs, o, n) -> calculateTotalAmount());
+        dpCheckOut.valueProperty().addListener((obs, o, n) -> calculateTotalAmount());
+        txtSoGioThue.textProperty().addListener((obs, o, n) -> calculateTotalAmount());
+        tgCheckInMode.selectedToggleProperty().addListener((obs, o, n) -> calculateTotalAmount());
+    }
+
+    // --- HÀM TÍNH TỔNG TIỀN DỰ KIẾN ---
+    private void calculateTotalAmount() {
+        try {
+            double tongGiaPhongGoc = 0;
+
+            // 1. Lấy giá phòng chính đang chọn
+            if (currentRoom != null) {
+                tongGiaPhongGoc += getRoomDailyPrice(currentRoom.getMaLoaiPhong());
+            }
+
+            // 2. Lấy giá các phòng phụ (Đoàn) được tích chọn
+            for (Node node : fpExtraRooms.getChildren()) {
+                if (node instanceof CheckBox cb && cb.isSelected()) {
+                    String soPhongPhu = (String) cb.getUserData();
+                    tongGiaPhongGoc += getRoomDailyPriceBySoPhong(soPhongPhu);
+                }
+            }
+
+            // 3. Tính hệ số thời gian (Tùy chỉnh theo công thức của khách sạn)
+            double heSoThoiGian = 0;
+            String hinhThuc = cbHinhThuc.getValue();
+
+            if ("Theo ngày".equals(hinhThuc)) {
+                if (dpCheckIn.getValue() != null && dpCheckOut.getValue() != null) {
+                    long days = ChronoUnit.DAYS.between(dpCheckIn.getValue(), dpCheckOut.getValue());
+                    heSoThoiGian = (days > 0) ? days : 1;
+                }
+            } else if ("Qua đêm".equals(hinhThuc)) {
+                heSoThoiGian = 0.8; // Giả sử qua đêm tính 80% giá trị phòng 1 ngày
+            } else if ("Theo giờ".equals(hinhThuc)) {
+                String soGioStr = txtSoGioThue.getText().replaceAll("[^\\d]", "").trim();
+                if (!soGioStr.isEmpty()) {
+                    int gio = Integer.parseInt(soGioStr);
+                    heSoThoiGian = gio * 0.15; // Giả sử 1 giờ = 15% giá trị phòng 1 ngày
+                }
+            }
+
+            // 4. Tính và hiển thị lên giao diện (Bỏ chữ "Tổng: " để hiển thị số to)
+            expectedTotalAmount = tongGiaPhongGoc * heSoThoiGian;
+
+            if (lblTongTien != null) {
+                DecimalFormat formatter = new DecimalFormat("#,###");
+                String formatted = formatter.format(expectedTotalAmount).replace(",", ".") + " đ";
+                lblTongTien.setText(formatted);
+            }
+        } catch (Exception e) {
+            expectedTotalAmount = 0;
+            if (lblTongTien != null) lblTongTien.setText("0 đ");
+        }
+    }
+
+    // Hàm lấy đơn giá phòng theo MaLoaiPhong (Đã kết nối trực tiếp với Database)
+    private double getRoomDailyPrice(int maLoaiPhong) {
+        return BusinessBLL.LoaiPhongBLL.getDonGiaByMaLoai(maLoaiPhong);
+    }
+
+    // Hàm lấy đơn giá từ DB Cache bằng Số Phòng
+    private double getRoomDailyPriceBySoPhong(String soPhong) {
+        if (allRoomsCache == null) return 0;
+        for (Phong p : allRoomsCache) {
+            if (p.getSoPhong().equals(soPhong)) {
+                return getRoomDailyPrice(p.getMaLoaiPhong());
+            }
+        }
+        return 0;
     }
 
     private void setupModeListener() {
@@ -183,8 +274,57 @@ public class CheckInController {
         Others.setMaxLength(txtHoTen, 100);
         Others.setMaxLength(txtSDT, 10); Others.setNumericOnly(txtSDT);
         Others.setMaxLength(txtCCCD, 20);
-        Others.setMaxLength(txtTienCoc, 10); Others.setNumericOnly(txtTienCoc);
-        Others.setMaxLength(txtSoGioThue, 3); Others.setNumericOnly(txtSoGioThue);
+
+        txtSoGioThue.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.equals(oldValue)) return;
+
+            String digits = newValue.replaceAll("[^\\d]", "");
+
+            if (digits.length() > 3) {
+                digits = digits.substring(0, 3);
+            }
+
+            String formatted = digits.isEmpty() ? "" : digits + "h";
+
+            if (!newValue.equals(formatted)) {
+                Platform.runLater(() -> {
+                    txtSoGioThue.setText(formatted);
+                    if (!formatted.isEmpty()) {
+                        txtSoGioThue.positionCaret(formatted.length() - 1);
+                    }
+                });
+            }
+        });
+
+        txtTienCoc.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.equals(oldValue)) return;
+
+            String digits = newValue.replaceAll("[^\\d]", "");
+
+            if (digits.length() > 10) {
+                digits = digits.substring(0, 10);
+            }
+
+            String formatted = "";
+            if (!digits.isEmpty()) {
+                try {
+                    long amount = Long.parseLong(digits);
+                    DecimalFormat formatter = new DecimalFormat("#,###");
+                    formatted = formatter.format(amount).replace(",", ".") + "đ";
+                } catch (NumberFormatException e) {
+                }
+            }
+
+            if (!newValue.equals(formatted)) {
+                final String finalText = formatted;
+                Platform.runLater(() -> {
+                    txtTienCoc.setText(finalText);
+                    if (!finalText.isEmpty()) {
+                        txtTienCoc.positionCaret(finalText.length() - 1);
+                    }
+                });
+            }
+        });
 
         if (!isReservationMode) {
             LocalDateTime now = LocalDateTime.now();
@@ -218,21 +358,6 @@ public class CheckInController {
         });
     }
 
-    private void loadExtraEmptyRooms(String primaryRoomNumber) {
-        if (fpExtraRooms == null) return;
-        fpExtraRooms.getChildren().clear();
-        List<Phong> allRooms = PhongBLL.getAllRooms();
-        for (Phong room : allRooms) {
-            if ("Trống".equals(room.getTrangThai()) && (primaryRoomNumber == null || !room.getSoPhong().equals(primaryRoomNumber))) {
-                String type = room.getMaLoaiPhong() == 2 ? "DELUXE" : (room.getMaLoaiPhong() == 3 ? "SUITE" : "STANDARD");
-                CheckBox cb = new CheckBox("Phòng " + room.getSoPhong() + " (" + type + ")");
-                cb.setUserData(room.getSoPhong());
-                cb.setStyle("-fx-cursor: hand; -fx-text-fill: #34495e; -fx-font-size: 13px;");
-                fpExtraRooms.getChildren().add(cb);
-            }
-        }
-    }
-
     public void loadExistBooking(int maDatPhong) {
         this.editingMaDatPhong = maDatPhong;
         Map<String, Object> data = DatPhongBLL.getBookingFullInfo(maDatPhong);
@@ -243,7 +368,19 @@ public class CheckInController {
         txtCCCD.setText((String) data.get("CCCD"));
         txtEmail.setText((String) data.get("Email"));
         txtDiaChi.setText((String) data.get("DiaChi"));
-        txtTienCoc.setText(String.valueOf(data.get("TienCoc")).replace(".0", ""));
+
+        String rawTienCoc = String.valueOf(data.get("TienCoc")).replace(".0", "");
+        try {
+            long amount = Long.parseLong(rawTienCoc);
+            if (amount > 0) {
+                DecimalFormat formatter = new DecimalFormat("#,###");
+                txtTienCoc.setText(formatter.format(amount).replace(",", ".") + "đ");
+            } else {
+                txtTienCoc.setText("");
+            }
+        } catch (Exception e) {
+            txtTienCoc.setText(rawTienCoc);
+        }
 
         LocalDateTime in = (LocalDateTime) data.get("NgayIn");
         LocalDateTime out = (LocalDateTime) data.get("NgayOut");
@@ -263,10 +400,41 @@ public class CheckInController {
         }
     }
 
+    private void loadExtraEmptyRooms(String primaryRoomNumber) {
+        if (fpExtraRooms == null) return;
+        fpExtraRooms.getChildren().clear();
+        for (Phong room : allRoomsCache) {
+            if ("Trống".equals(room.getTrangThai()) && (primaryRoomNumber == null || !room.getSoPhong().equals(primaryRoomNumber))) {
+                String type = room.getMaLoaiPhong() == 2 ? "DELUXE" : (room.getMaLoaiPhong() == 3 ? "SUITE" : "STANDARD");
+                CheckBox cb = new CheckBox("Phòng " + room.getSoPhong() + " (" + type + ")");
+                cb.setUserData(room.getSoPhong());
+                cb.setStyle("-fx-cursor: hand; -fx-text-fill: #34495e; -fx-font-size: 13px;");
+
+                // Kích hoạt tính lại tiền khi Checkbox được tích chọn
+                cb.selectedProperty().addListener((obs, oldVal, newVal) -> calculateTotalAmount());
+
+                fpExtraRooms.getChildren().add(cb);
+            }
+        }
+    }
+
     @FXML
     void handleConfirmCheckIn(ActionEvent event) {
-        if (txtHoTen.getText().trim().isEmpty() || txtSDT.getText().trim().isEmpty() || txtCCCD.getText().trim().isEmpty()) {
+        String sdt = txtSDT.getText().trim();
+        String email = txtEmail.getText().trim();
+
+        if (txtHoTen.getText().trim().isEmpty() || sdt.isEmpty() || txtCCCD.getText().trim().isEmpty()) {
             Others.showAlert(mainPane, "Vui lòng nhập đầy đủ thông tin (*)", true);
+            return;
+        }
+
+        if (!sdt.matches("^0\\d{9}$")) {
+            Others.showAlert(mainPane, "Số điện thoại không hợp lệ! Vui lòng nhập 10 chữ số bắt đầu bằng 0.", true);
+            return;
+        }
+
+        if (!email.isEmpty() && !email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[a-zA-Z]{2,}$")) {
+            Others.showAlert(mainPane, "Email không đúng định dạng! (Ví dụ: abc@gmail.com)", true);
             return;
         }
 
@@ -298,7 +466,7 @@ public class CheckInController {
                     thoiGianCheckOut = thoiGianCheckIn.toLocalDate().plusDays(1).atTime(8, 0);
                 }
             } else {
-                String soGioStr = txtSoGioThue.getText().trim();
+                String soGioStr = txtSoGioThue.getText().replaceAll("[^\\d]", "").trim();
                 if (soGioStr.isEmpty()) {
                     Others.showAlert(mainPane, "Vui lòng nhập số giờ thuê!", true);
                     return;
@@ -346,20 +514,27 @@ public class CheckInController {
             }
 
             double tienCoc = 0;
-            String tienCocStr = txtTienCoc.getText().trim();
+            String tienCocStr = txtTienCoc.getText().replaceAll("[^\\d]", "").trim();
             if (!tienCocStr.isEmpty()) {
                 tienCoc = Double.parseDouble(tienCocStr);
+
                 if (tienCoc < 0) {
                     Others.showAlert(mainPane, "Tiền cọc không được là số âm!", true);
+                    return;
+                }
+                if (expectedTotalAmount > 0 && tienCoc > expectedTotalAmount) {
+                    DecimalFormat formatter = new DecimalFormat("#,###");
+                    String expectedStr = formatter.format(expectedTotalAmount).replace(",", ".") + "đ";
+                    Others.showAlert(mainPane, "Số tiền trả trước không được vượt quá tổng tiền phòng dự kiến (" + expectedStr + ")!", true);
                     return;
                 }
             }
 
             boolean isSuccess;
             if (editingMaDatPhong != -1) {
-                isSuccess = BusinessBLL.DatPhongBLL.updateBooking(editingMaDatPhong, Others.standardizeName(txtHoTen.getText()), txtSDT.getText(), txtCCCD.getText(), txtEmail.getText(), txtDiaChi.getText(), danhSachPhongChon, thoiGianCheckIn, thoiGianCheckOut, tienCoc);
+                isSuccess = BusinessBLL.DatPhongBLL.updateBooking(editingMaDatPhong, Others.standardizeName(txtHoTen.getText()), sdt, txtCCCD.getText(), email, txtDiaChi.getText(), danhSachPhongChon, thoiGianCheckIn, thoiGianCheckOut, tienCoc);
             } else {
-                isSuccess = BusinessBLL.DatPhongBLL.processCheckIn(Others.standardizeName(txtHoTen.getText()), txtSDT.getText(), txtCCCD.getText(), txtEmail.getText(), txtDiaChi.getText(), danhSachPhongChon, Utilities.UserSession.getInstance().getNhanVien().getMaNhanVien(), thoiGianCheckIn, thoiGianCheckOut, tienCoc, trangThaiDon);
+                isSuccess = BusinessBLL.DatPhongBLL.processCheckIn(Others.standardizeName(txtHoTen.getText()), sdt, txtCCCD.getText(), email, txtDiaChi.getText(), danhSachPhongChon, Utilities.UserSession.getInstance().getNhanVien().getMaNhanVien(), thoiGianCheckIn, thoiGianCheckOut, tienCoc, trangThaiDon);
 
                 if (isSuccess && "Đang ở".equals(trangThaiDon)) {
                     for (String soPhong : danhSachPhongChon) {

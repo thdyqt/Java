@@ -5,23 +5,24 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<?import javafx.scene.control.ToggleGroup?>
-<?import javafx.scene.control.RadioButton?>
 <VBox fx:id="mainPane" prefWidth="650.0" spacing="20.0" style="-fx-background-color: white; -fx-padding: 30; -fx-background-radius: 12;" stylesheets="@checkin.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.CheckInController">
     <children>
         <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="THỦ TỤC ĐẶT / NHẬN PHÒNG" />
         <HBox spacing="30.0" style="-fx-padding: 10 0; -fx-alignment: CENTER_LEFT;">
             <children>
-                <Label text="Chế độ xử lý:" style="-fx-font-weight: bold; -fx-text-fill: #1e293b;" />
+                <Label style="-fx-font-weight: bold; -fx-text-fill: #1e293b;" text="Chế độ xử lý:" />
                 <RadioButton fx:id="rbTrucTiep" selected="true" text="Check-in trực tiếp (Vào ở ngay)">
                     <toggleGroup>
                         <ToggleGroup fx:id="tgCheckInMode" />
@@ -124,6 +125,8 @@
                         <TextField fx:id="txtSoGioThue" prefHeight="35.0" promptText="VD: 2" />
                     </children>
                 </VBox>
+
+                <!-- Gỡ bỏ dòng Label Tổng tiền cũ ở đây -->
                 <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                     <children>
                         <Label text="Tiền trả trước / Tiền cọc (VNĐ)" />
@@ -145,8 +148,20 @@
             </children>
         </VBox>
 
-        <HBox alignment="CENTER_RIGHT" spacing="15.0">
+        <!-- Đã điều chỉnh HBox này để chứa Box Tổng tiền bên trái -->
+        <HBox alignment="CENTER_LEFT" spacing="15.0">
             <children>
+                <!-- Box Tổng Tiền -->
+                <VBox alignment="CENTER" prefHeight="65.0" prefWidth="220.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-color: #e2e8f0; -fx-border-radius: 8; -fx-padding: 8;">
+                    <children>
+                        <Label text="Tổng tiền phòng" textFill="#64748b" style="-fx-font-size: 13px;" />
+                        <Label fx:id="lblTongTien" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="0 đ" />
+                    </children>
+                </VBox>
+
+                <!-- Dùng Region để đẩy 2 nút Hủy và Xác Nhận qua tít bên phải -->
+                <Region HBox.hgrow="ALWAYS" />
+
                 <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#handleCancel" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #f1f5f9; -fx-text-fill: #475569; -fx-font-weight: bold; -fx-cursor: hand;" text="Hủy bỏ" />
                 <Button fx:id="btnSave" mnemonicParsing="false" onAction="#handleConfirmCheckIn" prefHeight="45.0" prefWidth="240.0" style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand;" text="XÁC NHẬN LƯU THÔNG TIN" />
             </children>

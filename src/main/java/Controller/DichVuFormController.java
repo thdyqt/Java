@@ -13,6 +13,8 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.text.DecimalFormat;
+
 public class DichVuFormController {
     @FXML private VBox mainPane;
     @FXML private Label lblTitle, lblStatus;
@@ -39,7 +41,40 @@ public class DichVuFormController {
 
     private void setupConstraints() {
         Others.setMaxLength(txtTenDV, 100);
-        Others.setNumericOnly(txtDonGia);
+
+        // 1. CHỈ NHẬP SỐ CHO Ô ĐƠN GIÁ VÀ GIỚI HẠN 10 CHỮ SỐ
+        txtDonGia.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (txtDonGia.isFocused()) {
+                String raw = newVal.replaceAll("[^\\d]", "");
+                if (raw.length() > 10) {
+                    raw = raw.substring(0, 10);
+                }
+                if (!newVal.equals(raw)) {
+                    txtDonGia.setText(raw);
+                }
+            }
+        });
+
+        // 2. TỰ ĐỘNG FORMAT TIỀN TỆ KHI FOCUS / BLUR
+        txtDonGia.focusedProperty().addListener((obs, oldVal, isFocused) -> {
+            if (isFocused) {
+                // Khi click vào: Xóa định dạng để dễ sửa
+                String raw = txtDonGia.getText().replaceAll("[^\\d]", "");
+                txtDonGia.setText(raw);
+            } else {
+                // Khi click ra ngoài: Format thành tiền có chấm và 'đ'
+                String raw = txtDonGia.getText().replaceAll("[^\\d]", "");
+                if (!raw.isEmpty()) {
+                    try {
+                        long val = Long.parseLong(raw);
+                        DecimalFormat formatter = new DecimalFormat("#,###");
+                        txtDonGia.setText(formatter.format(val).replace(",", ".") + "đ");
+                    } catch(Exception e){}
+                } else {
+                    txtDonGia.setText("");
+                }
+            }
+        });
     }
 
     private void setupComboBox() {
@@ -62,14 +97,20 @@ public class DichVuFormController {
         cbTrangThai.setVisible(true);
 
         txtTenDV.setText(dv.getTenDichVu());
-        txtDonGia.setText(String.valueOf((long)dv.getDonGia()));
+
+        // Hiển thị giá tiền dạng format đẹp (VD: 50.000đ) khi tải dữ liệu lên để sửa
+        DecimalFormat formatter = new DecimalFormat("#,###");
+        txtDonGia.setText(formatter.format(dv.getDonGia()).replace(",", ".") + "đ");
+
         cbTrangThai.setValue(dv.getTrangThai());
     }
 
     @FXML
     void handleSave(ActionEvent event) {
         String tenDV = txtTenDV.getText().trim();
-        String donGiaStr = txtDonGia.getText().trim();
+
+        // Bóc tách chữ 'đ' và dấu '.' ra trước khi xử lý lưu
+        String donGiaStr = txtDonGia.getText().replaceAll("[^\\d]", "").trim();
 
         if (tenDV.isEmpty() || donGiaStr.isEmpty()) {
             Others.showAlert(mainPane, "Vui lòng nhập đầy đủ Tên và Đơn giá!", true);

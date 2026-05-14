@@ -210,13 +210,24 @@ public class QuanLyNhanVienController {
         }
     }
 
-    @FXML void handleResetPassword() {
+    @FXML
+    void handleResetPassword() {
         StaffRow selected = tvNhanVien.getSelectionModel().getSelectedItem();
         if (selected == null) return;
-        boolean confirm = Others.showCustomConfirm("Xác nhận", "Đặt lại mật khẩu mặc định (123456) cho " + selected.getHoTen() + "?", "Đặt lại", "Hủy");
+
+        boolean confirm = Others.showCustomConfirm(
+                "Xác nhận",
+                "Đặt lại mật khẩu mặc định (123456) cho " + selected.getHoTen() + "?",
+                "Đặt lại",
+                "Hủy"
+        );
+
         if (confirm) {
-            if (NhanVienBLL.changePassword(selected.getMaNV(), "123456")) {
+            // Thay đổi ở đây: Gọi hàm resetPasswordDefault thay vì changePassword
+            if (NhanVienBLL.resetPasswordDefault(selected.getMaNV())) {
                 Others.showAlert(mainPane, "Đã đặt lại mật khẩu thành công!", false);
+            } else {
+                Others.showAlert(mainPane, "Lỗi khi đặt lại mật khẩu!", true);
             }
         }
     }

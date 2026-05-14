@@ -271,16 +271,7 @@ public class DatPhongDAL {
         return false;
     }
 
-    public static boolean quickCheckIn(int maDatPhong) {
-        String sql = "UPDATE DatPhong SET TrangThai = 'Đang ở', NgayCheckInDuKien = ? WHERE MaDatPhong = ?";
-        try (Connection conn = DBHelper.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setTimestamp(1, java.sql.Timestamp.valueOf(LocalDateTime.now()));
-            stmt.setInt(2, maDatPhong);
-            return stmt.executeUpdate() > 0;
-        } catch (Exception e) { e.printStackTrace(); }
-        return false;
-    }
+    // Đã xóa hàm quickCheckIn() để không chọc vào thay đổi NgayCheckInDuKien nữa.
 
     public static boolean changeStatus(int maDatPhong, String newStatus) {
         String sql = "UPDATE DatPhong SET TrangThai = ? WHERE MaDatPhong = ?";

@@ -5,7 +5,6 @@ import DataDAL.KhachHangDAL;
 import EntitiesDTO.DatPhong;
 import EntitiesDTO.KhachHang;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -78,9 +77,7 @@ public class DatPhongBLL {
         return DatPhongDAL.insertCheckInTransaction(booking, roomNumbers);
     }
 
-    public static boolean quickCheckIn(int maDatPhong) {
-        return DatPhongDAL.quickCheckIn(maDatPhong);
-    }
+    // Đã xóa bỏ hoàn toàn hàm quickCheckIn() để ngăn chặn lỗi sai lệch giá phòng khi thanh toán
 
     public static boolean changeStatus(int maDatPhong, String newStatus) {
         if (maDatPhong <= 0 || newStatus == null || newStatus.trim().isEmpty()) {

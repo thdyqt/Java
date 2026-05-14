@@ -16,6 +16,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -58,13 +59,17 @@ public class ChiTietPhongController {
         cbPhuongThuc.getItems().addAll("Tiền mặt", "Chuyển khoản");
         cbPhuongThuc.setValue("Tiền mặt");
 
+        // CỐ ĐỊNH KÍCH THƯỚC COMBOBOX - Sửa lỗi bị kéo dài liên tục
+        cbPhuongThuc.setPrefWidth(200);
+        cbPhuongThuc.setMaxWidth(200);
+
         colSoPhong.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getSoPhong()));
         colLoaiPhong.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getLoaiPhong()));
         colTienPhongLe.setCellValueFactory(cellData -> new SimpleStringProperty(Others.formatPrice(cellData.getValue().getTienPhongThucTe())));
 
         colSoPhong.prefWidthProperty().bind(tvChiTietPhong.widthProperty().multiply(0.30));
         colLoaiPhong.prefWidthProperty().bind(tvChiTietPhong.widthProperty().multiply(0.30));
-        colTienPhongLe.prefWidthProperty().bind(tvChiTietPhong.widthProperty().multiply(0.395)); // Trừ hao 0.5% cho thanh cuộn
+        colTienPhongLe.prefWidthProperty().bind(tvChiTietPhong.widthProperty().multiply(0.395));
 
         colSTT.setCellValueFactory(column -> new ReadOnlyObjectWrapper<>(tvDichVu.getItems().indexOf(column.getValue()) + 1));
         colTenDV.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTenDichVu()));
@@ -76,24 +81,53 @@ public class ChiTietPhongController {
         colThanhTien.setCellValueFactory(cellData -> new SimpleStringProperty(Others.formatPrice(cellData.getValue().getThanhTien())));
         colThoiGian.setCellValueFactory(cellData -> new SimpleStringProperty(Others.formatDateTime(cellData.getValue().getThoiGianSuDung())));
 
-        colSTT.prefWidthProperty().bind(tvDichVu.widthProperty().multiply(0.05));       // 5%
-        colTenDV.prefWidthProperty().bind(tvDichVu.widthProperty().multiply(0.25));     // 25%
-        colDonGia.prefWidthProperty().bind(tvDichVu.widthProperty().multiply(0.15));    // 15%
-        colSoLuong.prefWidthProperty().bind(tvDichVu.widthProperty().multiply(0.08));   // 8%
-        colThanhTien.prefWidthProperty().bind(tvDichVu.widthProperty().multiply(0.20)); // 20%
-        colThoiGian.prefWidthProperty().bind(tvDichVu.widthProperty().multiply(0.265)); // 26.5%
+        colSTT.prefWidthProperty().bind(tvDichVu.widthProperty().multiply(0.05));
+        colTenDV.prefWidthProperty().bind(tvDichVu.widthProperty().multiply(0.25));
+        colDonGia.prefWidthProperty().bind(tvDichVu.widthProperty().multiply(0.15));
+        colSoLuong.prefWidthProperty().bind(tvDichVu.widthProperty().multiply(0.08));
+        colThanhTien.prefWidthProperty().bind(tvDichVu.widthProperty().multiply(0.20));
+        colThoiGian.prefWidthProperty().bind(tvDichVu.widthProperty().multiply(0.265));
+
+        Others.setMaxLength(txtPhuThu, 15);
+        Others.setMaxLength(txtGiamGia, 15);
+
+        // THIẾT LẬP ĐỊNH DẠNG "đ" CHO Ô PHỤ THU
+        txtPhuThu.focusedProperty().addListener((obs, oldVal, isFocused) -> {
+            if (isFocused) {
+                String raw = txtPhuThu.getText().replaceAll("[^\\d]", "");
+                txtPhuThu.setText(raw);
+            } else {
+                String raw = txtPhuThu.getText().replaceAll("[^\\d]", "");
+                if (!raw.isEmpty()) {
+                    long val = Long.parseLong(raw);
+                    DecimalFormat formatter = new DecimalFormat("#,###");
+                    txtPhuThu.setText(formatter.format(val).replace(",", ".") + "đ");
+                }
+            }
+        });
+
+        // THIẾT LẬP ĐỊNH DẠNG "đ" CHO Ô GIẢM GIÁ
+        txtGiamGia.focusedProperty().addListener((obs, oldVal, isFocused) -> {
+            if (isFocused) {
+                String raw = txtGiamGia.getText().replaceAll("[^\\d]", "");
+                txtGiamGia.setText(raw);
+            } else {
+                String raw = txtGiamGia.getText().replaceAll("[^\\d]", "");
+                if (!raw.isEmpty()) {
+                    long val = Long.parseLong(raw);
+                    DecimalFormat formatter = new DecimalFormat("#,###");
+                    txtGiamGia.setText(formatter.format(val).replace(",", ".") + "đ");
+                }
+            }
+        });
 
         txtPhuThu.textProperty().addListener((obs, oldVal, newVal) -> calculateFinalTotal());
         txtGiamGia.textProperty().addListener((obs, oldVal, newVal) -> calculateFinalTotal());
-        Others.setMaxLength(txtPhuThu, 10); Others.setNumericOnly(txtPhuThu);
-        Others.setMaxLength(txtGiamGia, 10); Others.setNumericOnly(txtGiamGia);
 
         ContextMenu contextMenu = new ContextMenu();
         MenuItem itemXoa = new MenuItem("🗑 Xóa dịch vụ này");
-
         itemXoa.setOnAction(e -> handleDeleteService());
         contextMenu.getItems().add(itemXoa);
-
         tvDichVu.setContextMenu(contextMenu);
     }
 
@@ -112,18 +146,66 @@ public class ChiTietPhongController {
             lblDiaChi.setText("📍 " + (kh.getDiaChi().isEmpty() ? "N/A" : kh.getDiaChi()));
         }
 
+        LocalDateTime thoiGianRaDuKien = currentBooking.getNgayCheckOutDuKien();
+
         lblNgayDat.setText("Ngày đặt đơn: " + Others.formatDateTime(currentBooking.getNgayDat()));
         lblNgayVao.setText("Giờ vào thực tế: " + Others.formatDateTime(currentBooking.getNgayCheckInDuKien()));
-        lblNgayRa.setText("Giờ ra dự kiến: " + Others.formatDateTime(currentBooking.getNgayCheckOutDuKien()));
+        lblNgayRa.setText("Giờ ra dự kiến: " + Others.formatDateTime(thoiGianRaDuKien));
         lblTienCoc.setText(Others.formatPrice(currentBooking.getTienCoc()));
 
         List<ChiTietDatPhong> roomDetails = ChiTietDatPhongBLL.getChiTietPhongTheoDoan(bookingId);
-        HoaDonBLL.tinhTienPhongThucTe(currentBooking.getNgayCheckInDuKien(), LocalDateTime.now(), roomDetails);
+
+        double[] extras = HoaDonBLL.tinhTienPhongThucTe(
+                currentBooking.getNgayCheckInDuKien(),
+                thoiGianRaDuKien,
+                LocalDateTime.now(),
+                roomDetails
+        );
+
+        double phuThuTuDong = extras[0];
+        double giamGiaTuDong = extras[1];
 
         tvChiTietPhong.setItems(FXCollections.observableArrayList(roomDetails));
         totalRoomMoney = roomDetails.stream().mapToDouble(ChiTietDatPhong::getTienPhongThucTe).sum();
         lblTienPhong.setText(Others.formatPrice(totalRoomMoney));
         lblDanhSachPhong.setText("Phòng đoàn: " + String.join(", ", roomDetails.stream().map(ChiTietDatPhong::getSoPhong).toList()));
+
+        DecimalFormat df = new DecimalFormat("#,###");
+
+        if (phuThuTuDong > 0) {
+            // Định dạng tiền tệ cho số tự động điền
+            txtPhuThu.setText(df.format(phuThuTuDong).replace(",", ".") + "đ");
+            txtPhuThu.setTooltip(new Tooltip("Khoản phạt do khách trả phòng quá giờ"));
+            txtPhuThu.setStyle("-fx-border-color: #ef4444; -fx-border-width: 2px; -fx-border-radius: 4px;");
+
+            Others.showAlert(mainPane,
+                    "⚠️ KHÁCH TRẢ PHÒNG QUÁ GIỜ:\n" +
+                            "Hệ thống đã tự động cộng tiền phạt vào ô PHỤ THU: " + Others.formatPrice(phuThuTuDong),
+                    false
+            );
+        } else {
+            txtPhuThu.setText("");
+            txtPhuThu.setTooltip(null);
+            txtPhuThu.setStyle("");
+        }
+
+        if (giamGiaTuDong > 0) {
+            // Định dạng tiền tệ cho số tự động điền
+            txtGiamGia.setText(df.format(giamGiaTuDong).replace(",", ".") + "đ");
+            txtGiamGia.setTooltip(new Tooltip("Được hoàn tiền do thanh toán sớm (Thuê theo giờ)"));
+            txtGiamGia.setStyle("-fx-border-color: #10b981; -fx-border-width: 2px; -fx-border-radius: 4px;");
+
+            Others.showAlert(mainPane,
+                    "💸 KHÁCH THANH TOÁN SỚM:\n" +
+                            "Giá tiền phòng gốc được giữ nguyên để lưu hóa đơn.\n" +
+                            "Số tiền phòng chênh lệch được hệ thống đẩy vào mục GIẢM GIÁ: " + Others.formatPrice(giamGiaTuDong),
+                    false
+            );
+        } else {
+            txtGiamGia.setText("");
+            txtGiamGia.setTooltip(null);
+            txtGiamGia.setStyle("");
+        }
 
         List<SuDungDichVu> services = SuDungDichVuBLL.getServiceByBookingId(bookingId);
         tvDichVu.setItems(FXCollections.observableArrayList(services));
@@ -135,8 +217,12 @@ public class ChiTietPhongController {
 
     private void calculateFinalTotal() {
         try {
-            double phuThu = txtPhuThu.getText().isEmpty() ? 0 : Double.parseDouble(txtPhuThu.getText());
-            double giamGia = txtGiamGia.getText().isEmpty() ? 0 : Double.parseDouble(txtGiamGia.getText());
+            // Bóc tách chữ 'đ' và dấu '.' ra trước khi tính toán
+            String rawPhuThu = txtPhuThu.getText().replaceAll("[^\\d]", "");
+            String rawGiamGia = txtGiamGia.getText().replaceAll("[^\\d]", "");
+
+            double phuThu = rawPhuThu.isEmpty() ? 0 : Double.parseDouble(rawPhuThu);
+            double giamGia = rawGiamGia.isEmpty() ? 0 : Double.parseDouble(rawGiamGia);
             double tienCoc = currentBooking != null ? currentBooking.getTienCoc() : 0;
 
             double finalTotal = (totalRoomMoney + totalServiceMoney + phuThu) - (tienCoc + giamGia);
@@ -203,8 +289,12 @@ public class ChiTietPhongController {
 
     @FXML
     void handleCheckOut() {
-        double phuThu = txtPhuThu.getText().isEmpty() ? 0 : Double.parseDouble(txtPhuThu.getText());
-        double giamGia = txtGiamGia.getText().isEmpty() ? 0 : Double.parseDouble(txtGiamGia.getText());
+        // Bóc tách chữ 'đ' và dấu '.' ra trước khi lưu vào database
+        String rawPhuThu = txtPhuThu.getText().replaceAll("[^\\d]", "");
+        String rawGiamGia = txtGiamGia.getText().replaceAll("[^\\d]", "");
+
+        double phuThu = rawPhuThu.isEmpty() ? 0 : Double.parseDouble(rawPhuThu);
+        double giamGia = rawGiamGia.isEmpty() ? 0 : Double.parseDouble(rawGiamGia);
 
         double finalTotal = (totalRoomMoney + totalServiceMoney + phuThu) - (currentBooking.getTienCoc() + giamGia);
         if (finalTotal < 0) finalTotal = 0;

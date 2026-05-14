@@ -224,9 +224,26 @@ public class QuanLyDatPhongController {
         BookingRow selected = tvDatPhong.getSelectionModel().getSelectedItem();
         if (selected == null) return;
 
-        boolean confirm = Others.showCustomConfirm("Xác nhận", "Khách hàng " + selected.hoTen + " đã đến nhận phòng?", "Xác nhận", "Hủy");
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime expectedCheckIn = selected.getNgayIn();
+
+        // 1. Kiểm tra điều kiện: Không được nhận phòng sớm hơn 2 tiếng
+        if (now.isBefore(expectedCheckIn.minusHours(2))) {
+            Others.showAlert(mainPane, "Khách hàng đến quá sớm!\nChỉ được phép nhận phòng sớm tối đa 2 tiếng so với giờ dự kiến (" + Others.formatDateTime(expectedCheckIn) + ").", true);
+            return;
+        }
+
+        // 2. Thông báo xác nhận dựa trên thời gian thực tế
+        String msg = "Khách hàng " + selected.hoTen + " đã đến nhận phòng?";
+        if (now.isBefore(expectedCheckIn)) {
+            msg = "Khách đến sớm hơn dự kiến.\nBạn có muốn nhận phòng cho " + selected.hoTen + " không?\n(Giá phòng sẽ được giữ nguyên theo đơn đặt gốc)";
+        }
+
+        boolean confirm = Others.showCustomConfirm("Xác nhận", msg, "Xác nhận", "Hủy");
         if (confirm) {
-            DatPhongBLL.quickCheckIn(selected.maDat);
+            // 3. Fix lỗi 90k: Thay vì dùng DatPhongBLL.quickCheckIn() làm đè mất thời gian gốc,
+            // Ta dùng hàm changeStatus để chỉ cập nhật trạng thái "Đang ở", thời gian tính tiền vẫn y nguyên.
+            DatPhongBLL.changeStatus(selected.maDat, "Đang ở");
 
             if (selected.dsPhong != null && !selected.dsPhong.isEmpty()) {
                 String[] danhSachPhong = selected.dsPhong.split(", ");

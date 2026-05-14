@@ -8,14 +8,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NhanVienDAL {
-    public static NhanVien findActiveStaffByUsernameAndPassword(String username, String password) {
-        String sql = "SELECT * FROM NhanVien WHERE TenDangNhap = ? AND MatKhau = ? AND TrangThai = 'Đang làm việc'";
+
+    // Đã thay đổi hàm này để chỉ tìm kiếm theo Username
+    public static NhanVien findActiveStaffByUsername(String username) {
+        String sql = "SELECT * FROM NhanVien WHERE TenDangNhap = ? AND TrangThai = 'Đang làm việc'";
 
         try (Connection conn = DBHelper.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, username);
-            stmt.setString(2, password);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -24,7 +25,7 @@ public class NhanVienDAL {
                             rs.getString("HoTen"),
                             rs.getString("ChucVu"),
                             rs.getString("TenDangNhap"),
-                            rs.getString("MatKhau"),
+                            rs.getString("MatKhau"), // Đây sẽ là chuỗi Hash Bcrypt
                             rs.getString("SoDienThoai"),
                             NhanVien.TrangThaiNhanVien.fromString(rs.getString("TrangThai"))
                     );
@@ -95,7 +96,7 @@ public class NhanVienDAL {
             stmt.setString(1, nv.getHoTen());
             stmt.setString(2, nv.getChucVu());
             stmt.setString(3, nv.getTenDangNhap());
-            stmt.setString(4, nv.getMatKhau());
+            stmt.setString(4, nv.getMatKhau()); // Mật khẩu lúc này đã được mã hóa từ BLL
             stmt.setString(5, nv.getSoDienThoai());
             stmt.setString(6, nv.getTrangThai().getText());
             return stmt.executeUpdate() > 0;
@@ -122,7 +123,7 @@ public class NhanVienDAL {
         String sql = "UPDATE NhanVien SET MatKhau = ? WHERE MaNhanVien = ?";
         try (Connection conn = DBHelper.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, newPassword);
+            stmt.setString(1, newPassword); // Mật khẩu lúc này đã được mã hóa từ BLL
             stmt.setInt(2, maNhanVien);
             return stmt.executeUpdate() > 0;
         } catch (Exception e) { e.printStackTrace(); }

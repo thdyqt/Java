@@ -41,11 +41,21 @@
                         <VBox spacing="8.0">
                             <children>
                                 <Label styleClass="input-label" text="Mật khẩu" />
-                                <PasswordField fx:id="txtPassword" promptText="Nhập mật khẩu..." styleClass="input-field" />
+                                <!-- Dùng StackPane để đè TextField hiện MK và Button con mắt lên trên PasswordField -->
+                                <StackPane alignment="CENTER_RIGHT">
+                                    <children>
+                                        <TextField fx:id="txtPasswordVisible" promptText="Nhập mật khẩu..." styleClass="input-field" visible="false" />
+                                        <PasswordField fx:id="txtPassword" promptText="Nhập mật khẩu..." styleClass="input-field" />
+
+                                        <!-- Nút con mắt (không nhận focus khi nhấn Tab để tránh phiền cho user) -->
+                                        <Button fx:id="btnTogglePassword" focusTraversable="false" onAction="#handleTogglePassword" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-font-size: 16px; -fx-padding: 0 10 0 0;" text="👁" />
+                                    </children>
+                                </StackPane>
                             </children>
                         </VBox>
 
-                        <Button fx:id="btnLogin" maxWidth="Infinity" mnemonicParsing="false" onAction="#handleLogin" styleClass="login-button" text="ĐĂNG NHẬP" />
+                        <!-- Thêm defaultButton="true" để nhận sự kiện phím Enter -->
+                        <Button fx:id="btnLogin" defaultButton="true" maxWidth="Infinity" mnemonicParsing="false" onAction="#handleLogin" styleClass="login-button" text="ĐĂNG NHẬP" />
 
                     </children>
                 </VBox>
