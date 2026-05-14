@@ -38,7 +38,6 @@ public class CheckInController {
     @FXML private RadioButton rbTrucTiep, rbDatTruoc;
     @FXML private ToggleGroup tgCheckInMode;
 
-    // --- BIẾN HIỂN THỊ VÀ LƯU TỔNG TIỀN ---
     @FXML private Label lblTongTien;
     private double expectedTotalAmount = 0;
     private List<Phong> allRoomsCache = new ArrayList<>();
@@ -55,7 +54,6 @@ public class CheckInController {
             this.isReservationMode = rbDatTruoc.isSelected();
         }
 
-        // Cache danh sách phòng để lấy đơn giá tính tiền
         this.allRoomsCache = PhongBLL.getAllRooms();
 
         setupRoomInfo(p);
@@ -68,9 +66,8 @@ public class CheckInController {
         setupCustomerAutoFill();
         loadExtraEmptyRooms(p != null ? p.getSoPhong() : null);
 
-        // Gắn sự kiện lắng nghe để tính tiền Real-time
         attachCalculationListeners();
-        calculateTotalAmount(); // Tính lần đầu khi vừa mở form
+        calculateTotalAmount();
     }
 
     private void attachCalculationListeners() {
@@ -82,17 +79,14 @@ public class CheckInController {
         tgCheckInMode.selectedToggleProperty().addListener((obs, o, n) -> calculateTotalAmount());
     }
 
-    // --- HÀM TÍNH TỔNG TIỀN DỰ KIẾN ---
     private void calculateTotalAmount() {
         try {
             double tongGiaPhongGoc = 0;
 
-            // 1. Lấy giá phòng chính đang chọn
             if (currentRoom != null) {
                 tongGiaPhongGoc += getRoomDailyPrice(currentRoom.getMaLoaiPhong());
             }
 
-            // 2. Lấy giá các phòng phụ (Đoàn) được tích chọn
             for (Node node : fpExtraRooms.getChildren()) {
                 if (node instanceof CheckBox cb && cb.isSelected()) {
                     String soPhongPhu = (String) cb.getUserData();
@@ -100,7 +94,6 @@ public class CheckInController {
                 }
             }
 
-            // 3. Tính hệ số thời gian (Tùy chỉnh theo công thức của khách sạn)
             double heSoThoiGian = 0;
             String hinhThuc = cbHinhThuc.getValue();
 
@@ -110,16 +103,15 @@ public class CheckInController {
                     heSoThoiGian = (days > 0) ? days : 1;
                 }
             } else if ("Qua đêm".equals(hinhThuc)) {
-                heSoThoiGian = 0.8; // Giả sử qua đêm tính 80% giá trị phòng 1 ngày
+                heSoThoiGian = 0.8;
             } else if ("Theo giờ".equals(hinhThuc)) {
                 String soGioStr = txtSoGioThue.getText().replaceAll("[^\\d]", "").trim();
                 if (!soGioStr.isEmpty()) {
                     int gio = Integer.parseInt(soGioStr);
-                    heSoThoiGian = gio * 0.15; // Giả sử 1 giờ = 15% giá trị phòng 1 ngày
+                    heSoThoiGian = gio * 0.15;
                 }
             }
 
-            // 4. Tính và hiển thị lên giao diện (Bỏ chữ "Tổng: " để hiển thị số to)
             expectedTotalAmount = tongGiaPhongGoc * heSoThoiGian;
 
             if (lblTongTien != null) {
@@ -133,12 +125,10 @@ public class CheckInController {
         }
     }
 
-    // Hàm lấy đơn giá phòng theo MaLoaiPhong (Đã kết nối trực tiếp với Database)
     private double getRoomDailyPrice(int maLoaiPhong) {
         return BusinessBLL.LoaiPhongBLL.getDonGiaByMaLoai(maLoaiPhong);
     }
 
-    // Hàm lấy đơn giá từ DB Cache bằng Số Phòng
     private double getRoomDailyPriceBySoPhong(String soPhong) {
         if (allRoomsCache == null) return 0;
         for (Phong p : allRoomsCache) {
@@ -410,7 +400,6 @@ public class CheckInController {
                 cb.setUserData(room.getSoPhong());
                 cb.setStyle("-fx-cursor: hand; -fx-text-fill: #34495e; -fx-font-size: 13px;");
 
-                // Kích hoạt tính lại tiền khi Checkbox được tích chọn
                 cb.selectedProperty().addListener((obs, oldVal, newVal) -> calculateTotalAmount());
 
                 fpExtraRooms.getChildren().add(cb);

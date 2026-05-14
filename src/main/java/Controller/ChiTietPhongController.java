@@ -59,7 +59,6 @@ public class ChiTietPhongController {
         cbPhuongThuc.getItems().addAll("Tiền mặt", "Chuyển khoản");
         cbPhuongThuc.setValue("Tiền mặt");
 
-        // CỐ ĐỊNH KÍCH THƯỚC COMBOBOX - Sửa lỗi bị kéo dài liên tục
         cbPhuongThuc.setPrefWidth(200);
         cbPhuongThuc.setMaxWidth(200);
 
@@ -91,7 +90,6 @@ public class ChiTietPhongController {
         Others.setMaxLength(txtPhuThu, 15);
         Others.setMaxLength(txtGiamGia, 15);
 
-        // THIẾT LẬP ĐỊNH DẠNG "đ" CHO Ô PHỤ THU
         txtPhuThu.focusedProperty().addListener((obs, oldVal, isFocused) -> {
             if (isFocused) {
                 String raw = txtPhuThu.getText().replaceAll("[^\\d]", "");
@@ -106,7 +104,6 @@ public class ChiTietPhongController {
             }
         });
 
-        // THIẾT LẬP ĐỊNH DẠNG "đ" CHO Ô GIẢM GIÁ
         txtGiamGia.focusedProperty().addListener((obs, oldVal, isFocused) -> {
             if (isFocused) {
                 String raw = txtGiamGia.getText().replaceAll("[^\\d]", "");

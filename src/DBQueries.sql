@@ -71,21 +71,7 @@ CREATE TABLE NhanVien (
 -- Tên đăng nhập: admin
 -- Mật khẩu gốc: 123456 (Chuỗi mã hóa bên dưới tương đương với 123456)
 INSERT INTO NhanVien (HoTen, ChucVu, TenDangNhap, MatKhau, SoDienThoai) VALUES
-    ('Đinh Huỳnh Nguyên Khang', 'Admin', 'admin', '$2a$12$KLPsUdJXWNlwRhdZNO65dutdQMfK9ovmkdoaugEjZ0lE82XPNWXiO', '0123456789');
-
-/*
- LƯU Ý QUAN TRỌNG:
- Đã vô hiệu hóa việc insert dữ liệu mẫu cho nhân viên.
- Vì hiện tại mật khẩu bắt buộc phải:
- 1. Thỏa mãn regex (Chữ hoa, chữ thường, số, ký tự đặc biệt, >= 6 ký tự).
- 2. Phải được mã hóa Bcrypt trước khi lưu.
- Vui lòng chạy ứng dụng Java và sử dụng form Đăng ký / Thêm nhân viên để insert tài khoản mới.
-
- INSERT INTO NhanVien (HoTen, ChucVu, TenDangNhap, MatKhau, SoDienThoai) VALUES
- ('Phan Thanh Duy', 'Admin', 'thdyqt', '123456', '0905383132'),
- ('Đinh Huỳnh Nguyên Khang', 'Admin', 'dhnkhang', '123456', '1'),
- ('Nguyễn Hoàng Hiếu', 'Lễ Tân', 'nhhieu', '123456', '1');
-*/
+    ('Đinh Huỳnh Nguyên Khang', 'Admin', 'admin', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', '0123456789');
 
 -- 5. Bảng Đặt Phòng (Header)
 CREATE TABLE DatPhong (

@@ -21,6 +21,7 @@ import javafx.util.Duration;
 
 import javax.swing.text.Utilities;
 import java.net.URLEncoder;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -36,6 +37,28 @@ public class Others {
     // CHUẨN HÓA GIÁ TIỀN
     public static String formatPrice(double price) {
         return priceFormatter.format(price) + " đ";
+    }
+
+    public static void setCurrencyFormatting(TextField textField) {
+        textField.focusedProperty().addListener((obs, oldVal, isFocused) -> {
+            if (isFocused) {
+                String raw = textField.getText().replaceAll("[^\\d]", "");
+                textField.setText(raw);
+            } else {
+                String raw = textField.getText().replaceAll("[^\\d]", "");
+                if (!raw.isEmpty()) {
+                    try {
+                        long val = Long.parseLong(raw);
+                        DecimalFormat formatter = new DecimalFormat("#,###");
+                        textField.setText(formatter.format(val).replace(",", ".") + "đ");
+                    } catch (NumberFormatException e) {
+                        textField.setText("0đ");
+                    }
+                } else {
+                    textField.setText("0đ");
+                }
+            }
+        });
     }
 
     // ĐỊNH DẠNG THỜI GIAN
