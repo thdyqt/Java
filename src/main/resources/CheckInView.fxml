@@ -14,10 +14,22 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.control.RadioButton?>
 <VBox fx:id="mainPane" prefWidth="650.0" spacing="20.0" style="-fx-background-color: white; -fx-padding: 30; -fx-background-radius: 12;" stylesheets="@checkin.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.CheckInController">
     <children>
         <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="THỦ TỤC ĐẶT / NHẬN PHÒNG" />
-
+        <HBox spacing="30.0" style="-fx-padding: 10 0; -fx-alignment: CENTER_LEFT;">
+            <children>
+                <Label text="Chế độ xử lý:" style="-fx-font-weight: bold; -fx-text-fill: #1e293b;" />
+                <RadioButton fx:id="rbTrucTiep" selected="true" text="Check-in trực tiếp (Vào ở ngay)">
+                    <toggleGroup>
+                        <ToggleGroup fx:id="tgCheckInMode" />
+                    </toggleGroup>
+                </RadioButton>
+                <RadioButton fx:id="rbDatTruoc" text="Đặt phòng trước (Reservation)" toggleGroup="$tgCheckInMode" />
+            </children>
+        </HBox>
         <HBox spacing="20.0" style="-fx-background-color: #f8fafc; -fx-padding: 15; -fx-background-radius: 8; -fx-border-color: #e2e8f0; -fx-border-radius: 8;">
             <children>
                 <VBox HBox.hgrow="ALWAYS">

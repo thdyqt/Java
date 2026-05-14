@@ -33,7 +33,7 @@ public class QuanLyDatPhongController {
     @FXML private TableView<BookingRow> tvDatPhong;
     @FXML private TableColumn<BookingRow, String> colMaDat, colKhachHang, colSDT, colPhong, colCheckIn, colCheckOut, colTienCoc, colTrangThai;
 
-    @FXML private Button btnBook, btnEditBooking, btnQuickCheckIn, btnQuickCheckOut, btnCancelBooking;
+    @FXML private Button btnEditBooking, btnQuickCheckIn, btnQuickCheckOut, btnCancelBooking;
 
     private ObservableList<BookingRow> masterData = FXCollections.observableArrayList();
     private FilteredList<BookingRow> filteredData;
@@ -72,7 +72,6 @@ public class QuanLyDatPhongController {
     }
 
     private void setupButtons() {
-        Others.playButtonAnimation(btnBook);
         Others.playButtonAnimation(btnEditBooking);
         Others.playButtonAnimation(btnQuickCheckIn);
         Others.playButtonAnimation(btnQuickCheckOut);
@@ -197,24 +196,6 @@ public class QuanLyDatPhongController {
             return row.hoTen.toLowerCase().contains(keyword) ||
                     (row.sdt != null && row.sdt.contains(keyword));
         });
-    }
-
-    @FXML void handleNewBooking() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/CheckInView.fxml"));
-            Parent root = loader.load();
-
-            CheckInController controller = loader.getController();
-            controller.setPhongData(null);
-
-            Stage stage = new Stage();
-            stage.setTitle("Lập Đơn Đặt Phòng Mới");
-            stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.showAndWait();
-
-            loadData();
-        } catch (Exception e) { e.printStackTrace(); }
     }
 
     @FXML void handleEditBooking() {

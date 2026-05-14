@@ -32,6 +32,8 @@ public class CheckInController {
     @FXML private ComboBox<Integer> cbGioCheckIn, cbPhutCheckIn;
     @FXML private FlowPane fpExtraRooms;
     @FXML private Button btnCancel, btnSave;
+    @FXML private RadioButton rbTrucTiep, rbDatTruoc;
+    @FXML private ToggleGroup tgCheckInMode;
 
     private Phong currentRoom;
     private boolean isReservationMode = false;
@@ -40,17 +42,43 @@ public class CheckInController {
 
     public void setPhongData(Phong p) {
         this.currentRoom = p;
-        this.isReservationMode = (p == null);
+
+        if (rbDatTruoc != null) {
+            this.isReservationMode = rbDatTruoc.isSelected();
+        }
 
         setupRoomInfo(p);
         setupButtons();
         initDefaultDateTime();
-        setupDateTimeValidators();
+        setupModeListener();
         setupRentalTypeLogic();
         setupInputConstraints();
+        setupDateTimeValidators();
         setupCustomerAutoFill();
-
         loadExtraEmptyRooms(p != null ? p.getSoPhong() : null);
+    }
+
+    private void setupModeListener() {
+        if (tgCheckInMode == null) return;
+
+        tgCheckInMode.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
+            isReservationMode = rbDatTruoc.isSelected();
+
+            if (!isReservationMode) {
+                LocalDateTime now = LocalDateTime.now();
+                dpCheckIn.setValue(now.toLocalDate());
+                cbGioCheckIn.setValue(now.getHour());
+                cbPhutCheckIn.setValue(now.getMinute());
+
+                dpCheckIn.setDisable(true);
+                cbGioCheckIn.setDisable(true);
+                cbPhutCheckIn.setDisable(true);
+            } else {
+                dpCheckIn.setDisable(false);
+                cbGioCheckIn.setDisable(false);
+                cbPhutCheckIn.setDisable(false);
+            }
+        });
     }
 
     private void setupRoomInfo(Phong p) {
@@ -285,7 +313,7 @@ public class CheckInController {
 
             if (thoiGianCheckOut != null && (thoiGianCheckOut.isBefore(thoiGianCheckIn) || thoiGianCheckOut.isEqual(thoiGianCheckIn))) {
                 if ("Theo ngày".equals(hinhThuc)) {
-                    Others.showAlert(mainPane, "Thời gian trả phòng (12:00 hôm nay) đã qua hoặc trùng với giờ nhận. \nVui lòng chọn ngày trả phòng là ngày mai!", true);
+                    Others.showAlert(mainPane, "Thời gian trả phòng (12:00 trưa) đã qua hoặc trùng với giờ nhận.\nVui lòng chọn ngày trả phòng là ngày mai!", true);
                 } else {
                     Others.showAlert(mainPane, "Thời gian trả phòng phải sau thời gian nhận phòng!", true);
                 }
@@ -335,7 +363,7 @@ public class CheckInController {
 
                 if (isSuccess && "Đang ở".equals(trangThaiDon)) {
                     for (String soPhong : danhSachPhongChon) {
-                        BusinessBLL.PhongBLL.updateRoomStatus(soPhong, "Đang có khách");
+                        PhongBLL.updateRoomStatus(soPhong, "Đang có khách");
                     }
                 }
             }
@@ -352,7 +380,8 @@ public class CheckInController {
         }
     }
 
-    @FXML void handleCancel(ActionEvent event) {
+    @FXML
+    void handleCancel(ActionEvent event) {
         ((Stage) mainPane.getScene().getWindow()).close();
     }
 }
