@@ -71,7 +71,7 @@ CREATE TABLE NhanVien (
 -- Tên đăng nhập: admin
 -- Mật khẩu gốc: 123456 (Chuỗi mã hóa bên dưới tương đương với 123456)
 INSERT INTO NhanVien (HoTen, ChucVu, TenDangNhap, MatKhau, SoDienThoai) VALUES
-    ('Đinh Huỳnh Nguyên Khang', 'Admin', 'admin', '$2a$12$KLPsUdJXWNlwRhdZNO65dutdQMfK9ovmkdoaugEjZ0lE82XPNWXiO', '0123456789');
+    ('Đinh Huỳnh Nguyên Khang', 'Admin', 'admin', '$2a$12$a.RIX56TKQcOxvvJD8lrBuPpIoGf84kLxZ/TpNw3nqk3GOqsgvARi', '0123456789');
 
 /*
  LƯU Ý QUAN TRỌNG:
