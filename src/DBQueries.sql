@@ -69,7 +69,9 @@ CREATE TABLE NhanVien (
 
 -- Mật khẩu gốc: 123456 (Chuỗi mã hóa bên dưới tương đương với 123456)
 INSERT INTO NhanVien (HoTen, ChucVu, TenDangNhap, MatKhau, SoDienThoai) VALUES
-('Đinh Huỳnh Nguyên Khang', 'Admin', 'admin', '$2a$10$teJrCEnsxNT49ZpXU7n22O27aCGbVYYe/RG6/XxdWPJbOLZubLIi2', '0123456789');
+('Phan Thanh Duy', 'Admin', 'thdyqt', '$2a$10$teJrCEnsxNT49ZpXU7n22O27aCGbVYYe/RG6/XxdWPJbOLZubLIi2', '0905383132'),
+('Đinh Huỳnh Nguyên Khang', 'Admin', 'admin', '$2a$10$teJrCEnsxNT49ZpXU7n22O27aCGbVYYe/RG6/XxdWPJbOLZubLIi2', '0123456789'),
+('Nguyễn Hoàng Hiếu', 'Lễ Tân', 'nhhieu', '$2a$10$teJrCEnsxNT49ZpXU7n22O27aCGbVYYe/RG6/XxdWPJbOLZubLIi2', '0123456789');
 
 -- 5. Bảng Đặt Phòng (Header)
 CREATE TABLE DatPhong (
