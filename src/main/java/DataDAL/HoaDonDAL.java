@@ -40,7 +40,7 @@ public class HoaDonDAL {
                 list.add(new HoaDonViewModel(
                         rs.getInt("MaHoaDon"),
                         rs.getString("HoTen"),
-                        rs.getString("SoDienThoai"), // Lấy dữ liệu SĐT từ ResultSet
+                        rs.getString("SoDienThoai"),
                         rs.getTimestamp("NgayThanhToan").toLocalDateTime(),
                         rs.getDouble("TongThanhToan"),
                         rs.getString("PhuongThucThanhToan")

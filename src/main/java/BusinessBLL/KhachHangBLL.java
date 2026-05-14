@@ -6,16 +6,13 @@ import EntitiesDTO.KhachHang;
 import java.util.List;
 
 public class KhachHangBLL {
-
-    // HÀM KIỂM TRA SĐT
     private static boolean isValidPhoneNumber(String phone) {
         if (phone == null) return false;
         return phone.matches("^0\\d{9}$");
     }
 
-    // HÀM KIỂM TRA EMAIL
     private static boolean isValidEmail(String email) {
-        if (email == null || email.trim().isEmpty()) return true; // Cho phép bỏ trống
+        if (email == null || email.trim().isEmpty()) return true;
         return email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[a-zA-Z]{2,}$");
     }
 
@@ -40,7 +37,6 @@ public class KhachHangBLL {
             return -1;
         }
 
-        // CHẶN BẢO MẬT Ở TẦNG DỮ LIỆU
         if (!isValidPhoneNumber(customer.getSoDienThoai())) return -1;
         if (!isValidEmail(customer.getEmail())) return -1;
 
@@ -53,7 +49,6 @@ public class KhachHangBLL {
             return false;
         }
 
-        // CHẶN BẢO MẬT Ở TẦNG DỮ LIỆU
         if (!isValidPhoneNumber(customer.getSoDienThoai())) return false;
         if (!isValidEmail(customer.getEmail())) return false;
 

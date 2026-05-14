@@ -8,14 +8,12 @@ import org.mindrot.jbcrypt.BCrypt;
 import java.util.List;
 
 public class NhanVienBLL {
-
     private static boolean isValidPassword(String password) {
         if (password == null) return false;
         String regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{6,}$";
         return password.matches(regex);
     }
 
-    // THÊM HÀM KIỂM TRA ĐỊNH DẠNG SỐ ĐIỆN THOẠI
     private static boolean isValidPhoneNumber(String phone) {
         if (phone == null) return false;
         return phone.matches("^0\\d{9}$"); // Bắt đầu bằng 0, theo sau là 9 chữ số
@@ -48,7 +46,6 @@ public class NhanVienBLL {
             return "Vui lòng điền đầy đủ Họ tên, Tên đăng nhập và Mật khẩu!";
         }
 
-        // KIỂM TRA SĐT TRỐNG VÀ SAI ĐỊNH DẠNG
         if (nv.getSoDienThoai() == null || nv.getSoDienThoai().trim().isEmpty()) {
             return "Số điện thoại là bắt buộc!";
         }
@@ -80,7 +77,6 @@ public class NhanVienBLL {
             return "Họ tên và Tên đăng nhập không được để trống!";
         }
 
-        // KIỂM TRA SĐT TRỐNG VÀ SAI ĐỊNH DẠNG
         if (nv.getSoDienThoai() == null || nv.getSoDienThoai().trim().isEmpty()) {
             return "Số điện thoại là bắt buộc!";
         }
@@ -92,7 +88,6 @@ public class NhanVienBLL {
             return "Tên đăng nhập này đã bị nhân viên khác sử dụng!";
         }
 
-        // Fix lỗi excludeId ở dòng dưới (Đổi -1 thành nv.getMaNhanVien() để cho phép NV giữ nguyên SĐT cũ)
         if (NhanVienDAL.checkPhoneExists(nv.getSoDienThoai(), nv.getMaNhanVien())) {
             return "Số điện thoại này đã được đăng ký cho nhân viên khác!";
         }

@@ -220,12 +220,10 @@ public class Others {
         formNode.setOpacity(0);
         formNode.setTranslateY(50);
 
-        // Hiệu ứng hiển thị rõ dần
         FadeTransition fade = new FadeTransition(Duration.millis(1500), formNode);
         fade.setFromValue(0);
         fade.setToValue(1);
 
-        // Hiệu ứng dịch chuyển từ dưới lên
         TranslateTransition translate = new TranslateTransition(Duration.millis(1500), formNode);
         translate.setFromY(80);
         translate.setToY(0);
@@ -271,7 +269,6 @@ public class Others {
         if (node == null || node.getScene() == null) return;
         Pane rootPane = (Pane) node.getScene().getRoot();
 
-        // Dọn dẹp thông báo cũ
         if (currentToast != null) {
             if (currentToastAnimation != null) {
                 currentToastAnimation.stop();
@@ -279,7 +276,6 @@ public class Others {
             rootPane.getChildren().remove(currentToast);
         }
 
-        // Tạo thông báo mới
         Label toast = new Label(message);
         currentToast = toast;
 
@@ -299,21 +295,18 @@ public class Others {
         toast.setTranslateY(-50);
         toast.setOpacity(0);
 
-        // Hiệu ứng Hiện ra (Trượt xuống)
         TranslateTransition slideIn = new TranslateTransition(Duration.millis(400), toast);
         slideIn.setToY(30);
         FadeTransition fadeIn = new FadeTransition(Duration.millis(400), toast);
         fadeIn.setToValue(1);
         ParallelTransition showAnim = new ParallelTransition(slideIn, fadeIn);
 
-        // Hiệu ứng Biến mất (Trượt ngược lên lại)
         TranslateTransition slideOut = new TranslateTransition(Duration.millis(400), toast);
         slideOut.setToY(-30);
         FadeTransition fadeOut = new FadeTransition(Duration.millis(400), toast);
         fadeOut.setToValue(0);
         ParallelTransition hideAnim = new ParallelTransition(slideOut, fadeOut);
 
-        // Đợi 2.5 giây rồi ẩn
         hideAnim.setDelay(Duration.seconds(2.5));
         hideAnim.setOnFinished(e -> {
             rootPane.getChildren().remove(toast);

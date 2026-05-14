@@ -10,7 +10,6 @@ public class LoaiPhongBLL {
         return LoaiPhongDAL.getAllLoaiPhong();
     }
 
-    // --- BỔ SUNG HÀM NÀY ĐỂ LẤY GIÁ TIỀN TỪ DB ---
     public static double getDonGiaByMaLoai(int maLoaiPhong) {
         List<LoaiPhong> danhSach = LoaiPhongDAL.getAllLoaiPhong();
         for (LoaiPhong lp : danhSach) {
@@ -18,7 +17,7 @@ public class LoaiPhongBLL {
                 return lp.getDonGia();
             }
         }
-        return 0; // Trả về 0 nếu không tìm thấy (tránh lỗi crash)
+        return 0;
     }
 
     public static String saveLoaiPhong(LoaiPhong lp, boolean isEdit) {

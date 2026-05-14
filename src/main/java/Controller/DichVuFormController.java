@@ -41,28 +41,14 @@ public class DichVuFormController {
 
     private void setupConstraints() {
         Others.setMaxLength(txtTenDV, 100);
+        Others.setMaxLength(txtDonGia, 10);
+        Others.setNumericOnly(txtDonGia);
 
-        // 1. CHỈ NHẬP SỐ CHO Ô ĐƠN GIÁ VÀ GIỚI HẠN 10 CHỮ SỐ
-        txtDonGia.textProperty().addListener((obs, oldVal, newVal) -> {
-            if (txtDonGia.isFocused()) {
-                String raw = newVal.replaceAll("[^\\d]", "");
-                if (raw.length() > 10) {
-                    raw = raw.substring(0, 10);
-                }
-                if (!newVal.equals(raw)) {
-                    txtDonGia.setText(raw);
-                }
-            }
-        });
-
-        // 2. TỰ ĐỘNG FORMAT TIỀN TỆ KHI FOCUS / BLUR
         txtDonGia.focusedProperty().addListener((obs, oldVal, isFocused) -> {
             if (isFocused) {
-                // Khi click vào: Xóa định dạng để dễ sửa
                 String raw = txtDonGia.getText().replaceAll("[^\\d]", "");
                 txtDonGia.setText(raw);
             } else {
-                // Khi click ra ngoài: Format thành tiền có chấm và 'đ'
                 String raw = txtDonGia.getText().replaceAll("[^\\d]", "");
                 if (!raw.isEmpty()) {
                     try {
@@ -98,7 +84,6 @@ public class DichVuFormController {
 
         txtTenDV.setText(dv.getTenDichVu());
 
-        // Hiển thị giá tiền dạng format đẹp (VD: 50.000đ) khi tải dữ liệu lên để sửa
         DecimalFormat formatter = new DecimalFormat("#,###");
         txtDonGia.setText(formatter.format(dv.getDonGia()).replace(",", ".") + "đ");
 
@@ -109,7 +94,6 @@ public class DichVuFormController {
     void handleSave(ActionEvent event) {
         String tenDV = txtTenDV.getText().trim();
 
-        // Bóc tách chữ 'đ' và dấu '.' ra trước khi xử lý lưu
         String donGiaStr = txtDonGia.getText().replaceAll("[^\\d]", "").trim();
 
         if (tenDV.isEmpty() || donGiaStr.isEmpty()) {

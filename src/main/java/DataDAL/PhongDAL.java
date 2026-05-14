@@ -27,7 +27,7 @@ public class PhongDAL {
         List<PhongViewModel> list = new ArrayList<>();
         String sql = "SELECT p.MaPhong, p.SoPhong, lp.TenLoaiPhong, lp.DonGia, lp.SoNguoiToiDa, p.TrangThai " +
                 "FROM Phong p " +
-                "LEFT JOIN LoaiPhong lp ON p.MaLoaiPhong = lp.MaLoaiPhong " + // CHUYỂN THÀNH LEFT JOIN
+                "LEFT JOIN LoaiPhong lp ON p.MaLoaiPhong = lp.MaLoaiPhong " +
                 "ORDER BY p.SoPhong ASC";
 
         try (Connection conn = DBHelper.getConnection();
