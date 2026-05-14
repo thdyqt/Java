@@ -223,7 +223,6 @@ public class QuanLyNhanVienController {
         );
 
         if (confirm) {
-            // Thay đổi ở đây: Gọi hàm resetPasswordDefault thay vì changePassword
             if (NhanVienBLL.resetPasswordDefault(selected.getMaNV())) {
                 Others.showAlert(mainPane, "Đã đặt lại mật khẩu thành công!", false);
             } else {

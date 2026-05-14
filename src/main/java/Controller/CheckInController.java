@@ -263,7 +263,7 @@ public class CheckInController {
     private void setupInputConstraints() {
         Others.setMaxLength(txtHoTen, 100);
         Others.setMaxLength(txtSDT, 10); Others.setNumericOnly(txtSDT);
-        Others.setMaxLength(txtCCCD, 20);
+        Others.setMaxLength(txtCCCD, 20); Others.setNumericOnly(txtCCCD);
 
         txtSoGioThue.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.equals(oldValue)) return;
@@ -286,35 +286,7 @@ public class CheckInController {
             }
         });
 
-        txtTienCoc.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.equals(oldValue)) return;
-
-            String digits = newValue.replaceAll("[^\\d]", "");
-
-            if (digits.length() > 10) {
-                digits = digits.substring(0, 10);
-            }
-
-            String formatted = "";
-            if (!digits.isEmpty()) {
-                try {
-                    long amount = Long.parseLong(digits);
-                    DecimalFormat formatter = new DecimalFormat("#,###");
-                    formatted = formatter.format(amount).replace(",", ".") + "đ";
-                } catch (NumberFormatException e) {
-                }
-            }
-
-            if (!newValue.equals(formatted)) {
-                final String finalText = formatted;
-                Platform.runLater(() -> {
-                    txtTienCoc.setText(finalText);
-                    if (!finalText.isEmpty()) {
-                        txtTienCoc.positionCaret(finalText.length() - 1);
-                    }
-                });
-            }
-        });
+        Others.setCurrencyFormatting(txtTienCoc);
 
         if (!isReservationMode) {
             LocalDateTime now = LocalDateTime.now();
@@ -521,9 +493,9 @@ public class CheckInController {
 
             boolean isSuccess;
             if (editingMaDatPhong != -1) {
-                isSuccess = BusinessBLL.DatPhongBLL.updateBooking(editingMaDatPhong, Others.standardizeName(txtHoTen.getText()), sdt, txtCCCD.getText(), email, txtDiaChi.getText(), danhSachPhongChon, thoiGianCheckIn, thoiGianCheckOut, tienCoc);
+                isSuccess = DatPhongBLL.updateBooking(editingMaDatPhong, Others.standardizeName(txtHoTen.getText()), sdt, txtCCCD.getText(), email, txtDiaChi.getText(), danhSachPhongChon, thoiGianCheckIn, thoiGianCheckOut, tienCoc);
             } else {
-                isSuccess = BusinessBLL.DatPhongBLL.processCheckIn(Others.standardizeName(txtHoTen.getText()), sdt, txtCCCD.getText(), email, txtDiaChi.getText(), danhSachPhongChon, Utilities.UserSession.getInstance().getNhanVien().getMaNhanVien(), thoiGianCheckIn, thoiGianCheckOut, tienCoc, trangThaiDon);
+                isSuccess = DatPhongBLL.processCheckIn(Others.standardizeName(txtHoTen.getText()), sdt, txtCCCD.getText(), email, txtDiaChi.getText(), danhSachPhongChon, Utilities.UserSession.getInstance().getNhanVien().getMaNhanVien(), thoiGianCheckIn, thoiGianCheckOut, tienCoc, trangThaiDon);
 
                 if (isSuccess && "Đang ở".equals(trangThaiDon)) {
                     for (String soPhong : danhSachPhongChon) {

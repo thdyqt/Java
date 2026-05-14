@@ -40,23 +40,34 @@ public class Others {
     }
 
     public static void setCurrencyFormatting(TextField textField) {
-        textField.focusedProperty().addListener((obs, oldVal, isFocused) -> {
-            if (isFocused) {
-                String raw = textField.getText().replaceAll("[^\\d]", "");
-                textField.setText(raw);
-            } else {
-                String raw = textField.getText().replaceAll("[^\\d]", "");
-                if (!raw.isEmpty()) {
-                    try {
-                        long val = Long.parseLong(raw);
-                        DecimalFormat formatter = new DecimalFormat("#,###");
-                        textField.setText(formatter.format(val).replace(",", ".") + "đ");
-                    } catch (NumberFormatException e) {
-                        textField.setText("0đ");
-                    }
-                } else {
-                    textField.setText("0đ");
+        textField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.equals(oldValue)) return;
+
+            String digits = newValue.replaceAll("[^\\d]", "");
+
+            if (digits.length() > 12) {
+                digits = digits.substring(0, 12);
+            }
+
+            String formatted = "";
+            if (!digits.isEmpty()) {
+                try {
+                    long amount = Long.parseLong(digits);
+                    DecimalFormat formatter = new DecimalFormat("#,###");
+                    formatted = formatter.format(amount).replace(",", ".") + " đ";
+                } catch (NumberFormatException e) {
                 }
+            }
+
+            if (!newValue.equals(formatted)) {
+                final String finalText = formatted;
+
+                Platform.runLater(() -> {
+                    textField.setText(finalText);
+                    if (!finalText.isEmpty()) {
+                        textField.positionCaret(finalText.length() - 2);
+                    }
+                });
             }
         });
     }

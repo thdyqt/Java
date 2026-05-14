@@ -62,7 +62,7 @@ CREATE TABLE NhanVien (
 	HoTen VARCHAR(100) NOT NULL,
 	ChucVu VARCHAR(50),
 	TenDangNhap VARCHAR(50) UNIQUE,
-	MatKhau VARCHAR(255), -- Chiều dài đủ lớn để lưu chuỗi Hash từ Bcrypt
+	MatKhau VARCHAR(255),
 	SoDienThoai VARCHAR(15),
 	TrangThai ENUM('Đang làm việc', 'Đã nghỉ việc') DEFAULT 'Đang làm việc'
 );
@@ -71,7 +71,7 @@ CREATE TABLE NhanVien (
 INSERT INTO NhanVien (HoTen, ChucVu, TenDangNhap, MatKhau, SoDienThoai) VALUES
 ('Phan Thanh Duy', 'Admin', 'thdyqt', '$2a$10$teJrCEnsxNT49ZpXU7n22O27aCGbVYYe/RG6/XxdWPJbOLZubLIi2', '0905383132'),
 ('Đinh Huỳnh Nguyên Khang', 'Admin', 'admin', '$2a$10$teJrCEnsxNT49ZpXU7n22O27aCGbVYYe/RG6/XxdWPJbOLZubLIi2', '0123456789'),
-('Nguyễn Hoàng Hiếu', 'Lễ Tân', 'nhhieu', '$2a$10$teJrCEnsxNT49ZpXU7n22O27aCGbVYYe/RG6/XxdWPJbOLZubLIi2', '0123456789');
+('Nguyễn Hoàng Hiếu', 'Lễ tân', 'nhhieu', '$2a$10$teJrCEnsxNT49ZpXU7n22O27aCGbVYYe/RG6/XxdWPJbOLZubLIi2', '0123456789');
 
 -- 5. Bảng Đặt Phòng (Header)
 CREATE TABLE DatPhong (

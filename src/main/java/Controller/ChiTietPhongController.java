@@ -87,36 +87,13 @@ public class ChiTietPhongController {
         colThanhTien.prefWidthProperty().bind(tvDichVu.widthProperty().multiply(0.20));
         colThoiGian.prefWidthProperty().bind(tvDichVu.widthProperty().multiply(0.265));
 
-        Others.setMaxLength(txtPhuThu, 15);
-        Others.setMaxLength(txtGiamGia, 15);
+        Others.setMaxLength(txtPhuThu, 10);
+        Others.setMaxLength(txtGiamGia, 10);
+        Others.setNumericOnly(txtPhuThu);
+        Others.setNumericOnly(txtGiamGia);
 
-        txtPhuThu.focusedProperty().addListener((obs, oldVal, isFocused) -> {
-            if (isFocused) {
-                String raw = txtPhuThu.getText().replaceAll("[^\\d]", "");
-                txtPhuThu.setText(raw);
-            } else {
-                String raw = txtPhuThu.getText().replaceAll("[^\\d]", "");
-                if (!raw.isEmpty()) {
-                    long val = Long.parseLong(raw);
-                    DecimalFormat formatter = new DecimalFormat("#,###");
-                    txtPhuThu.setText(formatter.format(val).replace(",", ".") + "đ");
-                }
-            }
-        });
-
-        txtGiamGia.focusedProperty().addListener((obs, oldVal, isFocused) -> {
-            if (isFocused) {
-                String raw = txtGiamGia.getText().replaceAll("[^\\d]", "");
-                txtGiamGia.setText(raw);
-            } else {
-                String raw = txtGiamGia.getText().replaceAll("[^\\d]", "");
-                if (!raw.isEmpty()) {
-                    long val = Long.parseLong(raw);
-                    DecimalFormat formatter = new DecimalFormat("#,###");
-                    txtGiamGia.setText(formatter.format(val).replace(",", ".") + "đ");
-                }
-            }
-        });
+        Others.setCurrencyFormatting(txtPhuThu);
+        Others.setCurrencyFormatting(txtGiamGia);
 
         txtPhuThu.textProperty().addListener((obs, oldVal, newVal) -> calculateFinalTotal());
         txtGiamGia.textProperty().addListener((obs, oldVal, newVal) -> calculateFinalTotal());
@@ -170,7 +147,6 @@ public class ChiTietPhongController {
         DecimalFormat df = new DecimalFormat("#,###");
 
         if (phuThuTuDong > 0) {
-            // Định dạng tiền tệ cho số tự động điền
             txtPhuThu.setText(df.format(phuThuTuDong).replace(",", ".") + "đ");
             txtPhuThu.setTooltip(new Tooltip("Khoản phạt do khách trả phòng quá giờ"));
             txtPhuThu.setStyle("-fx-border-color: #ef4444; -fx-border-width: 2px; -fx-border-radius: 4px;");
@@ -187,7 +163,6 @@ public class ChiTietPhongController {
         }
 
         if (giamGiaTuDong > 0) {
-            // Định dạng tiền tệ cho số tự động điền
             txtGiamGia.setText(df.format(giamGiaTuDong).replace(",", ".") + "đ");
             txtGiamGia.setTooltip(new Tooltip("Được hoàn tiền do thanh toán sớm (Thuê theo giờ)"));
             txtGiamGia.setStyle("-fx-border-color: #10b981; -fx-border-width: 2px; -fx-border-radius: 4px;");
@@ -214,7 +189,6 @@ public class ChiTietPhongController {
 
     private void calculateFinalTotal() {
         try {
-            // Bóc tách chữ 'đ' và dấu '.' ra trước khi tính toán
             String rawPhuThu = txtPhuThu.getText().replaceAll("[^\\d]", "");
             String rawGiamGia = txtGiamGia.getText().replaceAll("[^\\d]", "");
 
@@ -286,7 +260,6 @@ public class ChiTietPhongController {
 
     @FXML
     void handleCheckOut() {
-        // Bóc tách chữ 'đ' và dấu '.' ra trước khi lưu vào database
         String rawPhuThu = txtPhuThu.getText().replaceAll("[^\\d]", "");
         String rawGiamGia = txtGiamGia.getText().replaceAll("[^\\d]", "");
 

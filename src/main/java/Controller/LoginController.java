@@ -30,7 +30,6 @@ public class LoginController implements Initializable {
     @FXML
     private PasswordField txtPassword;
 
-    // Khai báo thêm 2 element mới từ file FXML
     @FXML
     private TextField txtPasswordVisible;
 
@@ -40,7 +39,6 @@ public class LoginController implements Initializable {
     @FXML
     private Button btnLogin;
 
-    // Biến lưu trạng thái hiển thị mật khẩu
     private boolean isPasswordVisible = false;
 
     @Override
@@ -51,7 +49,6 @@ public class LoginController implements Initializable {
         Others.setMaxLength(txtUsername, 20);
         Others.setMaxLength(txtPassword, 20);
 
-        // Ràng buộc (bind) dữ liệu giữa 2 ô ẩn và hiện để chúng luôn đồng bộ nội dung với nhau
         txtPasswordVisible.textProperty().bindBidirectional(txtPassword.textProperty());
 
         txtUsername.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -67,28 +64,24 @@ public class LoginController implements Initializable {
         });
     }
 
-    // Hàm xử lý khi click vào icon con mắt
     @FXML
     void handleTogglePassword(ActionEvent event) {
         isPasswordVisible = !isPasswordVisible;
 
         if (isPasswordVisible) {
-            // Hiện mật khẩu
             txtPasswordVisible.setVisible(true);
             txtPassword.setVisible(false);
-            btnTogglePassword.setText("🙈"); // Đổi icon thành mắt nhắm
+            btnTogglePassword.setText("🙈");
         } else {
-            // Ẩn mật khẩu
             txtPasswordVisible.setVisible(false);
             txtPassword.setVisible(true);
-            btnTogglePassword.setText("👁"); // Đổi icon về mắt mở
+            btnTogglePassword.setText("👁");
         }
     }
 
     @FXML
     void handleLogin(ActionEvent event) throws IOException {
         String username = txtUsername.getText().trim();
-        // Do đã bindBidirectional nên txtPassword luôn chứa mật khẩu chính xác (dù đang nhập ở ô hiện hay ô ẩn)
         String password = txtPassword.getText().trim();
 
         if (username.isEmpty() || password.isEmpty()) {

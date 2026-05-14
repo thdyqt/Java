@@ -12,6 +12,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 
 import java.text.DecimalFormat;
 
@@ -41,31 +42,12 @@ public class DichVuFormController {
 
     private void setupConstraints() {
         Others.setMaxLength(txtTenDV, 100);
-        Others.setMaxLength(txtDonGia, 10);
-        Others.setNumericOnly(txtDonGia);
-
-        txtDonGia.focusedProperty().addListener((obs, oldVal, isFocused) -> {
-            if (isFocused) {
-                String raw = txtDonGia.getText().replaceAll("[^\\d]", "");
-                txtDonGia.setText(raw);
-            } else {
-                String raw = txtDonGia.getText().replaceAll("[^\\d]", "");
-                if (!raw.isEmpty()) {
-                    try {
-                        long val = Long.parseLong(raw);
-                        DecimalFormat formatter = new DecimalFormat("#,###");
-                        txtDonGia.setText(formatter.format(val).replace(",", ".") + "đ");
-                    } catch(Exception e){}
-                } else {
-                    txtDonGia.setText("");
-                }
-            }
-        });
+        Others.setCurrencyFormatting(txtDonGia);
     }
 
     private void setupComboBox() {
         cbTrangThai.getItems().setAll(DichVu.TrangThaiDichVu.values());
-        cbTrangThai.setConverter(new javafx.util.StringConverter<>() {
+        cbTrangThai.setConverter(new StringConverter<>() {
             @Override public String toString(DichVu.TrangThaiDichVu object) { return object == null ? "" : object.getText(); }
             @Override public DichVu.TrangThaiDichVu fromString(String string) { return null; }
         });

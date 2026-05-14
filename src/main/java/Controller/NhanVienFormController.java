@@ -38,7 +38,7 @@ public class NhanVienFormController {
     }
 
     private void setupComboBoxes() {
-        cbChucVu.setItems(FXCollections.observableArrayList("Lễ tân", "Kế toán", "Admin"));
+        cbChucVu.setItems(FXCollections.observableArrayList("Lễ tân", "Admin"));
         cbTrangThai.setItems(FXCollections.observableArrayList("Đang làm việc", "Đã nghỉ việc"));
         cbTrangThai.getSelectionModel().select(0);
     }
@@ -46,7 +46,6 @@ public class NhanVienFormController {
     private void setupConstraints() {
         Others.setMaxLength(txtHoTen, 100);
 
-        // RÀNG BUỘC SỐ ĐIỆN THOẠI TRÊN GIAO DIỆN
         Others.setMaxLength(txtSDT, 10);
         Others.setNumericOnly(txtSDT);
 

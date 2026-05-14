@@ -1,10 +1,10 @@
 package Controller;
 
-import EntitiesDTO.DatPhong; // Bổ sung import DatPhong
+import EntitiesDTO.DatPhong;
 import EntitiesDTO.HoaDon;
 import EntitiesDTO.KhachHang;
 import EntitiesDTO.ChiTietDatPhong;
-import BusinessBLL.DatPhongBLL; // Bổ sung import DatPhongBLL
+import BusinessBLL.DatPhongBLL;
 import BusinessBLL.KhachHangBLL;
 import BusinessBLL.ChiTietDatPhongBLL;
 import Utilities.Others;

@@ -118,7 +118,7 @@ public class QuanLyHoaDonController {
                 return;
             }
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/HoaDonView.fxml")); // Hoặc tên file FXML chứa HoaDonController của bạn
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/HoaDonView.fxml"));
             Parent root = loader.load();
 
             HoaDonController controller = loader.getController();
