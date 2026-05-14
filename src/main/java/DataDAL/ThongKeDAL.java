@@ -12,9 +12,13 @@ import java.util.Map;
 public class ThongKeDAL {
     public static double[] getTongQuan(LocalDate tuNgay, LocalDate denNgay) {
         double[] result = new double[4];
-        String sql = "SELECT SUM(TongThanhToan) as Tong, SUM(TongTienPhong) as TienPhong, " +
-                "SUM(TongTienDichVu) as TienDV, COUNT(MaHoaDon) as SoLuong " +
+
+        String sql = "SELECT SUM(TongTienPhong + TongTienDichVu + PhuThu - GiamGia) as Tong, " +
+                "SUM(TongTienPhong) as TienPhong, " +
+                "SUM(TongTienDichVu) as TienDV, " +
+                "COUNT(MaHoaDon) as SoLuong " +
                 "FROM HoaDon WHERE DATE(NgayThanhToan) >= ? AND DATE(NgayThanhToan) <= ?";
+
         try (Connection conn = DBHelper.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setDate(1, java.sql.Date.valueOf(tuNgay));
@@ -24,7 +28,7 @@ public class ThongKeDAL {
                 result[0] = rs.getDouble("Tong");
                 result[1] = rs.getDouble("TienPhong");
                 result[2] = rs.getDouble("TienDV");
-                result[3] = rs.getDouble("SoLuong"); // Cast double để dùng chung mảng
+                result[3] = rs.getDouble("SoLuong");
             }
         } catch (Exception e) { e.printStackTrace(); }
         return result;

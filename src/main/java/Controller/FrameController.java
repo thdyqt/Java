@@ -66,7 +66,6 @@ public class FrameController implements Initializable {
         if (!"Admin".equals(currentStaff.getChucVu())) {
             btnDichVu.setVisible(false); btnDichVu.setManaged(false);
             btnQuanLyPhong.setVisible(false); btnQuanLyPhong.setManaged(false);
-            btnThongKe.setVisible(false); btnThongKe.setManaged(false);
             btnNhanVien.setVisible(false); btnNhanVien.setManaged(false);
         }
 
@@ -379,9 +378,7 @@ public class FrameController implements Initializable {
 
     @FXML
     void showThongKeView(ActionEvent event) {
-        if ("Admin".equals(UserSession.getInstance().getChucVu())) {
-            setActiveMenu(btnThongKe);
-            switchForm("/ThongKeView.fxml");
-        }
+        setActiveMenu(btnThongKe);
+        switchForm("/ThongKeView.fxml");
     }
 }
