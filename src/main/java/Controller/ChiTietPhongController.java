@@ -87,11 +87,6 @@ public class ChiTietPhongController {
         colThanhTien.prefWidthProperty().bind(tvDichVu.widthProperty().multiply(0.20));
         colThoiGian.prefWidthProperty().bind(tvDichVu.widthProperty().multiply(0.265));
 
-        Others.setMaxLength(txtPhuThu, 10);
-        Others.setMaxLength(txtGiamGia, 10);
-        Others.setNumericOnly(txtPhuThu);
-        Others.setNumericOnly(txtGiamGia);
-
         Others.setCurrencyFormatting(txtPhuThu);
         Others.setCurrencyFormatting(txtGiamGia);
 

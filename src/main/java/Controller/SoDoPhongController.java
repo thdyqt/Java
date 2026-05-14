@@ -155,12 +155,19 @@ public class SoDoPhongController implements Initializable {
         card.getChildren().addAll(header, lblType);
 
         ContextMenu contextMenu = new ContextMenu();
+
         MenuItem itemLichSu = new MenuItem("Xem lịch đặt phòng");
         Label iconLichSu = new Label("📅");
         itemLichSu.setGraphic(iconLichSu);
-
         itemLichSu.setOnAction(e -> showLichSuPopup(p.getSoPhong()));
-        contextMenu.getItems().add(itemLichSu);
+
+        MenuItem itemDatPhong = new MenuItem("Đặt phòng trước (Reservation)");
+        Label iconDatPhong = new Label("✍️");
+        itemDatPhong.setGraphic(iconDatPhong);
+
+        itemDatPhong.setOnAction(e -> openDialog("/CheckInView.fxml", "Đặt phòng trước: Phòng " + p.getSoPhong(), p));
+
+        contextMenu.getItems().addAll(itemDatPhong, itemLichSu);
 
         card.setOnContextMenuRequested(e ->
                 contextMenu.show(card, e.getScreenX(), e.getScreenY())
